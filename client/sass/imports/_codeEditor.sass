@@ -1,0 +1,83 @@
+#CodeEditor
+  height: 100%
+  display: flex
+  font-family: sans-serif
+  width: 888px
+
+#CECodeEditor
+  width: 100%
+  height: 100%
+
+#CEFolderStructure
+  background-color: rgba(100, 100, 100, 0.6)
+  width: 290px
+  height: 100%
+  padding: 10px
+  overflow-x: hidden
+
+.file .script
+  color: #ffffff
+
+.folder
+  padding:
+    left: 10px
+  white-space: nowrap
+
+.file
+  padding: 2px
+  white-space: nowrap
+
+.folderArrow
+  display: inline
+  position: relative
+  top: -1px
+  width: 8px
+  height: 8px
+
+.fileIcon
+  display: inline
+  width: 16px
+  height: 16px
+
+.fileName
+  position: relative
+  top: -1px
+
+#CECode
+  width: 100%
+  height: 100%
+
+.CodeMirror
+  background-color: rgba(80, 80, 80, 0.6)
+  width: 100%
+  height: 100%
+
+.closed > *
+  display: none
+
+.folderTop
+  display: block
+  margin:
+    left: -8px
+
+#CEContextMenu
+  z-index: 1000
+  position: absolute
+  left: 0px
+  top: 0px
+  min-width: 50px
+  background-color: #ffffff
+  color: #000000
+
+#CEContextMenu > ul
+  list-style-type: none
+
+#CEContextMenu > ul > li
+  height: 27px
+  padding:
+    right: 8px
+    left: 8px
+  line-height: 27px
+  border:
+    bottom: 1px solid #cfcfcf
+  cursor: default

@@ -1,2 +1,5 @@
 /.idea/
 /client/public/js/bundle.js
+/client/public/styles/*
+/client/public/data/*
+/node_modules/

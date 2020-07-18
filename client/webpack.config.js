@@ -2,8 +2,12 @@ const path = require('path');
 
 module.exports = {
     mode: "development",
-    entry: './client-src/main.ts',
+    entry: './client/client-src/game.ts',
     //devtool: 'inline-source-map',
+    optimization: {
+        minimize: false
+    },
+    watch: true,
     module: {
         rules: [
             {

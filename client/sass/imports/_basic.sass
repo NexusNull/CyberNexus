@@ -1,0 +1,142 @@
+*
+  margin: 0
+  padding: 0
+  box-sizing: border-box
+
+html, body
+  height: 100%
+  overflow: hidden
+
+#uiContainer
+  display: block
+  position: absolute
+  pointer-events: none
+  top: 0
+  left: 0
+  height: 100%
+  width: 100%
+  overflow: hidden
+  color: white
+
+#uiBackground
+  position: absolute
+  top: 0
+  right: 0
+  height: 100%
+  width: 100%
+
+#topLeftContainer
+  position: absolute
+  top: 0
+  left: 0
+
+#topRightContainer
+  position: absolute
+  top: 0
+  right: 0
+
+#bottomLeftContainer
+  position: absolute
+  bottom: 0
+  left: 0
+
+#bottomRightContainer
+  position: absolute
+  bottom: 0
+  right: 0
+
+#leftContainer
+  height: 100%
+
+#centerContainer
+  position: absolute
+  display: flex
+  height: 100%
+  width: 100%
+  align-items: center
+  justify-content: center
+
+#uiContainer > *
+  pointer-events: none
+
+#uiContainer > * > *
+  pointer-events: all
+
+.hidden
+  display: none !important
+
+#MainLoading
+  display: flex
+  align-items: center
+  flex-direction: column
+  height: 150px
+  width: 400px
+  background-color: rgba(128, 128, 128, .5)
+  border-radius: 5px
+
+.loadingText
+  margin-top: 10px
+  text-align: center
+
+.loadingBarContainer
+  margin-top: 20px
+  height: 10px
+  width: 80%
+  background-color: rgba(128, 128, 128, .5)
+  border: solid black 1px
+
+.loadingBar
+  height: 100%
+  width: 0%
+  background-color: aqua
+
+.box
+  display: flex
+  margin: 10px
+  align-items: center
+  flex-direction: column
+  min-height: 150px
+  min-width: 400px
+  background-color: rgba(128, 128, 128, .5)
+  border-radius: 5px
+
+#login
+  padding: 10px
+
+#loginContainer
+  display: grid
+  padding: 10px 0px
+  grid-column-gap: 10px
+  grid-row-gap: 10px
+  grid-template-columns: auto auto
+  grid-template-rows: auto auto
+  grid-template-areas: "labelName inputName" "labelPassword inputPassword"
+
+#loginLabelName
+  grid-area: labelName
+
+#loginLabelPassword
+  grid-area: labelPassword
+
+#loginName
+  grid-area: inputName
+
+#loginPassword
+  grid-area: inputPassword
+
+#loginAlternative
+  text-align: center
+
+#loginSubmit
+  float: right
+
+hr
+  margin: 8px
+  border-bottom: 1px white solid
+  width: 100%
+
+
+input[type="button" i], input[type="submit" i]
+  padding: 3px 5px
+  margin: 2px
+  text-transform: capitalize
