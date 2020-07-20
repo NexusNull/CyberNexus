@@ -3,3 +3,4 @@
 /client/public/styles/*
 /client/public/data/*
 /node_modules/
+/server/data/main.sqlite

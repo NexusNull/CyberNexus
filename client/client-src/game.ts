@@ -18,7 +18,8 @@ class Game {
     }
 }
 
-
 export {Game}
+
 let game = new Game();
 game.main();
+

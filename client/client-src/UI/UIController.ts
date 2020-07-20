@@ -2,8 +2,9 @@ import {InputController} from "./InputController";
 import {Game} from "../game";
 import {LoadingUI} from "./UIElements/LoadingUI";
 import {LoadingViewState} from "./ViewStates/Loading";
-import {LoginViewState} from "./ViewStates/Login";
-import {LoginUI} from "./UIElements/LoginUI";
+import {AuthViewState} from "./ViewStates/Auth";
+import {AuthUI} from "./UIElements/AuthUI";
+import {DebugViewState} from "./ViewStates/Debug";
 
 class UIController {
     game: Game;
@@ -12,11 +13,12 @@ class UIController {
     inputController: InputController;
     viewStates: {
         loading: LoadingViewState;
-        login: LoginViewState;
+        auth: AuthViewState;
+        debug: DebugViewState;
     };
     uiElements: {
         loadingUI: LoadingUI;
-        loginUI: LoginUI;
+        authUI: AuthUI;
     };
 
     constructor(game: Game, inputController: InputController) {
@@ -27,25 +29,26 @@ class UIController {
 
         this.viewStates = {
             loading: new LoadingViewState(game, this, inputController),
-            login: new LoginViewState(game, this, inputController),
+            auth: new AuthViewState(game, this, inputController),
+            debug: new DebugViewState(game, this, inputController),
         };
 
         this.uiElements = {
             loadingUI: new LoadingUI(this),
-            loginUI: new LoginUI(this),
+            authUI: new AuthUI(this),
         }
     };
 
-    changeViewState(viewState) {
+    async changeViewState(viewState) {
         if (this.activeViewState) {
             console.log("current:" + this.activeViewState.constructor.name + " new:" + viewState.constructor.name);
             if (typeof this.activeViewState.disable == "function")
-                this.activeViewState.disable();
+                await this.activeViewState.disable();
             else
                 console.error("ViewState needs disable");
         }
         if (typeof viewState.enable == "function") {
-            viewState.enable();
+            await viewState.enable();
             this.activeViewState = viewState;
         }
     };

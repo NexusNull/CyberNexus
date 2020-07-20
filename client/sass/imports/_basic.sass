@@ -82,7 +82,7 @@ html, body
   margin-top: 20px
   height: 10px
   width: 80%
-  background-color: rgba(128, 128, 128, .5)
+  background-color: rgba(128, 128, 128, .7)
   border: solid black 1px
 
 .loadingBar
@@ -91,52 +91,69 @@ html, body
   background-color: aqua
 
 .box
-  display: flex
-  margin: 10px
+  padding: 10px
   align-items: center
-  flex-direction: column
   min-height: 150px
   min-width: 400px
-  background-color: rgba(128, 128, 128, .5)
+  background-color: rgba(128, 128, 128, .7)
   border-radius: 5px
 
-#login
-  padding: 10px
+.tabContainer
+  display: flex
+  flex-direction: row
+  width: 100%
+  border-bottom: 1px white solid
 
-#loginContainer
+.tab:first-child
+  padding: 2px 3px
+  border:
+    left: 1px white solid
+    right: 1px white solid
+
+.tab
+  cursor: pointer
+  font-family: sans-serif
+  font-size: 24px
+  padding: 2px 3px
+  border:
+    right: 1px white solid
+
+.tabActive
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, .4))
+
+#loginForm
   display: grid
-  padding: 10px 0px
+  grid-template-columns: auto auto
+  grid-template-rows: auto auto auto
   grid-column-gap: 10px
   grid-row-gap: 10px
-  grid-template-columns: auto auto
-  grid-template-rows: auto auto
-  grid-template-areas: "labelName inputName" "labelPassword inputPassword"
 
-#loginLabelName
-  grid-area: labelName
+#loginContainer
+  padding: 10px
 
-#loginLabelPassword
-  grid-area: labelPassword
-
-#loginName
-  grid-area: inputName
-
-#loginPassword
-  grid-area: inputPassword
-
-#loginAlternative
-  text-align: center
+#registerContainer
+  padding: 10px
 
 #loginSubmit
+  padding: 3px
+  margin-top: 10px
+  text-transform: capitalize
   float: right
 
-hr
-  margin: 8px
-  border-bottom: 1px white solid
-  width: 100%
+#loginErrorContainer
+  grid-column-end: 3
+  grid-column-start: 1
+  text-align: center
+
+.animation-fade
+  animation: fadeOut
+  animation-duration: 3s
 
 
-input[type="button" i], input[type="submit" i]
-  padding: 3px 5px
-  margin: 2px
-  text-transform: capitalize
+@keyframes fadeOut
+  0%
+    opacity: 1
+  40%
+    opacity: 0.3
+  100%
+    opacity: 0.2

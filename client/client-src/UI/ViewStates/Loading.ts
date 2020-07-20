@@ -16,8 +16,6 @@ class LoadingViewState extends ViewState {
         this.uiController.uiElements.loadingUI.display();
         this.game.assetManager.on("error", function (data) {
             self.uiController.uiElements.loadingUI.setMessage(`Failed: ${data.message}`);
-
-
         });
 
         this.game.assetManager.on("progress", function (data) {
@@ -28,7 +26,7 @@ class LoadingViewState extends ViewState {
         this.game.assetManager.on("finished", function (data) {
             self.uiController.uiElements.loadingUI.setMessage(data.message);
             self.uiController.uiElements.loadingUI.setProgress(100);
-            self.uiController.changeViewState(self.uiController.viewStates.login);
+            self.uiController.changeViewState(self.uiController.viewStates.auth);
         });
 
         this.game.assetManager.init();
@@ -53,6 +51,7 @@ class LoadingViewState extends ViewState {
     async setup() {
 
     }
+
 
 
 }

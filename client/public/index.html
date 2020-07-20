@@ -5,9 +5,16 @@
     <title>Nexus B</title>
     <link rel="stylesheet" type="text/css" href="modules/codemirror/codemirror.css">
     <link rel="stylesheet" type="text/css" href="styles/main.min.css">
+
+    <script src="modules/codemirror/codemirror.js" defer></script>
+    <script src="modules/codemirror/mode/javascript/javascript.js" defer></script>
+    <script src="modules/three.min.js" defer></script>
+    <script src="modules/stats.min.js" defer></script>
+    <script src="modules/socket.io.js" defer></script>
+    <script src="js/bundle.js" defer></script>
+
 </head>
 <body>
-
 <canvas id="main"></canvas>
 <div id="uiContainer">
     <div id="uiBackground" class="hidden"></div>
@@ -38,7 +45,6 @@
                 path: test/path/to/a/random/file.png
             </div>
 
-
             <div class="loadingBarContainer">
                 <div class="loadingBar">
                 </div>
@@ -46,48 +52,34 @@
 
         </div>
 
-        <div id="login" class="box hidden">
-            <form action="#" method="post">
-                <div id="loginContainer">
-                    <label id="loginLabelName" for="loginName">Name/Email:</label>
-                    <input id="loginName" type="text" name="name">
-                    <label id="loginLabelPassword" for="loginPassword">Password:</label>
-                    <input id="loginPassword" type="password" name="password">
+        <div id="authContainer" class="box hidden">
+            <div class="tabContainer">
+                <div class="tab">
+                    Login
                 </div>
-                <input id="loginSubmit" type="submit" value="sign in" name="sign in">
-            </form>
-            <hr>
-            <div id="loginAlternative">
-                <p>
-                    If you don't feel like creating an account<br> you can click the button below and create an
-                    anonymous account.<br>
-                </p>
-                <input id="loginAnonymously" type="button" value="anonymous login">
-            </div>
-        </div>
-
-    </div>
-    <div id="leftContainer">
-        <div id="CodeEditor" class="hidden">
-            <div id="CEFolderStructure">
-
-            </div>
-            <div id="CECodeEditor">
-                <div id="CELineNumbers">
+                <div class="tab">
+                    Register
                 </div>
-                <div id="CECode">
+            </div>
+            <div class="contentContainer">
+                <div id="loginContainer" class="hidden">
+                    <form action="#" method="post">
+                        <div id="loginForm">
+                            <label id="loginLabelName" for="loginName">Name/Email:</label>
+                            <input id="loginName" type="text" name="name">
+                            <label id="loginLabelPassword" for="loginPassword">Password:</label>
+                            <input id="loginPassword" type="password" name="password">
+                            <div id="loginErrorContainer" class=""></div>
+                        </div>
+                        <input id="loginSubmit" type="submit" value="sign in" name="sign in">
+                    </form>
+                </div>
+                <div id="registerContainer" class="hidden">
+                    Doesn't work right now
                 </div>
             </div>
         </div>
     </div>
-
 </div>
-<script src="modules/codemirror/codemirror.js"></script>
-<script src="modules/codemirror/mode/javascript/javascript.js"></script>
-<script src="modules/three.min.js"></script>
-<script src="modules/stats.min.js"></script>
-<script src="modules/socket.io.js"></script>
-<script defer src="js/bundle.js"></script>
-
 </body>
 </html>
