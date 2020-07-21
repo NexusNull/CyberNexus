@@ -16,20 +16,22 @@ class AuthViewState extends ViewState {
 
     async enable(): Promise<any> {
         let authToken = util.getCookie("authToken");
-        let response
+        let response;
         if (authToken) {
             try {
                 response = await this.sendRequest("/auth/validateToken", {authToken});
-                if (response.valid)
+                if (response.valid) {
                     this.authCompleted();
+                    return;
+                }
             } catch (e) {
                 console.error(e);
             }
         }
-        if (response && response.valid) {
-            util.setCookie("authToken", "", 0)
-            this.uiController.uiElements.authUI.display();
-        }
+
+        util.setCookie("authToken", "", 0)
+        this.uiController.uiElements.authUI.display();
+
     }
 
     async setup(): Promise<any> {
