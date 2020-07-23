@@ -6,6 +6,7 @@ abstract class ViewState {
     game: Game;
     uiController: UIController;
     inputController: InputController;
+    isSetup: boolean;
 
     protected constructor(game: Game, uiController: UIController, inputController: InputController) {
         this.game = game;

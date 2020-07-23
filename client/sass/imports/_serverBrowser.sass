@@ -1,0 +1,41 @@
+#serverList
+  overflow-y: auto
+  height: 100%
+  font-size: 20px
+
+.serverEntry
+  display: grid
+  grid-template-rows: auto auto
+  grid-template-columns: 50px 100px auto 80px
+  grid-gap: 10px
+  font-family: sans-serif
+  grid-template-areas: "name name name name" "location players ping join"
+  padding: 5px
+
+.serverName
+  grid-area: name
+  overflow: hidden
+
+.serverLocation
+  grid-area: location
+  overflow: hidden
+
+.serverPing
+  grid-area: ping
+  overflow: hidden
+  text-align: end
+
+.serverPlayerCount
+  grid-area: players
+  overflow: hidden
+  text-align: end
+
+.joinButton
+  grid-area: join
+
+.icon
+  display: inline
+  width: 18px
+  height: 18px
+  position: relative
+  top: 2px

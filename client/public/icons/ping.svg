@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+ <g class="layer">
+  <title>Layer 1</title>
+  <rect fill="#ffffff" height="30" id="svg_1" stroke="#ffffff" width="20" x="20" y="80"/>
+  <rect fill="#ffffff" height="60" id="svg_2" stroke="#ffffff" width="20" x="54.2" y="50"/>
+  <rect fill="#ffffff" height="90" id="svg_4" stroke="#ffffff" width="20" x="89" y="21"/>
+ </g>
+</svg>

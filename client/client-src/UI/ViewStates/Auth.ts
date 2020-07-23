@@ -40,7 +40,7 @@ class AuthViewState extends ViewState {
 
     authCompleted() {
         this.uiController.uiElements.authUI.clearForms();
-        this.uiController.changeViewState(this.uiController.viewStates.debug);
+        this.uiController.changeViewState(this.uiController.viewStates.serverBrowser);
     }
 
     async login(name, password) {
