@@ -4,10 +4,11 @@
  * @constructor
  */
 import * as THREE from 'three';
-import {Model} from "./Model";
+import {Geometries} from "./Geometries";
 import {util} from "../util/Util"
 import {TextureAtlas} from "./TextureAtlas";
 import {EventSystem} from "../util/EventSystem";
+import {Assets} from "./Assets";
 
 
 class AssetManager extends EventSystem {
@@ -20,9 +21,11 @@ class AssetManager extends EventSystem {
     onError: (message, percentage) => void;
     onProgress: (string, number) => void;
     onFinish: (string) => void;
+    assets: Assets;
 
-    constructor() {
+    constructor(assets) {
         super();
+        this.assets = assets;
         this.loadManager = new THREE.LoadingManager();
         this.textureLoader = new THREE.TextureLoader(this.loadManager);
         this.textureAtlasesTextures = new Map();
@@ -81,10 +84,10 @@ class AssetManager extends EventSystem {
             this.textureAtlases.set(atlasData.name, new TextureAtlas(texture, data));
         }
 
-        this.emit("progress", {message: "Creating Models", percentage: 0.2});
-        let modelsData = await util.loadJSON("/data/models.json");
+        this.emit("progress", {message: "Creating Geometries", percentage: 0.2});
+        let modelsData = await util.loadJSON("/data/geometries.json");
         for (let modelData of modelsData) {
-            let model = new Model(modelData, this);
+            let model = new Geometries(modelData, this);
             this.models.set(modelData.name, model);
         }
 

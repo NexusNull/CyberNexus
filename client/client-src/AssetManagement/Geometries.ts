@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {AssetManager} from "./AssetManager";
 
-class Model {
+class Geometries {
     name: string;
     assetManager: AssetManager;
     vertices: number[];
@@ -15,7 +15,6 @@ class Model {
     translucent: boolean;
     sides: [[], [], [], [], [], []];
     faceSide: Uint8Array;
-
 
     constructor(data, assetManager) {
         this.name = data.name;
@@ -48,14 +47,12 @@ class Model {
         }
     };
 
-
     getVertexColor(skyLight, blockLight, pos) {
         return Math.max(Math.min(Math.max(
             skyLight[pos],
             blockLight[pos]
         ), 15), 0) / 15;
     };
-
 
     applyMesh(vertices, normals, faceVertexUvs, vertexColors, modelData, x, y, z, chunk?, face?, orientation?, rotation?) {
         for (let f = 0; f < this.vertices.length / 9; f++) {
@@ -156,5 +153,5 @@ class Model {
 }
 
 export {
-    Model
+    Geometries
 };

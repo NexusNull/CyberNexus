@@ -1,0 +1,12 @@
+[
+  {
+    "name": "uvTest",
+    "path": "/images/uvTest.png",
+    "export": true
+  },
+  {
+    "name": "stone",
+    "path": "/blocks/stone.png",
+    "export": true
+  }
+]

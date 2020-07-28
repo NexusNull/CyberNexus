@@ -3,7 +3,6 @@ const app = express();
 const DB = require("./DB");
 const bcrypt = require("bcrypt");
 
-
 app.use(express.json());
 
 

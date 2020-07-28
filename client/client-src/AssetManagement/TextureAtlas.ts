@@ -16,7 +16,7 @@ class TextureAtlas {
 
     constructor(texture, data) {
         this.name = data.name;
-        this.opts = data.opts || {}
+        this.opts = data.opts || {};
         this.size = data.size;
         this.textures = new Map();
 
@@ -34,7 +34,7 @@ class TextureAtlas {
 
         if (this.opts.vertexColors !== undefined)
             this.material.vertexColors = this.opts.vertexColors;
-        (<MeshLambertMaterial>this.material).wireframe = true;
+
         this.textureUVMap = new Map();
         for (let name in data.textures) {
             this.textures.set(name, data.textures[name]);

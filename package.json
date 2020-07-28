@@ -23,6 +23,7 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "express": "^4.17.1",
+    "pngjs-util": "git+https://github.com/NexusNull/pngjs-util.git#c3b2684099a70b3f56a81d6d61e81353be5e4029",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "sqlite": "^4.0.11",
