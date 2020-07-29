@@ -23,7 +23,7 @@ class AssetManager {
         this.textureAtlases = new Map();
         this.toExport = [];
         this.assetDB = {
-            texture: [],
+            textures: [],
             textureAtlases: [],
         };
         this.data = null;
@@ -114,10 +114,10 @@ class AssetManager {
                 path.join(this.assetPath, "/textures/", texture.path),
                 destPath,
             );
-            this.assetDB.texture.push({
+            this.assetDB.textures.push({
                 name: texture.name,
                 opts: texture.opts,
-                path: "/textures/" + fileName + path.extname(texture.path),
+                path: "/data/textures/" + fileName + path.extname(texture.path),
             });
         }
 
@@ -126,7 +126,7 @@ class AssetManager {
             await textureAtlas[1].writeFile(path.join(this.outputPath, "textureAtlases", textureAtlas[0]));
             this.assetDB.textureAtlases.push({
                 name: textureAtlas[1].name,
-                path: "/textureAtlases/" + textureAtlas[0],
+                path: "/data/textureAtlases/" + textureAtlas[0],
             })
         }
 
