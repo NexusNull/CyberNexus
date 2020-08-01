@@ -1,6 +1,4 @@
 {
-  "name": "block",
-  "type": "blockGeometry",
   "vertices": [
     -0.5,
     0.25,
@@ -260,6 +258,7 @@
     "down": [
       2,
       3
-    ]
+    ],
+    "free": []
   }
 }

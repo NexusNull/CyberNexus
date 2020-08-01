@@ -8,10 +8,9 @@ const outputPath = path.join(__dirname, "../../client/public/data");
 async function main() {
     console.log("clearing directory: " + outputPath);
 
-
     let contents = await fs.promises.readdir(outputPath);
     for (let fileName of contents) {
-        let filePath = path.join(outputPath, fileName)
+        let filePath = path.join(outputPath, fileName);
         if ((await fs.promises.stat(filePath)).isDirectory()) {
             fs.promises.rmdir(filePath, {recursive: true});
         } else {
@@ -22,6 +21,8 @@ async function main() {
     let assetManager = new AssetManager(assetPath, outputPath);
     await assetManager.loadTextures();
     await assetManager.createTextureAtlases();
+    await assetManager.loadGeometries();
+    await assetManager.buildGameGeometries();
     await assetManager.export();
 
 }

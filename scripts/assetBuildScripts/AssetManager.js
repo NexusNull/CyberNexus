@@ -3,7 +3,7 @@ const pngJs_util = require("pngjs-util");
 const TextureAtlas = require("./TextureAtlas");
 const path = require("path");
 const fs = require("fs");
-
+const BlockGeometry = require("./BlockGeometry");
 
 function randStr(length) {
     let alph = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
@@ -21,6 +21,8 @@ class AssetManager {
         this.outputPath = outputPath;
         this.textures = new Map();
         this.textureAtlases = new Map();
+        this.geometries = new Map();
+        this.exportGeometries = [];
         this.toExport = [];
         this.assetDB = {
             textures: [],
@@ -92,6 +94,60 @@ class AssetManager {
 
     }
 
+    async loadGeometries() {
+        let geometries = require(path.join(this.assetPath, "/geometries/Geometries"));
+        for (let geometryData of geometries) {
+            let geometry = null;
+
+            switch (geometryData.type) {
+                case "blockGeometry":
+                    let content;
+                    try {
+                        content = await fs.promises.readFile(path.join(this.assetPath, "/geometries/", geometryData.path))
+                    } catch (e) {
+                        console.error(`Unable to load file: ${path.join(this.assetPath, "/geometries/", geometryData.path)}`);
+                        console.error(e);
+                        continue;
+                    }
+                    let data;
+                    try {
+                        data = JSON.parse(content.toString());
+                    } catch (e) {
+                        console.error(e)
+                    }
+                    geometry = new BlockGeometry();
+                    geometry.clone(data);
+                    break;
+            }
+            if (!geometry) {
+                console.error("Couldn't load geometry");
+                continue;
+            }
+            this.geometries.set(geometryData.name, geometry);
+
+        }
+
+    }
+
+    async buildGameGeometries() {
+        let defs = require(path.join(this.assetPath, "/Blocks"));
+        for (let def of defs) {
+            if (!this.geometries.has(def.geometry)) {
+                console.error(`Couldn't find geometry ${def.name}`);
+                continue;
+            }
+            let geometry = this.geometries.get(def.geometry);
+
+            if (def.rotate) {
+                geometry.rotate(def.rotate);
+            }
+
+            geometry.name = def.name;
+
+            this.exportGeometries.push(geometry);
+        }
+
+    }
 
     async export() {
         let fileNames = new Set();
@@ -122,7 +178,6 @@ class AssetManager {
         }
 
         for (let textureAtlas of this.textureAtlases) {
-
             await textureAtlas[1].writeFile(path.join(this.outputPath, "textureAtlases", textureAtlas[0]));
             this.assetDB.textureAtlases.push({
                 name: textureAtlas[1].name,
@@ -130,7 +185,8 @@ class AssetManager {
             })
         }
 
-        await fs.promises.writeFile(path.join(this.outputPath, "assetDB.json"), JSON.stringify(this.assetDB, null, 4));
+        await fs.promises.writeFile(path.join(this.outputPath, "geometries.json"), JSON.stringify(this.exportGeometries, null,4));
+        await fs.promises.writeFile(path.join(this.outputPath, "assetDB.json"), JSON.stringify(this.assetDB, null));
 
     }
 
