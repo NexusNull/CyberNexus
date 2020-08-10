@@ -18,7 +18,8 @@ module.exports = {
     },
     externals: {
         "socket.io-client": 'io',
-        "three": "THREE"
+        "three": "THREE",
+        "Perlin": "perlin",
     },
     resolve: {
         extensions: ['.ts', ".js"],

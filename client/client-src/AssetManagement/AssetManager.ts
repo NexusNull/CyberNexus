@@ -4,7 +4,6 @@
  * @constructor
  */
 import * as THREE from 'three';
-import {Geometries} from "./Geometries";
 import {util} from "../util/Util"
 import {TextureAtlas} from "./TextureAtlas";
 import {EventSystem} from "../util/EventSystem";
@@ -18,9 +17,6 @@ class AssetManager extends EventSystem {
     textureAtlases: Map<any, TextureAtlas>;
     textures: Map<any, any>;
     models: Map<any, any>;
-    onError: (message, percentage) => void;
-    onProgress: (string, number) => void;
-    onFinish: (string) => void;
     assets: Assets;
 
     constructor(assets) {
@@ -40,6 +36,7 @@ class AssetManager extends EventSystem {
         this.emit("progress", {message: "Loading asset database", percentage: 0});
 
         let assetDB: { textures: any[], textureAtlases: any[] };
+
         try {
             assetDB = await util.loadJSON("/data/assetDB.json");
         } catch (e) {
@@ -49,8 +46,9 @@ class AssetManager extends EventSystem {
         this.emit("progress", {message: "Loading Textures", percentage: .02});
 
         for (let atlasData of assetDB.textureAtlases) {
-            this.textureLoader.load(atlasData.imagePath, function (texture) {
-                self.textureAtlasesTextures.set(atlasData.name, texture);
+            let data = await util.loadJSON(atlasData.path);
+            this.textureLoader.load(data.image, function (texture) {
+                self.textureAtlases.set(atlasData.name, new TextureAtlas(texture, data));
             });
         }
 
@@ -66,6 +64,7 @@ class AssetManager extends EventSystem {
             });
         }
 
+
         this.loadManager.onProgress = function (url, itemsLoaded, itemsTotal) {
             self.emit("progress", {
                 message: "Loaded: " + url,
@@ -77,20 +76,14 @@ class AssetManager extends EventSystem {
             self.loadManager.onLoad = resolve;
         });
 
-        this.emit("progress", {message: "Creating Texture Atlases", percentage: 0.1});
-        for (let atlasData of assetDB.textureAtlases) {
-            let texture = this.textureAtlasesTextures.get(atlasData.name);
-            let data = await util.loadJSON(atlasData.jsonPath);
-            this.textureAtlases.set(atlasData.name, new TextureAtlas(texture, data));
-        }
-
         this.emit("progress", {message: "Creating Geometries", percentage: 0.2});
-        let modelsData = await util.loadJSON("/data/geometries.json");
-        for (let modelData of modelsData) {
-            let model = new Geometries(modelData, this);
-            this.models.set(modelData.name, model);
-        }
 
+
+        let geometries = await util.loadJSON("/data/geometries.json");
+        for (let geometry of geometries) {
+            this.assets.geometries.set(geometry.id, geometry);
+        }
+        console.log(this.assets.geometries)
         this.emit("finished", {message: "Finished!"})
     };
 

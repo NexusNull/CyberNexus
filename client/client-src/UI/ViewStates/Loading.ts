@@ -26,6 +26,8 @@ class LoadingViewState extends ViewState {
         this.game.assetManager.on("finished", function (data) {
             self.uiController.uiElements.loadingUI.setMessage(data.message);
             self.uiController.uiElements.loadingUI.setProgress(100);
+            self.game.demoManager.start();
+            self.game.gameScene.startRender();
             self.uiController.changeViewState(self.uiController.viewStates.auth);
         });
 
@@ -51,7 +53,6 @@ class LoadingViewState extends ViewState {
     async setup() {
 
     }
-
 
 
 }

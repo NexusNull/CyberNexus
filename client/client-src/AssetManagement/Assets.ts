@@ -1,34 +1,15 @@
 import {TextureAtlas} from "./TextureAtlas";
+import {Texture} from "three";
 
 class Assets {
-    textureAtlasesTextures: Map<any, any>;
-    textureAtlases: Map<any, TextureAtlas>;
-    textures: Map<any, any>;
-    geometries: Map<any, any>;
+    textureAtlases: Map<string, TextureAtlas>;
+    textures: Map<string, Texture>;
+    geometries: Map<number, Geometry>;
 
     constructor() {
-
-
-    }
-
-    addModel() {
-
-    }
-
-    addTexture(name, texture) {
-
-    }
-
-    getTexture(name) {
-
-    }
-
-    getTextureAtlas(name): TextureAtlas {
-
-    }
-
-    addTextureAtlas() {
-
+        this.textureAtlases = new Map<string, TextureAtlas>();
+        this.textures = new Map<string, Texture>();
+        this.geometries = new Map<number, Geometry>();
     }
 }
 

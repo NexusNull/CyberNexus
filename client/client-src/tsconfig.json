@@ -3,7 +3,9 @@
     "module": "commonjs",
     "target": "es2015",
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
   },
   "outFile": "../public/js/index.js",
   "exclude": [

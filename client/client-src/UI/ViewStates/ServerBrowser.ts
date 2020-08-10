@@ -29,7 +29,6 @@ class ServerBrowserViewState extends ViewState {
             this.servers.set(server.id, server);
         }
 
-
         setTimeout(async function () {
             while (true) {
                 if (self.uiController.activeViewState == self)
@@ -41,7 +40,7 @@ class ServerBrowserViewState extends ViewState {
 
     async joinServer(id) {
         console.log(`joining server ${id}`);
-        this.uiController.changeViewState(this.uiController.viewStates.debug);
+        await this.uiController.changeViewState(this.uiController.viewStates.game);
     }
 
     async pingAllServers() {

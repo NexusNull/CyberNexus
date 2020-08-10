@@ -1,10 +1,8 @@
 import {Assets} from "../../AssetManagement/Assets";
-import THREE from "three";
+import {BufferGeometry, Float32BufferAttribute} from "three";
 
 class ChunkRenderer {
-    assets: Assets;
-
-    constructor(assets) {
+    constructor(public assets: Assets) {
 
 
     }
@@ -19,7 +17,7 @@ class ChunkRenderer {
             for (let z = 0; z < 16; z++) {
                 for (let x = 0; x < 16; x++) {
                     let i = (y + 1) * 612 + (z + 1) * 18 + x + 1;
-                    let id = data.blocks[i];
+                    let id = data[i];
                     if (id > 0) {
                         let sides = {
                             south: !data[i + 18],
@@ -31,9 +29,10 @@ class ChunkRenderer {
                         };
                         for (let side in sides) {
                             if (sides[side]) {
-                                let vert = this.assets.geometries[id].position.slice(this.assets.geometries[1].sides[side][0] * 9, this.assets.geometries[1].sides[side][1] * 9);
-                                let norm = this.assets.geometries[id].position.slice(this.assets.geometries[1].sides[side][0] * 9, this.assets.geometries[1].sides[side][1] * 9);
-                                let uv = this.assets.geometries[id].position.slice(this.assets.geometries[1].sides[side][0] * 6, this.assets.geometries[1].sides[side][1] * 6);
+                                let geometry = this.assets.geometries.get(id);
+                                let vert = geometry.vertices.slice(geometry.sides[side][0] * 9, (geometry.sides[side][1] + 1) * 9);
+                                let norm = geometry.normals.slice(geometry.sides[side][0] * 9, (geometry.sides[side][1] + 1) * 9);
+                                let uv = geometry.uvs.slice(geometry.sides[side][0] * 6, (geometry.sides[side][1] + 1) * 6);
 
                                 for (let i = 0; i < vert.length / 3; i++) {
                                     geo.vertices.push(
@@ -49,12 +48,12 @@ class ChunkRenderer {
                 }
             }
         }
-        let geometry = new THREE.BufferGeometry();
-        geometry.setAttribute("position", new THREE.Float32BufferAttribute(geo.vertices, 3));
-        geometry.setAttribute("normal", new THREE.Float32BufferAttribute(geo.normals, 3));
-        geometry.setAttribute("uv", new THREE.Float32BufferAttribute(geo.uvCoords, 2));
+        let geometry = new BufferGeometry();
+        geometry.setAttribute("position", new Float32BufferAttribute(geo.vertices, 3));
+        geometry.setAttribute("normal", new Float32BufferAttribute(geo.normals, 3));
+        geometry.setAttribute("uv", new Float32BufferAttribute(geo.uvCoords, 2));
 
-        return new THREE.Mesh(geometry, this.assets.getTextureAtlas(textureAtlasName).material);
+        return geometry;
     }
 }
 
