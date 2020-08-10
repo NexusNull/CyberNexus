@@ -136,14 +136,14 @@ class AssetManager {
                 console.error(`Couldn't find geometry ${def.name}`);
                 continue;
             }
-            let geometry = this.geometries.get(def.geometry);
+            let geometry = new BlockGeometry().clone(this.geometries.get(def.geometry));
 
             if (def.rotate) {
                 geometry.rotate(def.rotate);
             }
 
             geometry.name = def.name;
-
+            geometry.id = def.id;
             this.exportGeometries.push(geometry);
         }
 
@@ -185,7 +185,7 @@ class AssetManager {
             })
         }
 
-        await fs.promises.writeFile(path.join(this.outputPath, "geometries.json"), JSON.stringify(this.exportGeometries, null,4));
+        await fs.promises.writeFile(path.join(this.outputPath, "geometries.json"), JSON.stringify(this.exportGeometries, null, 4));
         await fs.promises.writeFile(path.join(this.outputPath, "assetDB.json"), JSON.stringify(this.assetDB, null));
 
     }

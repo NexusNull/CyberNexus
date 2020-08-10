@@ -1,0 +1,30 @@
+[
+  {
+    "id": 0,
+    "name": "stone",
+    "geometry": "block"
+  },
+  {
+    "id": 1,
+    "name": "ramp_north",
+    "geometry": "ramp"
+  },
+  {
+    "id": 2,
+    "name": "ramp_east",
+    "geometry": "ramp",
+    "rotate": 1
+  },
+  {
+    "id": 3,
+    "name": "ramp_south",
+    "geometry": "ramp",
+    "rotate": 2
+  },
+  {
+    "id": 4,
+    "name": "ramp_west",
+    "geometry": "ramp",
+    "rotate": 3
+  }
+]

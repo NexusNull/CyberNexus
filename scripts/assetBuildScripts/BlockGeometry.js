@@ -36,6 +36,7 @@ class BlockGeometry {
             free: data.sides.free.slice(),
         };
         this.textures = data.textures.slice();
+        return this;
     }
 
     rotate(dir) {
@@ -69,7 +70,6 @@ class BlockGeometry {
         this.sides.south = oldSides[posMod(2 + dir, 4)];
         this.sides.west = oldSides[posMod(3 + dir, 4)];
 
-        
 
     }
 
