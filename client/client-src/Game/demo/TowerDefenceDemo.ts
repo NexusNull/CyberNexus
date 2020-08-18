@@ -1,25 +1,36 @@
 import {GameScene} from "../rendering/GameScene";
-import {AmbientLight, BoxGeometry, Material, Mesh, MeshBasicMaterial, MeshLambertMaterial, PointLight} from "three";
-import {Chunk} from "../Chunk";
+import {
+    AmbientLight,
+    Material,
+    Mesh,
+    MeshLambertMaterial,
+    PointLight,
+    Vector3
+} from "three";
+import {Beam} from "../rendering/Beam";
 import {Assets} from "../../AssetManagement/Assets";
 import {ChunkRenderer} from "../rendering/ChunkRenderer";
 
 declare let perlin: perlin;
+declare var window: any;
 
 class TowerDefenceDemo {
     intervalID: number;
     materials: Array<Material>;
     meshes: Array<Mesh>;
     startTime: Date;
-    chunks: Array<Mesh>
+    chunks: Array<Mesh>;
 
     constructor(public assets: Assets, public gameScene: GameScene, public onDone: () => void) {
         this.chunks = [];
         let chunkRenderer = new ChunkRenderer(assets);
-
-        let blueMat = new MeshLambertMaterial({color: 0x001b00});
-        let pLight = new PointLight(0xffffff, 0.7, 200, 0.1);
-        let aLight = new AmbientLight(0xffffff, 0.2);
+        let beam = new Beam(new Vector3(10, 18, 10), new Vector3(-10, 18, -10), 0.2, 0.5, assets.textures.get("uvTest"));
+        window.beam = beam;
+        gameScene.world.position.x = 20;
+        gameScene.world.add(beam.mesh);
+        let greenMat = new MeshLambertMaterial({color: 0x001b00});
+        let pLight = new PointLight(0xffffff, 0.7, 200, 0.5);
+        let aLight = new AmbientLight(0xffffff, 0.9);
 
         gameScene.world.add(pLight);
         gameScene.world.add(aLight);
@@ -40,7 +51,7 @@ class TowerDefenceDemo {
                 }
 
                 let geometry = chunkRenderer.renderChunk(blockData, null);
-                let chunk = new Mesh(geometry, blueMat);
+                let chunk = new Mesh(geometry, greenMat);
                 chunk.position.x = 16 * _x - 8;
                 chunk.position.z = 16 * _z - 8;
                 this.chunks.push(chunk);
@@ -53,15 +64,14 @@ class TowerDefenceDemo {
         this.gameScene.mainCamera.position.z = 35;
 
         this.gameScene.mainCamera.rotation.x = -Math.PI * 0.3;
-        this.materials = [blueMat];
+        this.materials = [greenMat];
     }
 
     start() {
-
         this.startTime = new Date();
         this.intervalID = setInterval(() => {
-            this.gameScene.world.rotation.y += 0.01
-            if (new Date().getTime() - this.startTime.getTime() > 20000) {
+            this.gameScene.world.rotation.y += 0.001;
+            if (new Date().getTime() - this.startTime.getTime() > 20000000) {
                 this.stop();
                 this.onDone();
             }
