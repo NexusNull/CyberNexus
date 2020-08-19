@@ -6,6 +6,7 @@ class Authentication {
         this.DB = DB;
         app.post("/auth/login", async (req, res) => {
             let row = await this.DB.getUserByName(req.body.name);
+
             if (row && await bcrypt.compare(req.body.password, row.password)) {
                 let authToken = this.generateAuthToken();
                 this.tokens.set(authToken, row.id);

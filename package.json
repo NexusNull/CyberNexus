@@ -23,20 +23,20 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "express": "^4.17.1",
-    "pngjs-util": "git+https://github.com/NexusNull/pngjs-util.git#c3b2684099a70b3f56a81d6d61e81353be5e4029",
+    "pngjs-util": "git+https://github.com/NexusNull/pngjs-util.git",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
-    "sqlite": "^4.0.11",
+    "sqlite": "^4.0.14",
     "sqlite3": "^5.0.0",
     "three": "^0.118.3"
   },
   "devDependencies": {
-    "concurrently": "^5.2.0",
-    "sass": "^1.26.9",
+    "concurrently": "^5.3.0",
+    "sass": "^1.26.10",
     "ts-loader": "^7.0.5",
-    "typescript": "^3.9.5",
+    "typescript": "^3.9.7",
     "watch": "^1.0.2",
-    "webpack": "^4.43.0",
+    "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   }
 }
