@@ -5,6 +5,7 @@ const DB = require("./DB");
 const Authentication = require("./Authentication");
 const ServerList = require("./ServerList");
 const FileSystem = require("./FileSystem")
+const bodyParser = require('body-parser');
 app.use(express.json());
 
 
@@ -29,10 +30,11 @@ class WebServer {
             next();
         });
         app.use('/', express.static(__dirname + '/../client/public'));
-
+        app.use(bodyParser.text());
         let serverList = new ServerList(app, this.DB);
         let authentication = new Authentication(app, this.DB);
         let fileSystem = new FileSystem(app, this.DB, authentication);
+
         app.use(function (req, res) {
             res.status(404).send(" 404: Page not found");
         });
