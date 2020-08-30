@@ -142,6 +142,29 @@ class Util {
             xobj.send(null);
         })
     }
+
+    async sendRequest(method, url, body?) {
+        return new Promise(function (resolve, reject) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState === 4) {
+                    switch (xhttp.status) {
+                        case 200:
+                            resolve(xhttp.responseText);
+                            break;
+                        case 404:
+                            reject(`${xhttp.responseText} for ${xhttp.responseURL}`);
+                            break;
+                    }
+                }
+            };
+            xhttp.open(method, url, true);
+            xhttp.send(body);
+        });
+    }
 };
+
 let util = new Util();
+declare let window: any;
+window.util = util;
 export {util}

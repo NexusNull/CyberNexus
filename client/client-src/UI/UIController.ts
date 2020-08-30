@@ -8,24 +8,31 @@ import {AuthViewState} from "./ViewStates/Auth";
 import {ServerBrowserViewState} from "./ViewStates/ServerBrowser";
 import {GameViewSate} from "./ViewStates/Game";
 import {RenderUI} from "./UIElements/RenderUI";
+import {FileSystemUI} from "./UIElements/FileSystemUI";
+import {CodeEditorUI} from "./UIElements/CodeEditorUI";
+import {CodeEditorViewState} from "./ViewStates/CodeEditor";
 
 class UIController {
     game: Game;
     activeViewState: any;
     activeKeyMap: any;
     inputController: InputController;
-    viewStates: {
-        loading: LoadingViewState;
-        auth: AuthViewState;
-        serverBrowser: ServerBrowserViewState;
-        game: GameViewSate;
-    };
     uiElements: {
         loadingUI: LoadingUI;
         authUI: AuthUI;
         serverBrowserUI: ServerBrowserUI;
         renderUI: RenderUI;
+        codeEditorUI: CodeEditorUI;
+        fileSystemUI: FileSystemUI;
     };
+    viewStates: {
+        loading: LoadingViewState;
+        auth: AuthViewState;
+        serverBrowser: ServerBrowserViewState;
+        game: GameViewSate;
+        codeEditor: CodeEditorViewState;
+    };
+
 
     constructor(game: Game, inputController: InputController) {
         this.game = game;
@@ -38,6 +45,8 @@ class UIController {
             authUI: new AuthUI(this),
             serverBrowserUI: new ServerBrowserUI(this),
             renderUI: new RenderUI(this),
+            fileSystemUI: new FileSystemUI(1),
+            codeEditorUI: new CodeEditorUI(),
         };
 
         this.viewStates = {
@@ -45,6 +54,7 @@ class UIController {
             auth: new AuthViewState(game, this, inputController),
             serverBrowser: new ServerBrowserViewState(game, this, inputController),
             game: new GameViewSate(game, this, inputController),
+            codeEditor: new CodeEditorViewState(game, this, inputController),
         };
 
     };

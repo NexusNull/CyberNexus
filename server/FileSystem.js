@@ -36,7 +36,7 @@ class FileSystem {
                 let name = path.parse(objectPath).base;
                 if (this.validateFileName(name)) {
                     try {
-                        console.log(await fs.promises.writeFile(objectPath, ""));
+                        console.log(await fs.promises.writeFile(objectPath, req.body));
                         res.send("ok")
                     } catch (e) {
                         res.status(500).send("failed");
@@ -46,39 +46,6 @@ class FileSystem {
                     res.status(400).send("failed: invalid File name")
                 }
             }
-        });
-
-        app.put("/fs/*", async (req, res) => {// modify a resource
-
-            let user = {
-                name: "somename",
-                id: 1,
-            };
-
-
-            let url = path.normalize(req.url.replace("fs/", ""));
-            let objectPath = path.join(clientDir, "" + user.id, url);
-
-            let stats;
-            try {
-                stats = await fs.promises.stat(objectPath);
-            } catch (e) {
-                console.log(`User: ${user.name} tried to delete ${objectPath} which doesn't exist.`)
-                res.status(404).send(" 404: file or directory not found");
-                return;
-            }
-            console.log(req.body)
-            if (stats.isFile()) {
-                try {
-                    await fs.promises.writeFile(objectPath, req.body)
-                    res.send("ok")
-                } catch (e) {
-                    console.log(`User: ${user.name} failed to delete ${objectPath} which doesn't exist.`)
-                    res.status(404).send(" 404: file or directory not found");
-                }
-            }
-
-
         });
 
         app.delete("/fs/*", async (req, res) => {

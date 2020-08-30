@@ -40,7 +40,7 @@ class ServerBrowserViewState extends ViewState {
 
     async joinServer(id) {
         console.log(`joining server ${id}`);
-        await this.uiController.changeViewState(this.uiController.viewStates.game);
+        await this.uiController.changeViewState(this.uiController.viewStates.codeEditor);
     }
 
     async pingAllServers() {
