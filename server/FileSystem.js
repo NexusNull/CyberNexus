@@ -130,12 +130,12 @@ class FileSystem {
                         stats = await fs.promises.stat(elementPath);
                     } catch (e) {
                         console.error(`Failed to get stats for element ${elementPath}`);
-                        res.status(500).send("internal Server error")
+                        res.status(500).send("internal Server error");
                         continue;
                     }
 
                     let data = {
-                        path: path.join(url, element),
+                        path: path.sep === "/" ? path.join(url, element) : path.join(url, element).split(path.sep).join("/"),
                     };
 
                     if (stats.isDirectory()) {
@@ -150,7 +150,7 @@ class FileSystem {
                     response.push(data);
                 }
                 res.type("json");
-                res.send(JSON.stringify(response))
+                res.send(JSON.stringify(response));
                 return;
             } else if (stats.isFile()) { //It may be a symlink which we do not want to take
                 res.sendFile(objectPath);
