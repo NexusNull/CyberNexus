@@ -1,5 +1,8 @@
 import {FileSystemUI} from "./FileSystemUI";
 import {FileUI} from "./FileUI";
+import {Modal} from "../UIHelpers/Modal";
+import {ContextMenuUI} from "../UIHelpers/ContextMenuUI";
+
 
 class DirectoryUI {
     fileSystemUI: FileSystemUI;
@@ -53,6 +56,184 @@ class DirectoryUI {
             this.toggle();
         });
 
+        this.element.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+
+            e.cancelBubble = true;
+            let contextMenu = new ContextMenuUI();
+            contextMenu.setStructure([
+                {
+                    type: "subSelection",
+                    text: "New:",
+                    structure: [
+                        {
+                            type: "selection",
+                            text: "Directory",
+                            fn: () => {
+                                let modal = new Modal();
+                                let element = document.createElement("div");
+
+                                element.style.background = "#ababab";
+                                element.style.padding = "5px";
+                                element.innerHTML = `
+                                    <form>
+                                        <p style="margin: 5px 0">
+                                            <input class="inputNewName" name="name" type="text" value="${this.name}" >
+                                        </p>
+                                        <input class="buttonCancel" type="button" value="Cancel">
+                                        <input class="buttonSubmit" style="float:right;" type="submit" value="Create Directory">
+                                    </form>
+                                `;
+
+                                let form = element.getElementsByTagName("form")[0];
+                                let buttonCancel = <HTMLInputElement>element.getElementsByClassName("buttonCancel")[0];
+
+                                form.addEventListener("submit", (e) => {
+                                    e.preventDefault();
+                                    modal.destroy();
+
+                                    let nameElement = <HTMLInputElement>form.getElementsByClassName("inputNewName")[0];
+                                    this.add(new DirectoryUI(this.fileSystemUI, this, nameElement.value))
+
+                                });
+
+                                buttonCancel.addEventListener("click", (e) => {
+                                    modal.destroy();
+                                });
+
+                                modal.setContent(element);
+                                modal.display();
+                            }
+                        },
+                        {
+                            type: "selection",
+                            text: "File",
+                            fn: () => {
+                                let modal = new Modal();
+                                let element = document.createElement("div");
+
+                                element.style.background = "#ababab";
+                                element.style.padding = "5px";
+                                element.innerHTML = `
+                                    <form>
+                                        <p style="margin: 5px 0">
+                                            <input class="inputNewName" name="name" type="text" value="${this.name}" >
+                                        </p>
+                                        <input class="buttonCancel" type="button" value="Cancel">
+                                        <input class="buttonSubmit" style="float:right;" type="submit" value="Create File">
+                                    </form>
+                                `;
+
+                                let form = element.getElementsByTagName("form")[0];
+                                let buttonCancel = <HTMLInputElement>element.getElementsByClassName("buttonCancel")[0];
+
+                                form.addEventListener("submit", (e) => {
+                                    e.preventDefault();
+                                    modal.destroy();
+
+                                    let nameElement = <HTMLInputElement>form.getElementsByClassName("inputNewName")[0];
+                                    this.add(new FileUI(this.fileSystemUI, this, nameElement.value))
+                                });
+
+                                buttonCancel.addEventListener("click", (e) => {
+                                    modal.destroy();
+                                });
+
+                                modal.setContent(element);
+                                modal.display();
+                            }
+                        },
+                    ],
+                },
+                {
+                    type: "hl"
+                },
+                {
+                    type: "selection",
+                    text: "Rename",
+                    fn: () => {
+                        let modal = new Modal();
+                        let element = document.createElement("div");
+
+                        element.style.background = "#ababab";
+                        element.style.padding = "5px";
+                        element.innerHTML = `
+                            <form>
+                                <p style="margin: 5px 0">
+                                    <input class="inputNewName" name="name" type="text" value="${this.name}" >
+                                </p>
+                                <input class="buttonCancel" type="button" value="Cancel">
+                                <input class="buttonSubmit" style="float:right;" type="submit" value="Rename">
+                            </form>
+                        `;
+
+                        let form = element.getElementsByTagName("form")[0];
+                        let buttonCancel = <HTMLInputElement>element.getElementsByClassName("buttonCancel")[0];
+
+                        form.addEventListener("submit", (e) => {
+                            e.preventDefault();
+                            modal.destroy();
+                            console.log(form);
+                            let nameElement = <HTMLInputElement>form.getElementsByClassName("inputNewName")[0];
+                            this.rename(nameElement.value);
+                        });
+
+                        buttonCancel.addEventListener("click", (e) => {
+                            modal.destroy();
+                        });
+
+                        modal.setContent(element);
+                        modal.display();
+                    }
+                },
+                {
+                    type: "selection",
+                    text: "Delete",
+                    fn: () => {
+                        let modal = new Modal();
+                        let element = document.createElement("div");
+
+
+                        element.style.background = "#ababab";
+                        element.style.padding = "5px";
+
+                        element.innerHTML = `
+                            <p>Are you sure you want to delete the '${this.name}' directory?<br>
+                                All files inside will be irrecoverable. 
+                            </p>
+                            <button class="buttonCancel">Cancel</button>
+                            <button class="buttonOK">OK</button>
+                        `;
+
+                        let buttonCancel = element.getElementsByClassName("buttonCancel")[0];
+                        let buttonOK = element.getElementsByClassName("buttonOK")[0];
+
+                        buttonCancel.addEventListener("click", () => {
+                            modal.destroy();
+                        });
+
+                        buttonOK.addEventListener("click", () => {
+                            this.delete();
+                            modal.destroy();
+                        });
+
+                        modal.setContent(element);
+                        modal.display();
+                    }
+                }
+            ]);
+            contextMenu.display({x: e.clientX, y: e.clientY});
+        });
+    }
+
+    rename(newName) {
+        this.name = newName;
+        let dirName = <HTMLSpanElement>this.element.getElementsByClassName("directoryName")[0]
+        dirName.innerText = newName;
+    }
+
+    delete() {
+        this.element.parentElement.removeChild(this.element);
     }
 
     toggle() {
@@ -83,7 +264,6 @@ class DirectoryUI {
 
     add(fsElement: FileUI | DirectoryUI) {
         this.childContainer.appendChild(fsElement.element);
-
     }
 }
 

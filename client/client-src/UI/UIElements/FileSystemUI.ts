@@ -1,14 +1,16 @@
 import {DirectoryUI} from "./DirectoryUI";
 import {FileUI} from "./FileUI";
+import {UIController} from "../UIController";
 
 class FileSystemUI {
+    uiController: UIController;
     container: HTMLDivElement;
     directories: DirectoryUI;
     files: Map<number, FileUI>;
     rootDir: DirectoryUI;
 
-    constructor(codeEditorUI) {
-        var self = this;
+    constructor(uiController: UIController) {
+        this.uiController = uiController;
         this.container = <HTMLDivElement>document.getElementById("CEFolderStructure");
         this.rootDir = new DirectoryUI(this, null, "admin");
 

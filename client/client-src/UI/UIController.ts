@@ -11,6 +11,7 @@ import {RenderUI} from "./UIElements/RenderUI";
 import {FileSystemUI} from "./UIElements/FileSystemUI";
 import {CodeEditorUI} from "./UIElements/CodeEditorUI";
 import {CodeEditorViewState} from "./ViewStates/CodeEditor";
+import {ContextMenuUI} from "./UIHelpers/ContextMenuUI";
 
 class UIController {
     game: Game;
@@ -24,6 +25,7 @@ class UIController {
         renderUI: RenderUI;
         codeEditorUI: CodeEditorUI;
         fileSystemUI: FileSystemUI;
+        contextMenuUI: ContextMenuUI;
     };
     viewStates: {
         loading: LoadingViewState;
@@ -45,8 +47,9 @@ class UIController {
             authUI: new AuthUI(this),
             serverBrowserUI: new ServerBrowserUI(this),
             renderUI: new RenderUI(this),
-            fileSystemUI: new FileSystemUI(1),
-            codeEditorUI: new CodeEditorUI(),
+            fileSystemUI: new FileSystemUI(this),
+            codeEditorUI: new CodeEditorUI(this),
+            contextMenuUI: new ContextMenuUI(this),
         };
 
         this.viewStates = {
@@ -58,6 +61,8 @@ class UIController {
         };
 
     };
+
+
 
     async changeViewState(viewState) {
         if (this.activeViewState) {
