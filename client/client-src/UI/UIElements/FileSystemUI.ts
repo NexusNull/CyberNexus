@@ -15,29 +15,53 @@ class FileSystemUI {
         this.rootDir = new DirectoryUI(this, null, "admin");
 
         this.container.appendChild(this.rootDir.element);
-        let test = new DirectoryUI(this, this.rootDir, "test");
-        let test1 = new DirectoryUI(this, this.rootDir, "test1");
-        let test2 = new DirectoryUI(this, this.rootDir, "test2");
-        let test3 = new DirectoryUI(this, this.rootDir, "test3");
-        let test4 = new DirectoryUI(this, this.rootDir, "test4");
 
-        let testFile = new FileUI(this, test, "asd.js")
     }
 
-    addFile(path, name, type?) {
+    addFile(path) {
+        let parsedPath = this.parsePath(path);
+        let current = this.rootDir;
 
-    };
-
-    addDirectory(path, name) {
-
-    };
-
-    parsePath(path) {
-        let elements = path.split("/").filter((elem) => elem.length > 0);
-        return {
-            elements,
-            basename: elements
+        for (let segment of parsedPath.segments) {
+            let temp = current.getChild(segment);
+            if (!(temp instanceof DirectoryUI))
+                throw new Error(`${segment} is not a directory`);
+            current = temp;
         }
+
+        new FileUI(this, current, parsedPath.base);
+    };
+
+    addDirectory(path) {
+        let parsedPath = this.parsePath(path);
+        let current = this.rootDir;
+
+        for (let segment of parsedPath.segments) {
+            let temp = current.getChild(segment);
+            if (!(temp instanceof DirectoryUI))
+                throw new Error(`${segment} is not a directory`);
+            current = temp;
+        }
+        new DirectoryUI(this, current, parsedPath.base);
+    };
+
+    parsePath(path: string) {
+        let elements = path.split("/").filter((elem) => elem.length > 0);
+        let segments = elements.slice(0, -1);
+        let base = elements.slice(-1)[0];
+
+        let data: { elements: string[], segments: string[], base: string, ext: string } = {
+            elements,
+            segments,
+            base,
+            ext: null
+        };
+
+        let split = base.split(".");
+        if (split.length > 1)
+            data.ext = "." + split.slice(-1);
+
+        return data;
     }
 
     getDirectoryByPath(path): DirectoryUI {

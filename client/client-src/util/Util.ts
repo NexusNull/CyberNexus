@@ -143,7 +143,7 @@ class Util {
         })
     }
 
-    async sendRequest(method, url, body?) {
+    async sendRequest(method, url, body?): Promise<string> {
         return new Promise(function (resolve, reject) {
             let xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {

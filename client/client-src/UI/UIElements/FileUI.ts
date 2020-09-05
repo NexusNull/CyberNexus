@@ -32,8 +32,10 @@ class FileUI {
                 level++;
             }
             this.element.style.paddingLeft = level * 27 + "px";
-            parent.add(this);
+            parent.addChild(this);
         }
+
+
     }
 }
 

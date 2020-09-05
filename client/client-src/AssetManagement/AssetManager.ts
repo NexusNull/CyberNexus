@@ -77,7 +77,7 @@ class AssetManager extends EventSystem {
         });
 
         this.emit("progress", {message: "Creating Geometries", percentage: 0.2});
-        
+
         let geometries = await util.loadJSON("/data/geometries.json");
         for (let geometry of geometries) {
             this.assets.geometries.set(geometry.id, geometry);

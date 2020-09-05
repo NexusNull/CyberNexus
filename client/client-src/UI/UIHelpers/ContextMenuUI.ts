@@ -61,7 +61,6 @@ class ContextMenuUI {
                         let subMenu = new ContextMenuUI(this);
                         this.subMenus.push(subMenu);
                         subMenu.setStructure(declaration.structure);
-                        console.log(elem.getBoundingClientRect());
                         subMenu.display({
                             x: elem.getBoundingClientRect().right + 6,
                             y: elem.getBoundingClientRect().y + elem.getBoundingClientRect().height / 2 - 2

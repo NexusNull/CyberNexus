@@ -12,7 +12,7 @@ class DirectoryUI {
     element: HTMLDivElement;
     childContainer: HTMLDivElement;
     header: HTMLDivElement;
-    contents: Map<string, DirectoryUI | FileUI>
+    children: Map<string, DirectoryUI | FileUI>;
 
     constructor(fileSystemUI: FileSystemUI, parent: DirectoryUI, name: string) {
 
@@ -20,6 +20,7 @@ class DirectoryUI {
         this.parent = parent;
         this.name = name;
         this.collapsed = true;
+        this.children = new Map();
 
         this.element = document.createElement("div");
         this.element.classList.add("directory", "collapsed");
@@ -45,7 +46,7 @@ class DirectoryUI {
                 level++;
             }
             this.header.style.paddingLeft = level * 27 + "px";
-            parent.add(this);
+            parent.addChild(this);
         }
 
         this.element.addEventListener("click", (e) => {
@@ -93,7 +94,7 @@ class DirectoryUI {
                                     modal.destroy();
 
                                     let nameElement = <HTMLInputElement>form.getElementsByClassName("inputNewName")[0];
-                                    this.add(new DirectoryUI(this.fileSystemUI, this, nameElement.value))
+                                    this.addChild(new DirectoryUI(this.fileSystemUI, this, nameElement.value))
 
                                 });
 
@@ -132,7 +133,7 @@ class DirectoryUI {
                                     modal.destroy();
 
                                     let nameElement = <HTMLInputElement>form.getElementsByClassName("inputNewName")[0];
-                                    this.add(new FileUI(this.fileSystemUI, this, nameElement.value))
+                                    this.addChild(new FileUI(this.fileSystemUI, this, nameElement.value))
                                 });
 
                                 buttonCancel.addEventListener("click", (e) => {
@@ -213,7 +214,7 @@ class DirectoryUI {
                         });
 
                         buttonOK.addEventListener("click", () => {
-                            this.delete();
+                            this.parent.removeChild(this.name);
                             modal.destroy();
                         });
 
@@ -230,10 +231,6 @@ class DirectoryUI {
         this.name = newName;
         let dirName = <HTMLSpanElement>this.element.getElementsByClassName("directoryName")[0]
         dirName.innerText = newName;
-    }
-
-    delete() {
-        this.element.parentElement.removeChild(this.element);
     }
 
     toggle() {
@@ -262,8 +259,52 @@ class DirectoryUI {
         this.childContainer.classList.remove("hidden")
     }
 
-    add(fsElement: FileUI | DirectoryUI) {
+    getChild(name: string): FileUI | DirectoryUI {
+        return this.children.get(name);
+    }
+
+    addChild(fsElement: FileUI | DirectoryUI) {
+        this.children.set(fsElement.name, fsElement);
+        for (let child of this.childContainer.children) {
+            if (child.classList.contains("directory") && fsElement.element.classList.contains("directory")) {
+                let childElement = <HTMLSpanElement>child.getElementsByClassName("directoryName")[0];
+                let elementName = fsElement.name;
+                if (childElement.innerText.localeCompare(elementName) > -1) {
+                    this.childContainer.insertBefore(fsElement.element, child);
+                    return;
+                }
+            } else if (child.classList.contains("file") && fsElement.element.classList.contains("file")) {
+                let childElement = <HTMLSpanElement>child.getElementsByClassName("fileName")[0];
+                let elementName = fsElement.name;
+                if (childElement.innerText.localeCompare(elementName) > -1) {
+                    this.childContainer.insertBefore(fsElement.element, child);
+                    return;
+                }
+            } else if (child.classList.contains("file") && fsElement.element.classList.contains("directory")) {
+                //insertBefore
+                this.childContainer.insertBefore(fsElement.element, child);
+                return;
+            }
+        }
         this.childContainer.appendChild(fsElement.element);
+    }
+
+
+    removeChild(name: string) {
+        let child = this.children.get(name);
+        this.element.removeChild(child.element);
+        this.children.delete(name);
+    }
+
+    renameChild(name: string, newName: string) {
+        if (this.children.has("newName"))
+            throw new Error(`${newName} is already taken`);
+        if (!this.children.has(name))
+            throw new Error(`${name} doesn't exist`);
+
+        let child = this.children.get(name);
+        this.children.delete(name);
+        this.children.set(newName, child);
     }
 }
 
