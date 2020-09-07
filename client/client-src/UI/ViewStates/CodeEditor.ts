@@ -5,11 +5,15 @@ import {InputController} from "../InputController";
 import {fileSystem} from "../../Game/helpers/FileSystemAPI";
 import {DirectoryUI} from "../UIElements/DirectoryUI";
 import {FileSystemUI} from "../UIElements/FileSystemUI";
+import {FileUI} from "../UIElements/FileUI";
 
 class CodeEditorViewState extends ViewState {
+    currentFile: FileUI;
 
     constructor(game: Game, uiController: UIController, inputController: InputController) {
         super(game, uiController, inputController);
+        this.currentFile = null;
+
     }
 
     async disable(): Promise<any> {
@@ -43,6 +47,21 @@ class CodeEditorViewState extends ViewState {
         }
     }
 
+    async openFile(fileUI) {
+        if (this.currentFile)
+            this.currentFile.unselect();
+
+        this.currentFile = fileUI;
+        this.currentFile.select();
+        let path = this.currentFile.getPath();
+        let data = await fileSystem.getFile(path);
+        this.uiController.uiElements.codeEditorUI.editor.setValue(data);
+    }
+
+    async saveFile(content) {
+        let path = this.currentFile.getPath();
+        await fileSystem.writeFile(path, content);
+    }
 }
 
 export {CodeEditorViewState}

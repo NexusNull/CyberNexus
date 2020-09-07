@@ -18,15 +18,15 @@ class FileSystemAPI {
     }
 
     async getFile(path) {
-        return await util.sendRequest("POST", "/fs/" + path);
+        return await util.sendRequest("GET", "/fs/" + path);
     }
 
     async deleteFile(path) {
-        return await util.sendRequest("POST", "/fs/" + path);
+        return await util.sendRequest("DELETE", "/fs/" + path);
     }
 
     async deleteDirectory(path) {
-        return await util.sendRequest("POST", "/fs/" + path);
+        return await util.sendRequest("DELETE", "/fs/" + path);
     }
 
     validateDirectoryName(name) {

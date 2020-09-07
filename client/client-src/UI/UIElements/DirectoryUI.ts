@@ -49,6 +49,12 @@ class DirectoryUI {
             parent.addChild(this);
         }
 
+        this.header.getElementsByClassName("directoryArrow")[0].addEventListener("click", (e) => {
+            e.cancelBubble = true;
+            e.preventDefault();
+            this.toggle();
+        });
+
         this.element.addEventListener("click", (e) => {
             if (e.detail % 2 != 0) // double click gate
                 return;

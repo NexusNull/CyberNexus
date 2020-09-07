@@ -24,6 +24,11 @@ class FileUI {
             <span class="fileName">${name}</span>
         `;
 
+        this.element.addEventListener("click", (e) => {
+            e.cancelBubble = true;
+            this.fileSystemUI.uiController.viewStates.codeEditor.openFile(this);
+        });
+
         if (parent) {
             let level = 1;
             let current = parent;
@@ -34,8 +39,24 @@ class FileUI {
             this.element.style.paddingLeft = level * 27 + "px";
             parent.addChild(this);
         }
+    }
 
+    getPath() {
+        let path = this.name;
+        let current = this.parent;
+        while (current.parent) {
+            path = current.name + "/" + path;
+            current = current.parent;
+        }
+        return "/" + path;
+    }
 
+    select() {
+        this.element.classList.add("selected")
+    }
+
+    unselect() {
+        this.element.classList.remove("selected")
     }
 }
 

@@ -25,7 +25,6 @@ class UIController {
         renderUI: RenderUI;
         codeEditorUI: CodeEditorUI;
         fileSystemUI: FileSystemUI;
-        contextMenuUI: ContextMenuUI;
     };
     viewStates: {
         loading: LoadingViewState;
@@ -49,7 +48,6 @@ class UIController {
             renderUI: new RenderUI(this),
             fileSystemUI: new FileSystemUI(this),
             codeEditorUI: new CodeEditorUI(this),
-            contextMenuUI: new ContextMenuUI(this),
         };
 
         this.viewStates = {
@@ -61,8 +59,6 @@ class UIController {
         };
 
     };
-
-
 
     async changeViewState(viewState) {
         if (this.activeViewState) {
