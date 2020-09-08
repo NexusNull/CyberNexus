@@ -23,10 +23,11 @@ class FileSystem {
                 let name = path.parse(objectPath).base;
                 if (this.validateDirectoryName(name)) {
                     try {
-                        console.log(await fs.promises.mkdir(objectPath));
+                        await fs.promises.mkdir(objectPath);
                         res.send("ok")
                     } catch (e) {
                         res.status(500).send("failed");
+                        console.log(e);
                         return;
                     }
                 } else {
@@ -36,11 +37,12 @@ class FileSystem {
                 let name = path.parse(objectPath).base;
                 if (this.validateFileName(name)) {
                     try {
-                        console.log(await fs.promises.writeFile(objectPath, req.body));
+                        await fs.promises.writeFile(objectPath, req.body);
                         res.send("ok")
                     } catch (e) {
                         res.status(500).send("failed");
-                        return
+                        console.log(e);
+                        return;
                     }
                 } else {
                     res.status(400).send("failed: invalid File name")

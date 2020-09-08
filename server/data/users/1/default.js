@@ -31,3 +31,4 @@ setInterval(function(){
 	}
 
 },1000/4);
+var a = "asdasdasdasd";

@@ -5,6 +5,8 @@ $clickWidth: 3px
   height: 100%
 
 #CEFolderStructure
+  overflow-x: hidden
+  overflow-y: scroll
   height: 100%
   width: 300px
   background-color: rgba(70, 70, 70, 0.8)
@@ -32,49 +34,42 @@ $clickWidth: 3px
   background-color: rgba(255, 255, 255, 0.6)
 
 .directory
-  position: relative
-  top: 4px
+
+
+.directoryTop
+  padding:
+    top: 3px
+  height: 22px
+  overflow-y: hidden
+  overflow-x: hidden
+  white-space: nowrap
 
 .directoryArrow
   width: 8px
   height: 8px
-  position: relative
-  top: 1px
-  
+
 .directoryIcon
-  position: relative
-  top: 4px
   width: 20px
 
 .directoryName
-  position: relative
-  top: 4px
+  font-family: sans-serif
+
+.childContainer
 
 .collapsed
-
-.directoryTop
-  height: 26px
-  padding:
-    top: 4px
 
 .directoryTop:hover
   background-color: rgb(100, 100, 100, 0.5)
 
 
-.directoryName
-  font-family: sans-serif
-
 .file
-  padding:
-    top: 4px
+
 
 .file:hover
   background-color: rgb(100, 100, 100, 0.5)
 
 .fileIcon
   height: 18px
-  position: relative
-  bottom: -1px
 
 .fileName
   font-family: sans-serif

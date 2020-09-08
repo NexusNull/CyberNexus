@@ -31,6 +31,9 @@ class ContextMenuUI {
     setStructure(structure) {
         this.element.innerHTML = "";
         for (let declaration of structure) {
+            if (!declaration)
+                continue;
+            console.log(declaration)
             let elem;
             switch (declaration.type) {
                 case "hl":
@@ -68,6 +71,8 @@ class ContextMenuUI {
                     });
                     break;
             }
+            if(!elem)
+                continue;
             this.element.appendChild(elem);
         }
     }

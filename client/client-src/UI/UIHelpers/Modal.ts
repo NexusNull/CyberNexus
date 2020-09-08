@@ -6,7 +6,8 @@ class Modal {
         this.shadow = document.createElement("div");
         this.shadow.classList.add("modalShadow");
 
-        this.shadow.addEventListener("click", (e) => {
+        this.shadow.addEventListener("mousedown", (e) => {
+            console.log(e)
             if (e.target === this.shadow)
                 this.destroy();
         });
@@ -16,6 +17,7 @@ class Modal {
     setContent(element: HTMLElement) {
         this.shadow.innerHTML = "";
         this.shadow.appendChild(element)
+        this.element = element;
     }
 
     display() {

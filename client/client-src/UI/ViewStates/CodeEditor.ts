@@ -62,6 +62,14 @@ class CodeEditorViewState extends ViewState {
         let path = this.currentFile.getPath();
         await fileSystem.writeFile(path, content);
     }
+
+    async createDirectory(path) {
+        await fileSystem.createDirectory(path);
+    }
+
+    async createFile(path) {
+        await fileSystem.writeFile(path, "");
+    }
 }
 
 export {CodeEditorViewState}
