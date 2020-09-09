@@ -5,13 +5,11 @@ import {UIController} from "../UIController";
 class FileSystemUI {
     uiController: UIController;
     container: HTMLDivElement;
-    directories: DirectoryUI;
-    files: Map<number, FileUI>;
     rootDir: DirectoryUI;
 
     constructor(uiController: UIController) {
         this.uiController = uiController;
-        this.container = <HTMLDivElement>document.getElementById("CEFolderStructure");
+        this.container = <HTMLDivElement>document.getElementById("CEDirectoryStructure");
         this.rootDir = new DirectoryUI(this, null, "admin");
 
         this.container.appendChild(this.rootDir.element);

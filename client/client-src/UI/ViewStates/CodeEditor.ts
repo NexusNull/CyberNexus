@@ -3,8 +3,6 @@ import {Game} from "../../game";
 import {UIController} from "../UIController";
 import {InputController} from "../InputController";
 import {fileSystem} from "../../Game/helpers/FileSystemAPI";
-import {DirectoryUI} from "../UIElements/DirectoryUI";
-import {FileSystemUI} from "../UIElements/FileSystemUI";
 import {FileUI} from "../UIElements/FileUI";
 
 class CodeEditorViewState extends ViewState {
