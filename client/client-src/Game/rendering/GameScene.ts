@@ -2,7 +2,7 @@
  * Think of this object as a stage, a stage doesn't act on it's own, it get's acted upon.
  */
 
-declare let document: any;
+
 import {Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer} from "three";
 import {DisplayWorld} from "./DisplayWorld";
 
@@ -27,7 +27,7 @@ class GameScene {
         this.mainCamera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.renderer = new WebGLRenderer({canvas});
 
-        document.scene = this.scene;
+
         this.world = new Object3D();
         this.chunkContainer = new Object3D();
 
@@ -39,12 +39,9 @@ class GameScene {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         (function (camera, pointerCaptureElement) {
             camera.rotation.order = "YXZ";
-            pointerCaptureElement.requestPointerLock =
-                pointerCaptureElement.requestPointerLock ||
-                pointerCaptureElement.mozRequestPointerLock;
 
             let hasPointerLock = function () {
-                return document.pointerLockElement === pointerCaptureElement || document.mozPointerLockElement === pointerCaptureElement;
+                return document.pointerLockElement === pointerCaptureElement ;
             };
 
             let requestPointerLock = function () {

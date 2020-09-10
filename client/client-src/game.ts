@@ -5,6 +5,7 @@ import {Assets} from "./AssetManagement/Assets";
 import {GameScene} from "./Game/rendering/GameScene";
 import {DemoManager} from "./Game/demo/DemoManager";
 import {ChunkRenderer} from "./Game/rendering/ChunkRenderer";
+import {Runner} from "./Game/Runner";
 
 class Game {
     uiController: UIController;
@@ -14,6 +15,7 @@ class Game {
     gameScene: GameScene;
     demoManager: DemoManager;
     chunkRenderer: ChunkRenderer;
+    runner: Runner;
 
     constructor() {
         this.assets = new Assets();
@@ -23,6 +25,7 @@ class Game {
         this.uiController = new UIController(this, this.inputController);
         this.gameScene = new GameScene(this.uiController.uiElements.renderUI.canvas);
         this.demoManager = new DemoManager(this.assets, this.gameScene);
+        this.runner = new Runner();
     }
 
     main() {
@@ -31,7 +34,8 @@ class Game {
 }
 
 export {Game}
-
+declare let window: any;
 let game = new Game();
+window.game = game;
 game.main();
 
