@@ -82,3 +82,41 @@ $clickWidth: 3px
 
 .selected
   background-color: rgb(128, 128, 128, 0.5)
+
+#CEConsole
+  display: grid
+  grid-template-rows: 1fr auto
+
+#consoleExecuteButton
+  float: right
+
+.consoleLog
+  display: flex
+  flex-direction: column
+  align-self: flex-end
+.consoleInput
+  overflow-y: scroll
+  max-height: 300px
+  padding: 5px
+  border:
+    top: 1px solid white
+
+.logMessage
+  font-family: sans-serif
+  font-size: 15px
+  padding: 5px
+  border:
+    top: 1px solid white
+    bottom: 1px solid white
+
+.logError
+  background-color: rgba(225, 0, 0, 0.4)
+  border:
+    top: 1px solid rgb(225, 0, 0)
+    bottom: 1px solid rgb(225, 0, 0)
+
+.logWarning
+  background-color: rgba(228, 167, 0, 0.4)
+  border:
+    top: 1px solid rgb(228, 167, 0)
+    bottom: 1px solid rgb(228, 167, 0)

@@ -20,6 +20,9 @@ class CodeEditorViewState extends ViewState {
 
     async enable(): Promise<any> {
         this.uiController.uiElements.codeEditorUI.display();
+        this.uiController.uiElements.consoleUI.codeInput.refresh();
+        this.uiController.uiElements.codeEditorUI.editor.refresh();
+
     }
 
     async setup(): Promise<any> {
