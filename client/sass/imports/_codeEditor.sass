@@ -85,7 +85,8 @@ $clickWidth: 3px
 
 #CEConsole
   display: grid
-  grid-template-rows: 1fr auto auto
+  grid-template-rows: 1fr auto 300px
+  grid-auto-columns: 100%
 
 #consoleExecuteButton
   float: right
@@ -113,9 +114,7 @@ $clickWidth: 3px
   cursor: pointer
 
 .consoleInput
-  overflow-y: scroll
-  max-height: 300px
-  padding: 5px
+  height: 300px
   border:
     top: 1px solid white
 
