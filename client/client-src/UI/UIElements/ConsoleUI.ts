@@ -5,7 +5,6 @@ class ConsoleUI {
     consoleInputElement: HTMLDivElement;
     consoleLogElement: HTMLDivElement;
     codeInput: CodeMirror.Editor;
-    consoleExecuteButton: HTMLButtonElement;
     scrollBarBound: boolean;
 
     constructor(props) {
