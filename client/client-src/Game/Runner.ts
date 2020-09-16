@@ -37,7 +37,7 @@ class Runner {
             environment = "console";
         }
 
-        let sourceMap = `//# sourceURL=${environment}:///${path}`
+        let sourceMap = `//# sourceURL=${environment}:///${path}`;
         let document = this.iframe.contentDocument;
         let script = document.createElement("script");
         script.innerHTML = `

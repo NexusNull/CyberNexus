@@ -4,10 +4,17 @@ const DB = require("./DB");
 
 const Authentication = require("./Authentication");
 const ServerList = require("./ServerList");
-const FileSystem = require("./FileSystem")
+const FileSystem = require("./FileSystem");
 const bodyParser = require('body-parser');
-app.use(express.json());
+const session = require('express-session');
 
+app.use(express.json());
+app.use(session({
+    secret: '94fc9999c757efbc752f27e66c3981a4',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {httpOnly: true}
+}));
 
 class WebServer {
     constructor() {

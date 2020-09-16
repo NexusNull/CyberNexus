@@ -16,6 +16,10 @@ class Game {
     demoManager: DemoManager;
     chunkRenderer: ChunkRenderer;
     runner: Runner;
+    userData: {
+        username: string,
+        id: number,
+    };
 
     constructor() {
         this.assets = new Assets();
@@ -30,6 +34,12 @@ class Game {
 
     main() {
         this.uiController.changeViewState(this.uiController.viewStates.loading);
+    }
+
+    setUserData(id, username) {
+        this.userData = {
+            id, username
+        }
     }
 }
 

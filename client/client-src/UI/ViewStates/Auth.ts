@@ -2,7 +2,7 @@ import {ViewState} from "./ViewState";
 import {Game} from "../../game";
 import {UIController} from "../UIController";
 import {InputController} from "../InputController";
-import {util} from "../../util/Util";
+
 
 class AuthViewState extends ViewState {
     constructor(game: Game, uiController: UIController, inputController: InputController) {
@@ -15,23 +15,16 @@ class AuthViewState extends ViewState {
     }
 
     async enable(): Promise<any> {
-        let authToken = util.getCookie("authToken");
-        let response;
-        if (authToken) {
-            try {
-                response = await this.sendRequest("/auth/validateToken", {authToken});
-                if (response.valid) {
-                    this.authCompleted();
-                    return;
-                }
-            } catch (e) {
-                console.error(e);
-            }
+        try {
+            let userData = await this.sendRequest("/auth/requestUserData");
+            this.game.setUserData(userData.id, userData.username);
+            this.authCompleted();
+            return;
+        } catch (e) {
+            console.error(e);
         }
 
-        util.setCookie("authToken", "", 0)
         this.uiController.uiElements.authUI.display();
-
     }
 
     async setup(): Promise<any> {
@@ -44,16 +37,12 @@ class AuthViewState extends ViewState {
     }
 
     async login(name, password) {
-        let response;
         try {
-            response = await this.sendRequest("/auth/login", {name, password});
+            let userData = await this.sendRequest("/auth/login", {name, password});
+            this.game.setUserData(userData.id, userData.username);
+            this.authCompleted();
         } catch (e) {
             this.uiController.uiElements.authUI.loginError(e);
-        }
-
-        if (response) {
-            util.setCookie("authToken", response.authToken, 32);
-            this.authCompleted();
         }
     }
 
@@ -61,9 +50,14 @@ class AuthViewState extends ViewState {
 
     }
 
-    sendRequest(url, data): any {
-        return new Promise(function (resolve, reject) {
+    async requestJWT(ipaddr, port) {
 
+    }
+
+    sendRequest(url, data?): any {
+        return new Promise(function (resolve, reject) {
+            if (!data)
+                data = {};
             var xobj = new XMLHttpRequest();
             xobj.open('POST', url, true);
             xobj.setRequestHeader("Content-type", "application/json");
