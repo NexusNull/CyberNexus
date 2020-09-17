@@ -3,8 +3,8 @@ const app = express();
 const DB = require("./DB");
 
 const Authentication = require("./Authentication");
-const ServerList = require("./ServerList");
-const FileSystem = require("./FileSystem");
+const ServerList = require("./ServerListRoute");
+const FileSystem = require("./FileSystemRoute");
 const bodyParser = require('body-parser');
 const session = require('express-session');
 

@@ -1,4 +1,4 @@
-class ServerList {
+class ServerListRoute {
     constructor(app, db) {
         this.servers = new Map();
 
@@ -52,4 +52,4 @@ class ServerList {
     }
 }
 
-module.exports = ServerList;
+module.exports = ServerListRoute;
