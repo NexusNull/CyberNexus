@@ -1,11 +1,22 @@
 const fs = require("fs");
 const path = require("path");
 const clientDir = path.join(process.cwd(), "/server/data/users");
+const FileSystem = require("./FileSystem");
 
 class FileSystemRoute {
-
-
     constructor(app, DB, auth) {
+
+        app.get("/fsIndex", async (req, res) => {
+            if (req.session.user) {
+                let filesystem = new FileSystem(req.session.user.id);
+                let index = await filesystem.getIndex();
+                console.log(index)
+                res.send(index);
+            } else {
+                res.status(403).send();
+            }
+        });
+
 
         app.post("/fs/*", async (req, res) => {// add a resource
 
@@ -13,7 +24,6 @@ class FileSystemRoute {
                 name: "somename",
                 id: 1,
             };
-
 
             let url = path.normalize(req.url.replace("fs/", ""));
             let objectPath = path.join(clientDir, "" + user.id, url);

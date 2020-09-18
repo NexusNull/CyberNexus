@@ -6,7 +6,7 @@ import {GameScene} from "./Game/rendering/GameScene";
 import {DemoManager} from "./Game/demo/DemoManager";
 import {ChunkRenderer} from "./Game/rendering/ChunkRenderer";
 import {Runner} from "./Game/Runner";
-
+import * as BrowserFS from "browserfs";
 class Game {
     uiController: UIController;
     inputController: InputController;
@@ -30,6 +30,16 @@ class Game {
         this.gameScene = new GameScene(this.uiController.uiElements.renderUI.canvas);
         this.demoManager = new DemoManager(this.assets, this.gameScene);
         this.runner = new Runner();
+        BrowserFS.install(window);
+        BrowserFS.configure({
+            fs: "LocalStorage",
+            options:{},
+        }, function (e) {
+            if (e) {
+                // An error happened!
+                throw e;
+            }
+        })
     }
 
     main() {

@@ -1,3 +1,1 @@
-require("./server/FileSystem")
-
-//require("./server/WebServer");
+require("./server/WebServer");
