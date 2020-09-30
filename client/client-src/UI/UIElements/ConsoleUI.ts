@@ -1,13 +1,16 @@
 import CodeMirror from "codemirror";
+import {UIController} from "../UIController";
 
 class ConsoleUI {
+    uiController: UIController;
     element: HTMLDivElement;
     consoleInputElement: HTMLDivElement;
     consoleLogElement: HTMLDivElement;
     codeInput: CodeMirror.Editor;
     scrollBarBound: boolean;
 
-    constructor(props) {
+    constructor(uiController: UIController) {
+        this.uiController = uiController;
         this.element = <HTMLDivElement>document.getElementById("CEConsole");
         this.consoleInputElement = <HTMLDivElement>this.element.getElementsByClassName("consoleInput")[0];
         this.consoleLogElement = <HTMLDivElement>this.element.getElementsByClassName("consoleLog")[0];
@@ -20,37 +23,15 @@ class ConsoleUI {
         });
 
         this.consoleLogElement.addEventListener("scroll", (e) => {
-            console.log(e);
             this.scrollBarBound = this.consoleLogElement.scrollHeight - this.consoleLogElement.scrollTop === this.consoleLogElement.clientHeight;
         });
 
         window.addEventListener("keypress", (e) => {
 
             if (this.codeInput.hasFocus() && e.ctrlKey && e.code == "Enter") {
-                console.log = new Proxy(console.log, {
-                    apply: (target, that, args) => {
-                        target.apply(that, args);
-                        //this.logMessage(args)
-                    }
-                });
-
-                console.warn = new Proxy(console.warn, {
-                    apply: (target, that, args) => {
-                        target.apply(that, args);
-                        this.logWarning(args)
-                    }
-                });
-
-                console.error = new Proxy(console.error, {
-                    apply: (target, that, args) => {
-                        target.apply(that, args);
-                        this.logError(args)
-                    }
-                });
-
                 let result;
                 {
-                    result = eval(this.codeInput.getValue());
+                    this.uiController.game.runner.run(this.codeInput.getValue());
                 }
                 try {
                     if (result !== undefined)
