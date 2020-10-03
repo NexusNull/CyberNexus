@@ -27,17 +27,26 @@ class ConsoleUI {
         });
 
         window.addEventListener("keypress", (e) => {
-
-            if (this.codeInput.hasFocus() && e.ctrlKey && e.code == "Enter") {
-                let result;
-                {
-                    this.uiController.game.runner.run(this.codeInput.getValue());
-                }
-                try {
-                    if (result !== undefined)
-                        this.logMessage(result);
-                } catch (e) {
-                    this.logError(e)
+            console.log(e)
+            if (this.codeInput.hasFocus() && e.ctrlKey) {
+                switch (e.code) {
+                    case "Enter":
+                        let result;
+                    {
+                        this.uiController.game.runner.run(this.codeInput.getValue());
+                    }
+                        try {
+                            if (result !== undefined)
+                                this.logMessage(result);
+                        } catch (e) {
+                            this.logError(e)
+                        }
+                        break;
+                    case "KeyB":
+                        this.uiController.game.runner.stop();
+                        break;
+                    default:
+                        break;
                 }
 
             }
@@ -53,30 +62,25 @@ class ConsoleUI {
             this.consoleLogElement.scrollTo(0, this.consoleLogElement.scrollHeight);
     }
 
-    logError(e) {
-        let element = document.createElement("div");
-        element.classList.add("logMessage");
+    logError(object) {
+        let element = this.logMessage(object);
         element.classList.add("logError");
-        element.innerText = e;
-        this.consoleLogElement.appendChild(element);
-        this.updateScrollPosition();
+        return element;
     }
 
-    logWarning(e) {
-        let element = document.createElement("div");
-        element.classList.add("logMessage");
+    logWarning(object) {
+        let element = this.logMessage(object);
         element.classList.add("logWarning");
-        element.innerText = e;
-        this.consoleLogElement.appendChild(element);
-        this.updateScrollPosition();
+        return element;
     }
 
-    logMessage(text) {
+    logMessage(object) {
         let element = document.createElement("div");
         element.classList.add("logMessage");
-        element.innerText = text;
+        element.innerText = object;
         this.consoleLogElement.appendChild(element);
         this.updateScrollPosition();
+        return element;
     }
 }
 
