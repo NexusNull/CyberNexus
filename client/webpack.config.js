@@ -5,7 +5,7 @@ module.exports = {
     entry: './client/client-src/game.ts',
     //devtool: 'inline-source-map',
     optimization: {
-        minimize: false
+        minimize: true
     },
     watch: true,
     module: {
@@ -21,6 +21,7 @@ module.exports = {
         "three": "THREE",
         "codemirror": "CodeMirror",
         "Perlin": "perlin",
+        "Browserfs": "browserfs",
     },
     resolve: {
         extensions: ['.ts', ".js"],

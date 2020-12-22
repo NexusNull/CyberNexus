@@ -47,7 +47,7 @@ class Beam {
             this.end.clone().add(cross).toArray(geometry.attributes.position.array, 6);
             this.end.clone().sub(cross).toArray(geometry.attributes.position.array, 9);
             geometry.computeBoundingSphere();
-            (<BufferAttribute>geometry.attributes.position).needsUpdate = true
+            (<BufferAttribute>geometry.attributes.position).needsUpdate = true;
         }
     }
 

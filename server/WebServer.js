@@ -7,8 +7,10 @@ const ServerList = require("./ServerListRoute");
 const FileSystem = require("./FileSystemRoute");
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(session({
     secret: '94fc9999c757efbc752f27e66c3981a4',
     resave: false,
@@ -36,10 +38,12 @@ class WebServer {
             res.setHeader("Access-Control-Allow-Origin", "*");
             next();
         });
+
         app.use('/', express.static(__dirname + '/../client/public'));
         app.use(bodyParser.text());
-        let serverList = new ServerList(app, this.DB);
+
         let authentication = new Authentication(app, this.DB);
+        let serverList = new ServerList(app, this.DB);
         let fileSystem = new FileSystem(app, this.DB, authentication);
 
         app.use(function (req, res) {

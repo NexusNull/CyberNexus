@@ -50,10 +50,6 @@ class AuthViewState extends ViewState {
 
     }
 
-    async requestJWT(ipaddr, port) {
-
-    }
-
     sendRequest(url, data?): any {
         return new Promise(function (resolve, reject) {
             if (!data)

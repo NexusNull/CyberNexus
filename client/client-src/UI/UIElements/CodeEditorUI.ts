@@ -2,6 +2,7 @@ import {UIController} from "../UIController";
 import CodeMirror from 'codemirror';
 import {FileUI} from "./FileUI";
 import {VariableSeparator} from "../UIHelpers/VariableSeparator";
+import Timeout = NodeJS.Timeout;
 
 class CodeEditorUI {
     uiController: UIController;
@@ -13,7 +14,7 @@ class CodeEditorUI {
     consoleElement: HTMLDivElement;
     directoryStructure: HTMLDivElement;
     currentFile: FileUI;
-    saveTimeout: number;
+    saveTimeout: Timeout;
 
     constructor(uiController: UIController) {
         this.uiController = uiController;

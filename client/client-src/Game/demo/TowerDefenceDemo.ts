@@ -10,12 +10,13 @@ import {
 import {Beam} from "../rendering/Beam";
 import {Assets} from "../../AssetManagement/Assets";
 import {ChunkRenderer} from "../rendering/ChunkRenderer";
+import Timeout = NodeJS.Timeout;
 
 declare let perlin: perlin;
 declare var window: any;
 
 class TowerDefenceDemo {
-    intervalID: number;
+    intervalID: Timeout;
     materials: Array<Material>;
     meshes: Array<Mesh>;
     startTime: Date;

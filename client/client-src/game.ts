@@ -10,8 +10,6 @@ import * as BrowserFS from "browserfs";
 class Game {
     uiController: UIController;
     inputController: InputController;
-    assetManager: AssetManager;
-    assets: Assets;
     gameScene: GameScene;
     demoManager: DemoManager;
     chunkRenderer: ChunkRenderer;
