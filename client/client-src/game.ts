@@ -29,7 +29,7 @@ class Game {
         this.uiController = new UIController(this, this.inputController);
         this.gameScene = new GameScene(this.uiController.uiElements.renderUI.canvas);
         this.demoManager = new DemoManager(this.assets, this.gameScene);
-        this.runner = new Runner();
+        this.runner = new Runner(this);
         BrowserFS.install(window);
         BrowserFS.configure({
             fs: "LocalStorage",
