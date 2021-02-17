@@ -1,5 +1,5 @@
 import {InputController} from "./InputController";
-import {Game} from "../game";
+import {Game} from "../Game";
 import {LoadingUI} from "./UIElements/LoadingUI";
 import {AuthUI} from "./UIElements/AuthUI";
 import {ServerBrowserUI} from "./UIElements/ServerBrowserUI";

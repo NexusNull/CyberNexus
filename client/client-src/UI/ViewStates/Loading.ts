@@ -1,6 +1,6 @@
 import {AssetManager} from "../../AssetManagement/AssetManager";
 import {ViewState} from "./ViewState";
-import {Game} from "../../game";
+import {Game} from "../../Game";
 import {UIController} from "../UIController";
 import {InputController} from "../InputController";
 

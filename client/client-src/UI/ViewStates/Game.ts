@@ -1,5 +1,5 @@
 import {ViewState} from "./ViewState";
-import {Game} from "../../game";
+import {Game} from "../../Game";
 import {UIController} from "../UIController";
 import {InputController} from "../InputController";
 import {GameScene} from "../../Game/rendering/GameScene";

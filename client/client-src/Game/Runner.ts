@@ -1,4 +1,4 @@
-import type {Game} from "../game";
+import type {Game} from "../Game";
 
 interface VMContainer extends HTMLIFrameElement {
     contentWindow: HTMLIFrameElement["contentWindow"] & {

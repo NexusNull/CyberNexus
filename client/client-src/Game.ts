@@ -7,6 +7,7 @@ import {DemoManager} from "./Game/demo/DemoManager";
 import {ChunkRenderer} from "./Game/rendering/ChunkRenderer";
 import {Runner} from "./Game/Runner";
 import * as BrowserFS from "browserfs";
+
 class Game {
     uiController: UIController;
     inputController: InputController;
@@ -19,7 +20,8 @@ class Game {
     userData: {
         username: string,
         id: number,
-    };
+        jwt: string,
+    } | null;
 
     constructor() {
         this.assets = new Assets();
@@ -30,17 +32,20 @@ class Game {
         this.gameScene = new GameScene(this.uiController.uiElements.renderUI.canvas);
         this.demoManager = new DemoManager(this.assets, this.gameScene);
         this.runner = new Runner(this);
+        this.userData = null;
         BrowserFS.install(window);
         BrowserFS.configure({
-            fs: "LocalStorage",
-            options:{},
+            fs: "WebDav",
+            options: {
+                prefixUrl: "http://localhost:2000/fs/"
+            },
         }, function (e) {
             if (e) {
                 // An error happened!
                 throw e;
             }
-        })
-        this.runner = new Runner(this);
+        });
+        window.fs = BrowserFS.BFSRequire("fs");
     }
 
     main() {
@@ -48,9 +53,14 @@ class Game {
     }
 
     setUserData(id, username) {
-        this.userData = {
-            id, username
-        }
+        // @ts-ignore
+        this.userData = this.userData || {};
+        this.userData.id = id;
+        this.userData.username = username;
+    }
+
+    setJwt(jwt: string) {
+        this.userData.jwt = jwt;
     }
 }
 
