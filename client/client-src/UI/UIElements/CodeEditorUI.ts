@@ -33,7 +33,7 @@ class CodeEditorUI {
         this.editor = CodeMirror(this.editorElement, {
             lineNumbers: true,
             mode: "javascript",
-            value: "adasdasd"
+            value: ""
         });
 
         this.editor.on("change", (e) => {
