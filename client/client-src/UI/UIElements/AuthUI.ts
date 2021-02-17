@@ -1,5 +1,4 @@
 import {UIController} from "../UIController";
-import util from "../../util/Util"
 import {TabController} from "../UIHelpers/TabController";
 
 class AuthUI {
@@ -52,54 +51,6 @@ class AuthUI {
             e.preventDefault();
         });
 
-        /*
-        this.loginForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            let data = {action: "login"};
-            for (let inputElements of self.loginForm.getElementsByTagName("input")) {
-                data[inputElements.name] = inputElements.value;
-            }
-
-            var xobj = new XMLHttpRequest();
-            xobj.overrideMimeType("mimeType");
-            xobj.open('POST', "/login", true);
-            xobj.setRequestHeader("Content-type", "application/json");
-
-            xobj.onreadystatechange = function (data) {
-                if (xobj.readyState === XMLHttpRequest.DONE) {
-                    if (xobj.status === 200) {
-                        let data = JSON.parse(xobj.responseText);
-                        util.setCookie("authToken", data.authToken, 32);
-                        (<HTMLInputElement>document.getElementById("loginName")).value = "";
-                        (<HTMLInputElement>document.getElementById("loginPassword")).value = "";
-                    }
-                    if (xobj.status === 400) {
-                        let data = JSON.parse(xobj.responseText);
-
-                        let errorElement = document.createElement("p");
-                        if (data.message) {
-                            errorElement.innerText = data.message;
-                        } else {
-                            errorElement.innerText = "Unknown error occurred";
-                        }
-
-                        errorElement.classList.add("fade");
-                        self.loginErrorContainer.prepend(errorElement);
-                        if (self.loginErrorContainer.children.length > 3)
-                            self.loginErrorContainer.removeChild(self.loginErrorContainer.children[3]);
-                        setTimeout(function () {
-                            self.loginErrorContainer.removeChild(errorElement);
-                        }, 2000);
-
-                    }
-                }
-            };
-
-            xobj.send(JSON.stringify(data));
-        });
-
-        */
         this.visible = false;
     }
 

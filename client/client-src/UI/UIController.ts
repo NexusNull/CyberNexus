@@ -11,10 +11,9 @@ import {RenderUI} from "./UIElements/RenderUI";
 import {FileSystemUI} from "./UIElements/FileSystemUI";
 import {CodeEditorUI} from "./UIElements/CodeEditorUI";
 import {CodeEditorViewState} from "./ViewStates/CodeEditor";
-import {ContextMenuUI} from "./UIHelpers/ContextMenuUI";
 import {ConsoleUI} from "./UIElements/ConsoleUI";
 
-class UIController {
+export class UIController {
     game: Game;
     activeViewState: any;
     activeKeyMap: any;
@@ -76,5 +75,3 @@ class UIController {
         this.activeViewState = viewState;
     };
 }
-
-export {UIController};

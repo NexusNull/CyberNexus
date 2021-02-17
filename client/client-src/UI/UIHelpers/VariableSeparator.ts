@@ -1,4 +1,4 @@
-class VariableSeparator {
+export class VariableSeparator {
     separator: HTMLDivElement;
     target: HTMLDivElement;
     active: boolean;
@@ -31,5 +31,3 @@ class VariableSeparator {
 
     }
 }
-
-export {VariableSeparator}

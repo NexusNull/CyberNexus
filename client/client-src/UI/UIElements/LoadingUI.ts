@@ -1,6 +1,6 @@
 import {UIController} from "../UIController";
 
-class LoadingUI {
+export class LoadingUI {
     uiController: UIController;
     element: HTMLDivElement;
     loadingBar: HTMLDivElement;
@@ -33,5 +33,3 @@ class LoadingUI {
         this.visible = false;
     };
 }
-
-export {LoadingUI}

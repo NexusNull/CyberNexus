@@ -1,6 +1,6 @@
 import {UIController} from "../UIController";
 
-class RenderUI {
+export class RenderUI {
     uiController: UIController;
     canvas: HTMLCanvasElement;
 
@@ -11,5 +11,3 @@ class RenderUI {
     }
 
 }
-
-export {RenderUI}

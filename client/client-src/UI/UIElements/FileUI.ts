@@ -1,10 +1,9 @@
 import {FileSystemUI} from "./FileSystemUI";
 import {DirectoryUI} from "./DirectoryUI";
 import {ContextMenuUI} from "../UIHelpers/ContextMenuUI";
-import {default as newOps} from "../ContextGroups/newOps";
 import {default as updateOps} from "../ContextGroups/updateOps";
 
-class FileUI {
+export class FileUI {
     fileSystemUI: FileSystemUI;
     parent: DirectoryUI;
 
@@ -101,5 +100,3 @@ class FileUI {
         this.element.classList.remove("selected")
     }
 }
-
-export {FileUI}

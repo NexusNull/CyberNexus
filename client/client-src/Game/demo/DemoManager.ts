@@ -3,7 +3,7 @@ import {TowerDefenceDemo} from "./TowerDefenceDemo";
 import {Assets} from "../../AssetManagement/Assets";
 
 
-class DemoManager {
+export class DemoManager {
     demos = Array<any>();
     activeDemo: any;
     isActive: boolean;
@@ -36,5 +36,3 @@ class DemoManager {
         this.activeDemo.stop();
     }
 }
-
-export {DemoManager}

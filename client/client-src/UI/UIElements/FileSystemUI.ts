@@ -2,7 +2,7 @@ import {DirectoryUI} from "./DirectoryUI";
 import {FileUI} from "./FileUI";
 import {UIController} from "../UIController";
 
-class FileSystemUI {
+export class FileSystemUI {
     uiController: UIController;
     container: HTMLDivElement;
     rootDir: DirectoryUI;
@@ -66,5 +66,3 @@ class FileSystemUI {
         return null;
     }
 }
-
-export {FileSystemUI}

@@ -1,7 +1,7 @@
 import CodeMirror from "codemirror";
 import {UIController} from "../UIController";
 
-class ConsoleUI {
+export class ConsoleUI {
     uiController: UIController;
     element: HTMLDivElement;
     consoleInputElement: HTMLDivElement;
@@ -83,5 +83,3 @@ class ConsoleUI {
         return element;
     }
 }
-
-export {ConsoleUI}

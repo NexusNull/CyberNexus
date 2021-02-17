@@ -1,6 +1,5 @@
-import {UIController} from "../UIController";
 
-class ContextMenuUI {
+export class ContextMenuUI {
     element: HTMLDivElement;
     shadow: HTMLDivElement;
     destroyed: boolean;
@@ -94,5 +93,3 @@ class ContextMenuUI {
     }
 
 }
-
-export {ContextMenuUI}

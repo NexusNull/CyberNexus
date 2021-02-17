@@ -1,4 +1,4 @@
-class Modal {
+export class Modal {
     shadow: HTMLDivElement;
     element: HTMLElement;
 
@@ -27,5 +27,3 @@ class Modal {
         document.body.removeChild(this.shadow);
     }
 }
-
-export {Modal}

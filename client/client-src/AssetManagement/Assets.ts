@@ -1,7 +1,7 @@
 import {TextureAtlas} from "./TextureAtlas";
 import {Texture} from "three";
 
-class Assets {
+export class Assets {
     textureAtlases: Map<string, TextureAtlas>;
     textures: Map<string, Texture>;
     geometries: Map<number, Geometry>;
@@ -12,5 +12,3 @@ class Assets {
         this.geometries = new Map<number, Geometry>();
     }
 }
-
-export {Assets}

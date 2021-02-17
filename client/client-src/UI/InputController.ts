@@ -11,7 +11,7 @@
 import {Game} from "../Game";
 import {EventSystem} from "../util/EventSystem";
 
-class InputController extends EventSystem {
+export class InputController extends EventSystem {
     actions: Map<string, Action>;
     activeActions: Set<Action>;
     keys: Map<string, KeyCombo[]>;
@@ -231,7 +231,3 @@ class InputController extends EventSystem {
         return document.pointerLockElement === this.pointerLockElement;
     }
 }
-
-export {
-    InputController
-};

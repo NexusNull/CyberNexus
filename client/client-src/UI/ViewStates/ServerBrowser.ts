@@ -5,7 +5,7 @@ import {InputController} from "../InputController";
 import util from "../../util/Util";
 
 
-class ServerBrowserViewState extends ViewState {
+export class ServerBrowserViewState extends ViewState {
     servers: Map<number, Server>;
 
     constructor(game: Game, uiController: UIController, inputController: InputController) {
@@ -118,4 +118,3 @@ class ServerBrowserViewState extends ViewState {
     }
 }
 
-export {ServerBrowserViewState}

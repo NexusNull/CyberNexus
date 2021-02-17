@@ -8,7 +8,7 @@ import {ChunkRenderer} from "./Game/rendering/ChunkRenderer";
 import {Runner} from "./Game/Runner";
 import * as BrowserFS from "browserfs";
 
-class Game {
+export class Game {
     uiController: UIController;
     inputController: InputController;
     assetManager: AssetManager;
@@ -64,7 +64,7 @@ class Game {
     }
 }
 
-export {Game}
+
 declare let window: any;
 let game = new Game();
 window.game = game;

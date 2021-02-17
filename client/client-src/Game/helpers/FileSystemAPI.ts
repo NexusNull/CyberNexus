@@ -1,6 +1,6 @@
 import util from "../../util/Util";
 
-class FileSystemAPI {
+export class FileSystemAPI {
     constructor() {
 
     }

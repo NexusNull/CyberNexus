@@ -5,7 +5,7 @@ import {InputController} from "../InputController";
 import {fileSystem} from "../../Game/helpers/FileSystemAPI";
 import {FileUI} from "../UIElements/FileUI";
 
-class CodeEditorViewState extends ViewState {
+export class CodeEditorViewState extends ViewState {
     currentFile: FileUI;
 
     constructor(game: Game, uiController: UIController, inputController: InputController) {
@@ -72,5 +72,3 @@ class CodeEditorViewState extends ViewState {
         await fileSystem.writeFile(path, "");
     }
 }
-
-export {CodeEditorViewState}

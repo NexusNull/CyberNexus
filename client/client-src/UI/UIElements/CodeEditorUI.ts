@@ -4,7 +4,7 @@ import {FileUI} from "./FileUI";
 import {VariableSeparator} from "../UIHelpers/VariableSeparator";
 import Timeout = NodeJS.Timeout;
 
-class CodeEditorUI {
+export class CodeEditorUI {
     uiController: UIController;
     element: HTMLDivElement;
     visible: boolean;
@@ -55,5 +55,3 @@ class CodeEditorUI {
         this.visible = false;
     };
 }
-
-export {CodeEditorUI}

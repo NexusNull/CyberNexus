@@ -23,15 +23,13 @@ class HTTPJWTAuthentication {
 
         const authHeader = ctx.headers.find('Authorization');
         let type, credentials;
-        if(authHeader){
+        if (authHeader) {
             [type, credentials] = authHeader.split(' ');
-            if(type !== 'Bearer' || !credentials){
-                console.log("WrongHeaderFormat")
+            if (type !== 'Bearer' || !credentials) {
                 onError(Errors.WrongHeaderFormat)
                 return;
             }
-        } else{
-            console.log("MissingAuthorisationHeader")
+        } else {
             onError(Errors.MissingAuthorisationHeader)
             return;
         }
@@ -45,7 +43,7 @@ class HTTPJWTAuthentication {
             onError(Errors.BadAuthentication)
             return;
         }
-        console.log("asdasd")
+
         let user = this.users.get(credentials);
         if (!user) {
             user = new SimpleUser(token.uid, '', token.admin, false);

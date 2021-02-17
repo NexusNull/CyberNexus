@@ -1,4 +1,4 @@
-class EventSystem {
+export class EventSystem {
     listeners: Map<string, Array<(any) => void>>;
 
     constructor() {
@@ -33,5 +33,3 @@ class EventSystem {
         listeners.splice(i, 1);
     };
 }
-
-export {EventSystem}

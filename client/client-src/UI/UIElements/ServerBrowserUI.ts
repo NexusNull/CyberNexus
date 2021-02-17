@@ -1,6 +1,6 @@
 import {UIController} from "../UIController";
 
-class ServerBrowserUI {
+export class ServerBrowserUI {
     uiController: UIController;
     element: HTMLDivElement;
     visible: boolean;
@@ -99,5 +99,3 @@ class ServerBrowserUI {
         this.visible = false;
     };
 }
-
-export {ServerBrowserUI}

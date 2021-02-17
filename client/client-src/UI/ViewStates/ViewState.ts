@@ -2,7 +2,7 @@ import {Game} from "../../Game";
 import {UIController} from "../UIController";
 import {InputController} from "../InputController";
 
-abstract class ViewState {
+export abstract class ViewState {
     game: Game;
     uiController: UIController;
     inputController: InputController;
@@ -21,5 +21,3 @@ abstract class ViewState {
     abstract async disable();
 
 }
-
-export {ViewState}

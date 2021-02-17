@@ -1,10 +1,9 @@
-import {AssetManager} from "../../AssetManagement/AssetManager";
 import {ViewState} from "./ViewState";
 import {Game} from "../../Game";
 import {UIController} from "../UIController";
 import {InputController} from "../InputController";
 
-class LoadingViewState extends ViewState {
+export class LoadingViewState extends ViewState {
 
     constructor(game: Game, uiController: UIController, inputController: InputController) {
         super(game, uiController, inputController);
@@ -56,5 +55,3 @@ class LoadingViewState extends ViewState {
 
 
 }
-
-export {LoadingViewState}

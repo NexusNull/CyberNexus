@@ -1,7 +1,6 @@
 import * as THREE from "three";
-import {MeshLambertMaterial} from "three";
 
-class TextureAtlas {
+export class TextureAtlas {
     name: string;
     opts: {
         transparent: boolean,
@@ -44,5 +43,3 @@ class TextureAtlas {
         }
     };
 }
-
-export {TextureAtlas};

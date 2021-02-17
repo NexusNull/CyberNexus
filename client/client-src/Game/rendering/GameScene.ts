@@ -7,7 +7,7 @@ import {Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer} from "three"
 import {DisplayWorld} from "./DisplayWorld";
 
 
-class GameScene {
+export class GameScene {
     isRendering: boolean;
     requestAnimationFrameID: number;
 
@@ -127,5 +127,3 @@ class GameScene {
     }
 
 }
-
-export {GameScene}

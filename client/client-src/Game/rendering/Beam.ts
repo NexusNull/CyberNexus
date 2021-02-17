@@ -4,9 +4,8 @@
  *
  */
 import * as THREE from "three";
-import {BufferAttribute} from "three";
 
-class Beam {
+export class Beam {
     start: THREE.Vector3;
     end: THREE.Vector3;
     speed: number;
@@ -47,7 +46,7 @@ class Beam {
             this.end.clone().add(cross).toArray(geometry.attributes.position.array, 6);
             this.end.clone().sub(cross).toArray(geometry.attributes.position.array, 9);
             geometry.computeBoundingSphere();
-            (<BufferAttribute>geometry.attributes.position).needsUpdate = true;
+            (<THREE.BufferAttribute>geometry.attributes.position).needsUpdate = true;
         }
     }
 
@@ -59,5 +58,3 @@ class Beam {
     }
 
 }
-
-export {Beam}

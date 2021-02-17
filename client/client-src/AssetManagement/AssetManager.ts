@@ -10,7 +10,7 @@ import {EventSystem} from "../util/EventSystem";
 import {Assets} from "./Assets";
 
 
-class AssetManager extends EventSystem {
+export class AssetManager extends EventSystem {
     loadManager: THREE.LoadingManager;
     textureLoader: THREE.TextureLoader;
     textureAtlasesTextures: Map<any, any>;
@@ -87,5 +87,3 @@ class AssetManager extends EventSystem {
     };
 
 }
-
-export {AssetManager}

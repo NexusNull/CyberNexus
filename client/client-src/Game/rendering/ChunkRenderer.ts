@@ -1,7 +1,7 @@
 import {Assets} from "../../AssetManagement/Assets";
 import {BufferGeometry, Float32BufferAttribute} from "three";
 
-class ChunkRenderer {
+export class ChunkRenderer {
     constructor(public assets: Assets) {
 
 
@@ -56,5 +56,3 @@ class ChunkRenderer {
         return geometry;
     }
 }
-
-export {ChunkRenderer}

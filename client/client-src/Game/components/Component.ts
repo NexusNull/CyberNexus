@@ -1,4 +1,4 @@
-enum ComponentType {
+export enum ComponentType {
     Core,
     Chassis,
     Armor,
@@ -7,7 +7,7 @@ enum ComponentType {
 }
 
 
-abstract class Component {
+export abstract class Component {
     health: number;
     maxHealth: number;
     name: string;
@@ -23,5 +23,3 @@ abstract class Component {
         this.disables = new Set(data.disables);
     }
 }
-
-export {Component, ComponentType}

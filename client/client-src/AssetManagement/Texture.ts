@@ -1,4 +1,4 @@
-class Texture{
+export class Texture{
     constructor() {
         
     }

@@ -15,7 +15,7 @@ import Timeout = NodeJS.Timeout;
 declare let perlin: perlin;
 declare var window: any;
 
-class TowerDefenceDemo {
+export class TowerDefenceDemo {
     intervalID: Timeout;
     materials: Array<Material>;
     meshes: Array<Mesh>;
@@ -93,5 +93,3 @@ class TowerDefenceDemo {
         }
     }
 }
-
-export {TowerDefenceDemo};

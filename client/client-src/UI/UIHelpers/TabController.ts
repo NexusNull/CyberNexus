@@ -1,10 +1,10 @@
-interface Tab {
+export interface Tab {
     nav: HTMLDivElement;
     content: HTMLDivElement;
 }
 
 
-class TabController {
+export class TabController {
     activeTab: Tab;
 
     constructor(structure: Array<Tab>) {
@@ -29,5 +29,3 @@ class TabController {
     }
 
 }
-
-export {TabController}

@@ -1,11 +1,10 @@
 import {FileSystemUI} from "./FileSystemUI";
 import {FileUI} from "./FileUI";
-import {Modal} from "../UIHelpers/Modal";
 import {ContextMenuUI} from "../UIHelpers/ContextMenuUI";
 import {default as newOps} from "../ContextGroups/newOps";
 import {default as updateOps} from "../ContextGroups/updateOps";
 
-class DirectoryUI {
+export class DirectoryUI {
     fileSystemUI: FileSystemUI;
     parent: DirectoryUI;
     name: string;
@@ -172,5 +171,3 @@ class DirectoryUI {
         this.children.set(newName, child);
     }
 }
-
-export {DirectoryUI};
