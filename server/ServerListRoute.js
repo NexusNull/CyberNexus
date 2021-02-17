@@ -6,27 +6,7 @@ class ServerListRoute {
             name: "Europa Iasdasdasdasdasdasd",
             location: "EU",
 
-            ip: "185.228.139.97",
-            port: 8080,
-
-            players: 1,
-            maxPlayers: 2,
-        });
-        this.servers.set(2, {
-            name: "Europa II",
-            location: "EU",
-
-            ip: "185.228.139.97",
-            port: 8080,
-
-            players: 1,
-            maxPlayers: 2,
-        });
-        this.servers.set(3, {
-            name: "Europa III",
-            location: "EU",
-
-            ip: "185.228.139.97",
+            ip: "localhost",
             port: 8080,
 
             players: 1,
@@ -48,8 +28,8 @@ class ServerListRoute {
 
             res.send(JSON.stringify(servers, null, 2));
         });
-
     }
+
 }
 
 module.exports = ServerListRoute;
