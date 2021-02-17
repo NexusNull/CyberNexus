@@ -27,7 +27,7 @@ import {CoreComponent} from "./components/Core";
  *  chassis:
  *  vertical drive| allows for relatively fast vertical movement with limited horizontal movement
  *  simple walker| semi high mobility up 1 block high medium speed cheap not able to act while moving
- *  advaced walker| high mobility 2 blocks high can act while moving medium speed
+ *  advanced walker| high mobility 2 blocks high can act while moving medium speed
  *  wheel drive | fast fragile not able to move up blocks
  *  tracks | high hp slow not able to move up blocks
  *  static| can't move very durable essentially a tower
@@ -37,7 +37,7 @@ import {CoreComponent} from "./components/Core";
  *  titanium stronk
  *
  *  mounts:
- *  mining drill| can mine materials and actually get's resources, low reach
+ *  mining drill| can mine materials and actually gets resources, low reach
  *  mining laser| vaporises material semi fast but destroy mined resources medium reach
  *  machine gun| high rate of fire medium damage
  *  laser gun| high rate of fire low damage high accuracy

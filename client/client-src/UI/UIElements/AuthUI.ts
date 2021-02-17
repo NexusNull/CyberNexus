@@ -13,8 +13,8 @@ class AuthUI {
     loginContainer: HTMLDivElement;
     registerContainer: HTMLDivElement;
 
-    registerForm: HTMLFormElement;
     loginForm: HTMLFormElement;
+    registerForm: HTMLFormElement;
 
     loginErrorContainer: HTMLDivElement;
     registerErrorContainer: HTMLDivElement;

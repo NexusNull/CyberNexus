@@ -1,5 +1,5 @@
 /**
- * Think of this object as a stage, a stage doesn't act on it's own, it get's acted upon.
+ * Think of this object as a stage, a stage doesn't act on it's own, it gets acted upon.
  */
 
 
