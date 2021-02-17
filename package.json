@@ -32,12 +32,14 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "jsonwebtoken": "^8.5.1",
+    "node-fetch": "^2.6.1",
     "pngjs-util": "git+https://github.com/NexusNull/pngjs-util.git",
     "socket.io": "^3.1.0",
     "socket.io-client": "^3.1.0",
     "sqlite": "^4.0.14",
-    "sqlite3": "^5.0.0",
-    "three": "^0.118.3"
+    "sqlite3": "^5.0.1",
+    "three": "^0.118.3",
+    "webdav-server": "git+https://github.com/NexusNull/npm-WebDAV-Server.git"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",
