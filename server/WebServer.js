@@ -3,7 +3,7 @@ const app = express();
 const DB = require("./DB");
 const UserAuth = require("./UserAuth");
 
-const Authentication = require("./Authentication");
+const ServerAuth = require("./ServerAuth");
 const ServerList = require("./ServerListRoute");
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -44,17 +44,13 @@ class WebServer {
         await this.DB.init();
         port = (port) ? port : this.defaultPort;
 
-        app.use("/", function (req, res, next) {
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            next();
-        });
 
         app.use('/', express.static(__dirname + '/../client/public'));
         app.use(bodyParser.text());
 
         let userAuth = new UserAuth(app, this.DB);
         let serverList = new ServerList(app, this.DB);
-        let fileSystem = new FileSystem(app, this.DB, authentication);
+        let serverAuth = new ServerAuth(app, userAuth);
 
         app.use(function (req, res) {
             res.status(404).send(" 404: Page not found");
