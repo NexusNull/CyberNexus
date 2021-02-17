@@ -4,7 +4,6 @@ const DB = require("./DB");
 
 const Authentication = require("./Authentication");
 const ServerList = require("./ServerListRoute");
-const FileSystem = require("./FileSystemRoute");
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');

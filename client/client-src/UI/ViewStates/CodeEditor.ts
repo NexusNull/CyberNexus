@@ -26,7 +26,7 @@ class CodeEditorViewState extends ViewState {
     }
 
     async setup(): Promise<any> {
-        this.requestDirectoryStructure("/");
+
     }
 
     async requestDirectoryStructure(path) {
@@ -55,8 +55,8 @@ class CodeEditorViewState extends ViewState {
         this.currentFile = fileUI;
         this.currentFile.select();
         let path = this.currentFile.getPath();
-        let data = await fileSystem.getFile(path);
-        this.uiController.uiElements.codeEditorUI.editor.setValue(data);
+        //let data = await fileSystem.getFile(path);
+        this.uiController.uiElements.codeEditorUI.editor.setValue("");
     }
 
     async saveFile(content) {
