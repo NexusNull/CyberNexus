@@ -2,7 +2,7 @@ import {ViewState} from "./ViewState";
 import {Game} from "../../Game";
 import {UIController} from "../UIController";
 import {InputController} from "../InputController";
-
+import util from "../../util/Util";
 
 class AuthViewState extends ViewState {
     constructor(game: Game, uiController: UIController, inputController: InputController) {
@@ -16,7 +16,7 @@ class AuthViewState extends ViewState {
 
     async enable(): Promise<any> {
         try {
-            let userData = await this.sendRequest("/auth/requestUserData");
+            let userData = JSON.parse(await util.sendRequest("GET","/auth/self"));
             this.game.setUserData(userData.id, userData.username);
             this.authCompleted();
             return;
@@ -38,7 +38,7 @@ class AuthViewState extends ViewState {
 
     async login(name, password) {
         try {
-            let userData = await this.sendRequest("/auth/login", {name, password});
+            let userData = JSON.parse(await util.sendRequest("post", "/auth/login", {name, password}));
             this.game.setUserData(userData.id, userData.username);
             this.authCompleted();
         } catch (e) {
@@ -50,10 +50,9 @@ class AuthViewState extends ViewState {
 
     }
 
-    sendRequest(url, data?): any {
+    sendRequest(url, data: object = {}): any {
         return new Promise(function (resolve, reject) {
-            if (!data)
-                data = {};
+
             var xobj = new XMLHttpRequest();
             xobj.open('POST', url, true);
             xobj.setRequestHeader("Content-type", "application/json");

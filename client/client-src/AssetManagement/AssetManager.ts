@@ -4,7 +4,7 @@
  * @constructor
  */
 import * as THREE from 'three';
-import {util} from "../util/Util"
+import util from "../util/Util"
 import {TextureAtlas} from "./TextureAtlas";
 import {EventSystem} from "../util/EventSystem";
 import {Assets} from "./Assets";

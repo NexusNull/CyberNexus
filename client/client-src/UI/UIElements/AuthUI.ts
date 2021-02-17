@@ -1,5 +1,5 @@
 import {UIController} from "../UIController";
-import {util} from "../../util/Util"
+import util from "../../util/Util"
 import {TabController} from "../UIHelpers/TabController";
 
 class AuthUI {

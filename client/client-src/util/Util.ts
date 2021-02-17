@@ -1,24 +1,22 @@
-class Util {
-    constructor() {
-    }
+export default {
 
-    posMod(num, mod) {
+    posMod: function (num, mod) {
         let res = num % mod;
         return (res < 0 ? res + mod : res);
-    }
+    },
 
-    async sleep(ms) {
+    sleep: async function (ms) {
         return new Promise(function (resolve) {
             setTimeout(resolve, ms)
         });
-    }
+    },
 
     /**
      * @param cname {string}
      * @param cvalue {string}
      * @param exdays {number}
      */
-    setCookie(cname, cvalue, exdays) {
+    setCookie: function (cname, cvalue, exdays) {
         if (typeof cname !== "string") {
             throw TypeError("cname has to be of type string");
         }
@@ -29,14 +27,14 @@ class Util {
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
         var expires = "expires=" + d.toUTCString();
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
+    },
 
     /**
      *
      * @param cname {string}
      * @returns {string|null}
      */
-    getCookie(cname) {
+    getCookie: function (cname) {
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
@@ -50,37 +48,37 @@ class Util {
             }
         }
         return null;
-    }
+    },
 
 
-    distance(posA, posB) {
+    distance: function (posA, posB) {
         let dist = Math.sqrt(Math.pow(posA.x - posB.x, 2) + Math.pow(posA.y - posB.y, 2) + Math.pow(posA.z - posB.z, 2))
         return dist;
-    }
+    },
 
-    clamp(value, min, max) {
+    clamp: function (value, min, max) {
         return Math.min(Math.max(value, min), max);
-    }
+    },
 
     /**
      *  copies all position values into a new object
      * @param pos {{x: number, y: number, z: number}}
      * @returns {{x: number, y: number, z: number}}
      */
-    copyPosition(pos) {
+    copyPosition: function (pos) {
         return {x: pos.x, y: pos.y, z: pos.z};
-    }
+    },
 
     /**
      * copies the position information from the second argument into the first
      * @param posA {{x: number, y: number, z: number}}
      * @param posB {{x: number, y: number, z: number}}
      */
-    assignPosition(posA, posB) {
+    assignPosition: function (posA, posB) {
         posA.x = posB.x;
         posA.y = posB.y;
         posA.z = posB.z;
-    }
+    },
 
     /**
      * set x,y,z of posA
@@ -89,32 +87,32 @@ class Util {
      * @param y {number}
      * @param z {number}
      */
-    setPosition(posA, x, y, z) {
+    setPosition: function (posA, x, y, z) {
         posA.x = x;
         posA.y = y;
         posA.z = z;
-    }
+    },
 
-    toChunkCoordinates(x, y, z) {
+    toChunkCoordinates: function (x, y, z) {
         return {
             x: Math.floor(x / 16),
             y: Math.floor(y / 16),
             z: Math.floor(z / 16),
         }
-    }
+    },
 
-    equalPosition(posA, posB) {
+    equalPosition: function (posA, posB) {
         return posA.x === posB.x && posA.y === posB.y && posA.z === posB.z;
-    }
+    },
 
     /**
      *
      * @param path
      * @return {Promise<string>}
      */
-    async loadJSON(path: string) {
+    loadJSON: async function(path: string) {
         return JSON.parse(await this.loadFile(path, "application/json"));
-    }
+    },
 
     /**
      *
@@ -122,7 +120,7 @@ class Util {
      * @param mimeType
      * @return {Promise<string>}
      */
-    async loadFile(path: string, mimeType: string): Promise<string> {
+    loadFile: async function(path: string, mimeType: string): Promise<string> {
         return new Promise(function (resolve, reject) {
             var xobj = new XMLHttpRequest();
             xobj.overrideMimeType(mimeType);
@@ -141,30 +139,32 @@ class Util {
             };
             xobj.send(null);
         })
-    }
+    },
 
     async sendRequest(method, url, body?): Promise<string> {
         return new Promise(function (resolve, reject) {
             let xhttp = new XMLHttpRequest();
+            xhttp.open(method, url, true);
+            let data = "";
+            if (typeof body == "object") {
+                data = JSON.stringify(body);
+                xhttp.setRequestHeader("Content-type", "application/json")
+            } else {
+                data = body;
+            }
+
             xhttp.onreadystatechange = function () {
-                if (xhttp.readyState === 4) {
-                    switch (xhttp.status) {
-                        case 200:
-                            resolve(xhttp.responseText);
-                            break;
-                        case 404:
-                            reject(`${xhttp.responseText} for ${xhttp.responseURL}`);
-                            break;
+                if (xhttp.readyState === XMLHttpRequest.DONE) {
+                    if (xhttp.status == 200) {
+                        let result = xhttp.responseText;
+                        resolve(result);
+                    } else {
+                        reject(xhttp);
                     }
                 }
             };
-            xhttp.open(method, url, true);
-            xhttp.send(body);
+
+            xhttp.send(data);
         });
     }
 };
-
-let util = new Util();
-declare let window: any;
-window.util = util;
-export {util}
