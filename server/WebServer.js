@@ -9,7 +9,17 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
+app.set("env", "production");
 app.use(express.json());
+app.use((err, req, res, next) => {
+    if (err instanceof SyntaxError) {
+        console.log(`${err.type} ${err.message}`);
+        res.status(400).send(JSON.stringify({message: "Bad Request Error"}))
+    } else {
+        next();
+    }
+});
+
 app.use(cookieParser());
 app.use(session({
     secret: '94fc9999c757efbc752f27e66c3981a4',
@@ -53,8 +63,6 @@ class WebServer {
             console.log('WebServer listening on port ' + port + '.');
         });
     };
-
-
 }
 
 (new WebServer()).openSocket(8080);
