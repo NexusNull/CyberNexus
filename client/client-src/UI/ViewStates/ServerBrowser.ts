@@ -58,7 +58,7 @@ class ServerBrowserViewState extends ViewState {
         let start = new Date();
         return new Promise(function (resolve, reject) {
             var xobj = new XMLHttpRequest();
-            xobj.open('GET', `http://${ip}:${port}`, true);
+            xobj.open('GET', `${window.location.protocol}//${ip}:${port}`, true);
             xobj.timeout = 2000;
 
             xobj.onreadystatechange = function () {
