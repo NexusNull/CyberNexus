@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const DB = require("./DB");
+const UserAuth = require("./UserAuth");
 
 const Authentication = require("./Authentication");
 const ServerList = require("./ServerListRoute");
@@ -51,7 +52,7 @@ class WebServer {
         app.use('/', express.static(__dirname + '/../client/public'));
         app.use(bodyParser.text());
 
-        let authentication = new Authentication(app, this.DB);
+        let userAuth = new UserAuth(app, this.DB);
         let serverList = new ServerList(app, this.DB);
         let fileSystem = new FileSystem(app, this.DB, authentication);
 

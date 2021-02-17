@@ -3,38 +3,11 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 
 const privateKey = fs.readFileSync('./keys/privateKey.pem');
-const publicKey = fs.readFileSync('./keys/publicKey.pem');
 const tokenTTL = 60 * 60 * 4;
 
-class Authentication {
+class UserAuth {
     constructor(app, DB) {
         this.DB = DB;
-        app.use("/", function (req, res, next) {
-            console.log(req.session.user)
-            console.log(req.cookies);
-            let validToken = false;
-            if (req.session.user) {
-                if (req.cookies.jwt) {
-                    try {
-                        validToken = jwt.verify(req.cookies.jwt, publicKey, {algorithm: 'RS256'});
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-                if (!validToken) {
-                    const token = jwt.sign({
-                        userId: req.session.user.id,
-                        parentId: req.session.user.sessionId
-                    }, privateKey, {
-                        algorithm: 'RS256',
-                        expiresIn: tokenTTL
-                    });
-                    res.setHeader("Set-Cookie", `jwt=${token}; Max-Age=${tokenTTL}; HttpOnly; Path=/`);
-                }
-            }
-            next();
-        });
-
 
         app.post("/auth/login", async (req, res) => {
             let row = await this.DB.getUserByName(req.body.name);
@@ -63,7 +36,7 @@ class Authentication {
             //TODO later
         });
 
-        app.post("/auth/requestUserData", async (req, res) => {
+        app.get("/auth/self", async (req, res) => {
             if (req.session.user) {
                 res.status(200);
                 res.setHeader("Content-Type", "application/json");
@@ -82,4 +55,4 @@ class Authentication {
     }
 }
 
-module.exports = Authentication;
+module.exports = UserAuth;
