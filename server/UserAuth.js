@@ -52,6 +52,34 @@ class UserAuth {
             }
         });
 
+        app.get("/auth/jwt", async (req, res) => {
+            if (req.session.user) {
+
+                const token = jwt.sign({
+                    uid: req.session.user.id,
+                    ip: req.connection.remoteAddress,
+                    paths: [
+                        {path: "/1/", perms: ["canRead", "canWrite"]}
+                    ],
+                    admin: false,
+                }, privateKey, {
+                    algorithm: 'RS256',
+                    expiresIn: tokenTTL
+                });
+                res.status(200);
+                res.setHeader("Content-Type", "application/json");
+
+                res.send(JSON.stringify({
+                    token: token,
+                }));
+
+            } else {
+                res.status(403);
+                res.setHeader("Content-Type", "application/json");
+                res.send(`{"valid":false, "message":"Invalid token"}`);
+            }
+
+        });
     }
 }
 
