@@ -1,4 +1,4 @@
-interface Component {
+export interface Component {
     health: number;
     maxHealth: number;
     name: string;

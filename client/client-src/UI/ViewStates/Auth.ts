@@ -1,13 +1,12 @@
-import {ViewState} from "./ViewState";
-import {Game} from "../../Game";
-import {UIController} from "../UIController";
-import {InputController} from "../InputController";
-import util from "../../util/Util";
+import {ViewState} from './ViewState';
+import {Game} from '../../Game';
+import {UIController} from '../UIController';
+import {InputController} from '../InputController';
+import util from '../../util/Util';
 
 class AuthViewState extends ViewState {
     constructor(game: Game, uiController: UIController, inputController: InputController) {
         super(game, uiController, inputController);
-
     }
 
     async disable(): Promise<any> {
@@ -16,7 +15,7 @@ class AuthViewState extends ViewState {
 
     async enable(): Promise<any> {
         try {
-            let userData = JSON.parse(await util.sendRequest("GET","/auth/self"));
+            const userData = JSON.parse(await util.sendRequest('GET', '/auth/self'));
             this.game.setUserData(userData.id, userData.username);
             this.authCompleted();
             return;
@@ -27,10 +26,6 @@ class AuthViewState extends ViewState {
         this.uiController.uiElements.authUI.display();
     }
 
-    async setup(): Promise<any> {
-
-    }
-
     authCompleted() {
         this.uiController.uiElements.authUI.clearForms();
         this.uiController.changeViewState(this.uiController.viewStates.serverBrowser);
@@ -38,7 +33,7 @@ class AuthViewState extends ViewState {
 
     async login(name, password) {
         try {
-            let userData = JSON.parse(await util.sendRequest("post", "/auth/login", {name, password}));
+            const userData = JSON.parse(await util.sendRequest('post', '/auth/login', {name, password}));
             this.game.setUserData(userData.id, userData.username);
             this.authCompleted();
         } catch (e) {
@@ -47,8 +42,9 @@ class AuthViewState extends ViewState {
     }
 
     async register(name, email, password) {
-
+        //TODO implement after cleanup
+        console.log("ADD ME");
     }
 }
 
-export {AuthViewState}
+export {AuthViewState};

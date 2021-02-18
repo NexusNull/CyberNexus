@@ -11,25 +11,26 @@ export class EventSystem {
         } else {
             this.listeners.set(eventName, [callback]);
         }
-    };
+    }
 
     async emit(eventName: string, data?: any) {
-        let listeners = this.listeners.get(eventName);
-        if (!listeners)
+        const listeners = this.listeners.get(eventName);
+        if (!listeners) {
             return;
+        }
 
-        for (let listener of listeners) {
+        for (const listener of listeners) {
             try {
                 await listener(data);
             } catch (e) {
                 console.error(e);
             }
         }
-    };
+    }
 
     remove(eventName, callback) {
-        let listeners = this.listeners.get(eventName);
-        let i = listeners.indexOf(callback);
+        const listeners = this.listeners.get(eventName);
+        const i = listeners.indexOf(callback);
         listeners.splice(i, 1);
-    };
+    }
 }

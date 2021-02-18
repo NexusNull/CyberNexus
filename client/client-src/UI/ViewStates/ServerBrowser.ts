@@ -1,8 +1,9 @@
-import {ViewState} from "./ViewState";
-import {Game} from "../../Game";
-import {UIController} from "../UIController";
-import {InputController} from "../InputController";
-import util from "../../util/Util";
+import {ViewState} from './ViewState';
+import {Game} from '../../Game';
+import {UIController} from '../UIController';
+import {InputController} from '../InputController';
+import util from '../../util/Util';
+import {Server} from "../../definitions/Server";
 
 
 export class ServerBrowserViewState extends ViewState {
@@ -22,20 +23,17 @@ export class ServerBrowserViewState extends ViewState {
     }
 
     async setup(): Promise<any> {
-        var self = this;
-        let servers = await this.requestServerList();
-        for (let server of servers) {
+        const servers = await this.requestServerList();
+        for (const server of servers) {
             this.uiController.uiElements.serverBrowserUI.addServerEntry(server.id, server);
             this.servers.set(server.id, server);
         }
 
-        setTimeout(async function () {
-            while (true) {
-                if (self.uiController.activeViewState == self)
-                    await self.pingAllServers();
-                await util.sleep(2000);
+        setInterval(async () => {
+            if (this.uiController.activeViewState == this) {
+                await this.pingAllServers();
             }
-        })
+        }, 2000);
     }
 
     async joinServer(id) {
@@ -44,28 +42,27 @@ export class ServerBrowserViewState extends ViewState {
     }
 
     async pingAllServers() {
-        var self = this;
-        for (let server of this.servers) {
-            await this.ping(server[1].ip, server[1].port).then(function (ping) {
-                self.uiController.uiElements.serverBrowserUI.updateServer(server[1].id, {ping: `${ping} ms`});
-            }).catch(function () {
-                self.uiController.uiElements.serverBrowserUI.updateServer(server[1].id, {ping: "-"})
-            })
+        for (const server of this.servers) {
+            await this.ping(server[1].ip, server[1].port).then((ping) => {
+                this.uiController.uiElements.serverBrowserUI.updateServer(server[1].id, {ping: `${ping} ms`});
+            }).catch(() => {
+                this.uiController.uiElements.serverBrowserUI.updateServer(server[1].id, {ping: '-'});
+            });
         }
     }
 
     async ping(ip, port): Promise<number> {
-        let start = new Date();
-        return new Promise(function (resolve, reject) {
-            var xobj = new XMLHttpRequest();
+        const start = new Date();
+        return new Promise((resolve, reject) => {
+            const xobj = new XMLHttpRequest();
             xobj.open('GET', `${window.location.protocol}//${ip}:${port}`, true);
             xobj.timeout = 2000;
 
-            xobj.onreadystatechange = function () {
+            xobj.onreadystatechange = () => {
                 if (xobj.readyState === XMLHttpRequest.DONE) {
-
-                    if (xobj.status == 0)
-                        reject("Request timed out");
+                    if (xobj.status == 0) {
+                        reject('Request timed out');
+                    }
 
                     resolve(new Date().getTime() - start.getTime());
                 }
@@ -76,39 +73,41 @@ export class ServerBrowserViewState extends ViewState {
     }
 
     async requestServerList(): Promise<Array<Server>> {
-        return new Promise(function (resolve, reject) {
-            var xobj = new XMLHttpRequest();
-            xobj.open('GET', "/serverList", true);
+        return new Promise((resolve, reject) => {
+            const xobj = new XMLHttpRequest();
+            xobj.open('GET', '/serverList', true);
             xobj.timeout = 1000;
 
-            xobj.onreadystatechange = function () {
+            xobj.onreadystatechange = () => {
                 if (xobj.readyState === XMLHttpRequest.DONE) {
                     let data = null;
 
-                    if (xobj.status == 0)
-                        reject("Request timed out");
+                    if (xobj.status == 0) {
+                        reject('Request timed out');
+                    }
 
 
                     switch (xobj.status) {
-                        case 200:
-                        case 400:
-                            try {
-                                data = JSON.parse(xobj.responseText);
-                            } catch (e) {
-                                reject("Unable to parse Server response");
-                                console.error(e);
-                                break;
-                            }
-
-                            if (xobj.status == 200)
-                                resolve(data);
-                            else
-                                reject(data.message);
-
+                    case 200:
+                    case 400:
+                        try {
+                            data = JSON.parse(xobj.responseText);
+                        } catch (e) {
+                            reject('Unable to parse Server response');
+                            console.error(e);
                             break;
-                        default:
-                            reject(`Unknown status code in response: ${xobj.status}`);
-                            break;
+                        }
+
+                        if (xobj.status == 200) {
+                            resolve(data);
+                        } else {
+                            reject(data.message);
+                        }
+
+                        break;
+                    default:
+                        reject(`Unknown status code in response: ${xobj.status}`);
+                        break;
                     }
                 }
             };

@@ -1,5 +1,5 @@
-import CodeMirror from "codemirror";
-import {UIController} from "../UIController";
+import CodeMirror from 'codemirror';
+import {UIController} from '../UIController';
 
 export class ConsoleUI {
     uiController: UIController;
@@ -11,44 +11,45 @@ export class ConsoleUI {
 
     constructor(uiController: UIController) {
         this.uiController = uiController;
-        this.element = <HTMLDivElement>document.getElementById("CEConsole");
-        this.consoleInputElement = <HTMLDivElement>this.element.getElementsByClassName("consoleInput")[0];
-        this.consoleLogElement = <HTMLDivElement>this.element.getElementsByClassName("consoleLog")[0];
+        this.element = <HTMLDivElement>document.getElementById('CEConsole');
+        this.consoleInputElement = <HTMLDivElement>this.element.getElementsByClassName('consoleInput')[0];
+        this.consoleLogElement = <HTMLDivElement>this.element.getElementsByClassName('consoleLog')[0];
         this.scrollBarBound = true;
 
         this.codeInput = CodeMirror(this.consoleInputElement, {
             lineNumbers: true,
-            mode: "javascript",
-            value: "setInterval(()=>{console.error(123)},500)"
+            mode: 'javascript',
+            value: 'setInterval(()=>{console.error(123)},500)',
         });
 
-        this.consoleLogElement.addEventListener("scroll", (e) => {
+        this.consoleLogElement.addEventListener('scroll', (e) => {
             this.scrollBarBound = this.consoleLogElement.scrollHeight - this.consoleLogElement.scrollTop === this.consoleLogElement.clientHeight;
         });
 
-        window.addEventListener("keypress", (e) => {
-            console.log(e)
+        window.addEventListener('keypress', (e) => {
+            console.log(e);
             if (this.codeInput.hasFocus() && e.ctrlKey) {
                 switch (e.code) {
-                    case "Enter":
-                        let result;
+                case 'Enter': {
+                    let result;
                     {
                         this.uiController.game.runner.run(this.codeInput.getValue());
                     }
-                        try {
-                            if (result !== undefined)
-                                this.logMessage(result);
-                        } catch (e) {
-                            this.logError(e)
+                    try {
+                        if (result !== undefined) {
+                            this.logMessage(result);
                         }
-                        break;
-                    case "KeyB":
-                        this.uiController.game.runner.stop();
-                        break;
-                    default:
-                        break;
+                    } catch (e) {
+                        this.logError(e);
+                    }
                 }
-
+                    break;
+                case 'KeyB':
+                    this.uiController.game.runner.stop();
+                    break;
+                default:
+                    break;
+                }
             }
         });
     }
@@ -58,25 +59,26 @@ export class ConsoleUI {
     }
 
     updateScrollPosition() {
-        if (this.scrollBarBound)
+        if (this.scrollBarBound) {
             this.consoleLogElement.scrollTo(0, this.consoleLogElement.scrollHeight);
+        }
     }
 
     logError(object) {
-        let element = this.logMessage(object);
-        element.classList.add("logError");
+        const element = this.logMessage(object);
+        element.classList.add('logError');
         return element;
     }
 
     logWarning(object) {
-        let element = this.logMessage(object);
-        element.classList.add("logWarning");
+        const element = this.logMessage(object);
+        element.classList.add('logWarning');
         return element;
     }
 
     logMessage(object) {
-        let element = document.createElement("div");
-        element.classList.add("logMessage");
+        const element = document.createElement('div');
+        element.classList.add('logMessage');
         element.innerText = object;
         this.consoleLogElement.appendChild(element);
         this.updateScrollPosition();

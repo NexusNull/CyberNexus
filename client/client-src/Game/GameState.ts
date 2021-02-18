@@ -3,12 +3,12 @@
  *
  */
 
-import {Chunk} from "./Chunk";
-import {EventSystem} from "../util/EventSystem";
-import {GameScene} from "./rendering/GameScene";
-import {Unit} from "./Unit";
+import {Chunk} from './Chunk';
+import {EventSystem} from '../util/EventSystem';
+import {GameScene} from './rendering/GameScene';
+import {Unit} from './Unit';
 
-class GameState extends EventSystem {
+export class GameState extends EventSystem {
     chunks: Map<string, Chunk>;
     units: Map<number, Unit>;
 
@@ -18,9 +18,5 @@ class GameState extends EventSystem {
         gameScene.clear();
     }
 
-    updateChunk(chunkData) {
-
-    }
 }
 
-export {GameState}

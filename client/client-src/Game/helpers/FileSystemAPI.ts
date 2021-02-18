@@ -1,38 +1,41 @@
-import util from "../../util/Util";
-
+/* eslint-disable */ //TODO This class needs to be redone after the cleanup has been finished
 export class FileSystemAPI {
     constructor() {
 
     }
 
-    async createDirectory(path) {
+    async createDirectory() {
 
     }
 
-    async writeFile(path, content) {
+    async writeFile() {
 
     }
 
-    async listDirectory(path): Promise<Array<{ path: string, type: string }>> {
-        return [{path: "", type: ""}]
+    async listDirectory(): Promise<Array<{ path: string, type: string }>> {
+        return [{path: '', type: ''}];
     }
 
-    async getFile(path) {
+    async getFile() {
 
     }
 
-    async deleteFile(path) {
+    async deleteFile() {
+
     }
 
-    async deleteDirectory(path) {
+    async deleteDirectory() {
+
     }
 
-    validateDirectoryName(name) {
+    validateDirectoryName() {
+
     }
 
-    validateFileName(name) {
+    validateFileName() {
+
     }
 }
 
-let fileSystem = new FileSystemAPI();
-export {fileSystem}
+const fileSystem = new FileSystemAPI();
+export {fileSystem};

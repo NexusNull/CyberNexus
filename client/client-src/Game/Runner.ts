@@ -1,7 +1,7 @@
-import type {Game} from "../Game";
+import type {Game} from '../Game';
 
 interface VMContainer extends HTMLIFrameElement {
-    contentWindow: HTMLIFrameElement["contentWindow"] & {
+    contentWindow: HTMLIFrameElement['contentWindow'] & {
         game: Game;
     }
 }
@@ -17,11 +17,11 @@ class Runner {
 
     start() {
         if (!this.iframe) {
-            this.iframe = <VMContainer>document.createElement("iframe");
+            this.iframe = <VMContainer>document.createElement('iframe');
             document.body.appendChild(this.iframe);
             this.iframe.contentWindow.game = this.game;
 
-            let script = document.createElement("script");
+            const script = document.createElement('script');
             script.innerHTML = `
                 console.log = new Proxy(console.log, {
                     apply: (target, that, args) => {
@@ -52,7 +52,7 @@ class Runner {
                 `;
             this.iframe.contentDocument.body.appendChild(script);
         } else {
-            throw new Error("Runner is already running");
+            throw new Error('Runner is already running');
         }
     }
 
@@ -62,17 +62,18 @@ class Runner {
     }
 
     run(code, path?) {
-        if (!this.iframe)
+        if (!this.iframe) {
             this.start();
-        let environment = "virtual-fs";
+        }
+        let environment = 'virtual-fs';
         if (!path) {
             path = `repl-${(Math.floor(new Date().getTime() / 1000) % (10000))}`;
-            environment = "console";
+            environment = 'console';
         }
 
-        let sourceMap = `//# sourceURL=${environment}:///${path}`;
-        let document = this.iframe.contentDocument;
-        let script = document.createElement("script");
+        const sourceMap = `//# sourceURL=${environment}:///${path}`;
+        const document = this.iframe.contentDocument;
+        const script = document.createElement('script');
         script.innerHTML = `
                  (function(){
                     let module = {
@@ -91,4 +92,4 @@ class Runner {
     }
 }
 
-export {Runner}
+export {Runner};

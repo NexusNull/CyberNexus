@@ -1,5 +1,5 @@
-import {Scene} from "three";
+import {Scene} from 'three';
 
-interface document {
+export interface document {
     scene: Scene;
 }

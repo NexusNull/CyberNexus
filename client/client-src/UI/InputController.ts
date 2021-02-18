@@ -8,8 +8,10 @@
  */
 
 
-import {Game} from "../Game";
-import {EventSystem} from "../util/EventSystem";
+import {Game} from '../Game';
+import {EventSystem} from '../util/EventSystem';
+import {Action} from "../definitions/Action";
+import {KeyCombo} from "../definitions/KeyCombo";
 
 export class InputController extends EventSystem {
     actions: Map<string, Action>;
@@ -34,25 +36,24 @@ export class InputController extends EventSystem {
         };
 
         this.pointerLockElement = document.body;
-        window.addEventListener("keypress", this.handleKeyPress.bind(this));
-        window.addEventListener("keydown", this.handleKeyDown.bind(this));
-        window.addEventListener("keyup", this.handleKeyUp.bind(this));
-        document.addEventListener("pointerlockchange", this.handlePointerLockChange.bind(this));
-        this.pointerLockElement.addEventListener("mousemove", this.handleMouseMove.bind(this));
-        this.pointerLockElement.addEventListener("mousedown", this.handleMouseDown.bind(this));
-
-    };
+        window.addEventListener('keypress', this.handleKeyPress.bind(this));
+        window.addEventListener('keydown', this.handleKeyDown.bind(this));
+        window.addEventListener('keyup', this.handleKeyUp.bind(this));
+        document.addEventListener('pointerlockchange', this.handlePointerLockChange.bind(this));
+        this.pointerLockElement.addEventListener('mousemove', this.handleMouseMove.bind(this));
+        this.pointerLockElement.addEventListener('mousedown', this.handleMouseDown.bind(this));
+    }
 
     registerAction(name, defaultKeyCombo: KeyCombo, keyDown?, keyUp?, keyPress?): Action {
-        if (typeof defaultKeyCombo !== "object" || typeof defaultKeyCombo.code !== "string") {
-            throw new Error("key combo has to be an object containing at least code as key code.");
+        if (typeof defaultKeyCombo !== 'object' || typeof defaultKeyCombo.code !== 'string') {
+            throw new Error('key combo has to be an object containing at least code as key code.');
         }
         if (this.actions.has(name)) {
-            console.error("Action:" + name + " is already defined");
+            console.error('Action:' + name + ' is already defined');
         }
         let keyCombo: KeyCombo = {
             code: defaultKeyCombo.code,
-            action: null
+            action: null,
         };
         if (defaultKeyCombo.modifiers) {
             keyCombo.modifiers = {
@@ -63,17 +64,14 @@ export class InputController extends EventSystem {
             };
         }
 
-        let action = {
+        const action = {
             name: name,
             defaultKeyCombo: defaultKeyCombo,
             keyCombo: keyCombo,
-            keyDown: keyDown || (() => {
-            }),
-            keyUp: keyUp || (() => {
-            }),
-            keyPress: keyPress || (() => {
-            }),
-            active: false
+            keyDown: keyDown || (() => undefined),
+            keyUp: keyUp || (() => undefined),
+            keyPress: keyPress || (() => undefined),
+            active: false,
         };
 
         keyCombo.action = action;
@@ -86,42 +84,47 @@ export class InputController extends EventSystem {
         action.keyCombo = keyCombo;
         this.actions.set(name, action);
         if (this.keys.has(keyCombo.code)) {
-            let keyCombos = this.keys.get(keyCombo.code);
+            const keyCombos = this.keys.get(keyCombo.code);
             keyCombos.push(keyCombo);
         } else {
             this.keys.set(keyCombo.code, [keyCombo]);
         }
 
         return action;
-    };
+    }
 
     handleKeyDown(event: KeyboardEvent) {
-        let keyCombos = this.keys.get(event.code);
+        const keyCombos = this.keys.get(event.code);
         let foundAction = false;
-        if (keyCombos)
-            for (let keyCombo of keyCombos) {
+        if (keyCombos) {
+            for (const keyCombo of keyCombos) {
                 if (keyCombo.modifiers) {
-                    if (keyCombo.modifiers.altKey === event.altKey)
+                    if (keyCombo.modifiers.altKey === event.altKey) {
                         continue;
-                    if (keyCombo.modifiers.shiftKey === event.shiftKey)
+                    }
+                    if (keyCombo.modifiers.shiftKey === event.shiftKey) {
                         continue;
-                    if (keyCombo.modifiers.metaKey === event.metaKey)
+                    }
+                    if (keyCombo.modifiers.metaKey === event.metaKey) {
                         continue;
-                    if (keyCombo.modifiers.ctrlKey === event.ctrlKey)
+                    }
+                    if (keyCombo.modifiers.ctrlKey === event.ctrlKey) {
                         continue;
+                    }
                 }
 
                 try {
-                    let action = keyCombo.action;
+                    const action = keyCombo.action;
                     if (action.active) {
                         foundAction = true;
                         keyCombo.action.keyDown();
-                        this.activeActions.add(keyCombo.action)
+                        this.activeActions.add(keyCombo.action);
                     }
                 } catch (e) {
-                    console.error(e)
+                    console.error(e);
                 }
             }
+        }
 
         if (foundAction) {
             event.preventDefault();
@@ -129,16 +132,11 @@ export class InputController extends EventSystem {
         }
     }
 
-    handleKeyPress(event: KeyboardEvent) {
-
-    }
-
-    handleKeyUp(event: KeyboardEvent) {
-
+    handleKeyPress(event) {
         let foundAction = false;
 
-        for (let action of this.activeActions) {
-            let keyCombo = action.keyCombo;
+        for (const action of this.activeActions) {
+            const keyCombo = action.keyCombo;
             let hit = false;
 
             if (keyCombo.code == event.code) {
@@ -146,24 +144,72 @@ export class InputController extends EventSystem {
             }
 
             if (keyCombo.modifiers) {
-                if (keyCombo.modifiers.altKey !== event.altKey)
+                if (keyCombo.modifiers.altKey !== event.altKey) {
                     hit = true;
-                if (keyCombo.modifiers.shiftKey !== event.shiftKey)
+                }
+                if (keyCombo.modifiers.shiftKey !== event.shiftKey) {
                     hit = true;
-                if (keyCombo.modifiers.metaKey !== event.metaKey)
+                }
+                if (keyCombo.modifiers.metaKey !== event.metaKey) {
                     hit = true;
-                if (keyCombo.modifiers.ctrlKey !== event.ctrlKey)
+                }
+                if (keyCombo.modifiers.ctrlKey !== event.ctrlKey) {
                     hit = true;
+                }
             }
 
             if (hit) {
-                let action = keyCombo.action;
+                const action = keyCombo.action;
                 if (action.active) {
                     try {
                         foundAction = true;
                         action.keyUp();
                     } catch (e) {
-                        console.error(e)
+                        console.error(e);
+                    }
+                }
+            }
+        }
+        if (foundAction) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
+    handleKeyUp(event: KeyboardEvent) {
+        let foundAction = false;
+
+        for (const action of this.activeActions) {
+            const keyCombo = action.keyCombo;
+            let hit = false;
+
+            if (keyCombo.code == event.code) {
+                hit = true;
+            }
+
+            if (keyCombo.modifiers) {
+                if (keyCombo.modifiers.altKey !== event.altKey) {
+                    hit = true;
+                }
+                if (keyCombo.modifiers.shiftKey !== event.shiftKey) {
+                    hit = true;
+                }
+                if (keyCombo.modifiers.metaKey !== event.metaKey) {
+                    hit = true;
+                }
+                if (keyCombo.modifiers.ctrlKey !== event.ctrlKey) {
+                    hit = true;
+                }
+            }
+
+            if (hit) {
+                const action = keyCombo.action;
+                if (action.active) {
+                    try {
+                        foundAction = true;
+                        action.keyUp();
+                    } catch (e) {
+                        console.error(e);
                     }
                 }
             }
@@ -179,25 +225,25 @@ export class InputController extends EventSystem {
      * @type boolean
      */
     handlePointerLockChange() {
-        this.emit("pointerLockChange", this.hasPointerLock())
+        this.emit('pointerLockChange', this.hasPointerLock());
     }
 
     async requestPointerLock() {
-        let self = this;
-        return new Promise(function (resolve, reject) {
-            let lockChange, lockError;
-            lockChange = function () {
-                resolve(self.hasPointerLock());
+
+        return new Promise((resolve, reject) => {
+
+            const lockChange = () => {
+                resolve(this.hasPointerLock());
                 document.removeEventListener('pointerlockerror', lockChange, false);
                 document.removeEventListener('pointerlockchange', lockError, false);
             };
 
-            lockError = function () {
+            const lockError = () => {
                 reject();
                 document.removeEventListener('pointerlockerror', lockChange, false);
                 document.removeEventListener('pointerlockchange', lockError, false);
             };
-            self.pointerLockElement.requestPointerLock();
+            this.pointerLockElement.requestPointerLock();
             document.addEventListener('pointerlockchange', lockChange, false);
             document.addEventListener('pointerlockerror', lockError, false);
         });
@@ -205,27 +251,30 @@ export class InputController extends EventSystem {
 
 
     handleMouseMove(event) {
-        if (!this.hasPointerLock())
+        if (!this.hasPointerLock()) {
             return;
+        }
 
-        if (Math.abs(event.movementX) > 100 || Math.abs(event.movementY) > 100)
+        if (Math.abs(event.movementX) > 100 || Math.abs(event.movementY) > 100) {
             return;
+        }
 
-        this.emit("lockedMouseMove", {
+        this.emit('lockedMouseMove', {
             rotationY: -event.movementX * this.config.sensitivityX,
             rotationX: -event.movementY * this.config.sensitivityY,
         });
     }
 
     handleMouseDown(event) {
-        if (!this.hasPointerLock())
+        if (!this.hasPointerLock()) {
             return;
-        this.emit("lockedMouseDown", event)
+        }
+        this.emit('lockedMouseDown', event);
     }
 
     unlockPointer() {
         document.exitPointerLock();
-    };
+    }
 
     hasPointerLock() {
         return document.pointerLockElement === this.pointerLockElement;

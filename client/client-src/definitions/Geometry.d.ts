@@ -1,4 +1,4 @@
-interface Geometry {
+export interface Geometry {
     vertices: Array<number>;
     normals: Array<number>;
     uvs: Array<number>;

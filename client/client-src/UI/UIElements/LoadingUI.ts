@@ -1,4 +1,4 @@
-import {UIController} from "../UIController";
+import {UIController} from '../UIController';
 
 export class LoadingUI {
     uiController: UIController;
@@ -9,27 +9,27 @@ export class LoadingUI {
 
     constructor(uiController) {
         this.uiController = uiController;
-        this.element = <HTMLDivElement>document.getElementById("MainLoading");
-        this.loadingBar = <HTMLDivElement>this.element.getElementsByClassName("loadingBar")[0];
-        this.loadingText = <HTMLDivElement>this.element.getElementsByClassName("loadingText")[0];
+        this.element = <HTMLDivElement>document.getElementById('MainLoading');
+        this.loadingBar = <HTMLDivElement> this.element.getElementsByClassName('loadingBar')[0];
+        this.loadingText = <HTMLDivElement> this.element.getElementsByClassName('loadingText')[0];
         this.visible = false;
-    };
+    }
 
     setProgress(progress) {
-        this.loadingBar.style.width = progress + "%";
-    };
+        this.loadingBar.style.width = progress + '%';
+    }
 
     setMessage(message) {
         this.loadingText.innerText = message;
-    };
+    }
 
     display() {
-        this.element.classList.remove("hidden");
+        this.element.classList.remove('hidden');
         this.visible = true;
-    };
+    }
 
     hide() {
-        this.element.classList.add("hidden");
+        this.element.classList.add('hidden');
         this.visible = false;
-    };
+    }
 }

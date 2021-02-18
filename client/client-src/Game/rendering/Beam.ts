@@ -3,7 +3,7 @@
  * instanced objects the math is simple and can effectively be done on a gpu.
  *
  */
-import * as THREE from "three";
+import * as THREE from 'three';
 
 export class Beam {
     start: THREE.Vector3;
@@ -26,19 +26,19 @@ export class Beam {
 
         this.material = new THREE.MeshBasicMaterial({map: this.texture, color: 0xffffff, transparent: true});
         this.geometry = new THREE.BufferGeometry();
-        this.geometry.setAttribute("position", new THREE.Float32BufferAttribute(new Array(12).fill(0), 3));
-        this.geometry.setAttribute("uv", new THREE.Float32BufferAttribute([0, 0, 0, 1, 1, 0, 1, 1], 2));
+        this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(new Array(12).fill(0), 3));
+        this.geometry.setAttribute('uv', new THREE.Float32BufferAttribute([0, 0, 0, 1, 1, 0, 1, 1], 2));
         this.geometry.setIndex([2, 1, 0, 1, 2, 3]);
         this.mesh = new THREE.Mesh(this.geometry, this.material);
 
-        this.mesh.onBeforeRender = (renderer, scene, camera, geometry: THREE.BufferGeometry, material, group) => {
+        this.mesh.onBeforeRender = (renderer, scene, camera, geometry: THREE.BufferGeometry) => {
             this.texture.offset.x += this.speed;
             this.texture.repeat.set(this.start.clone().sub(this.end).length() / this.thickness, 1);
 
-            let camPos = camera.position.clone().applyMatrix4(new THREE.Matrix4().getInverse(this.mesh.matrixWorld));
-            let vecA = camPos.clone().sub(this.start);
-            let vecB = camPos.clone().sub(this.end);
-            let cross = new THREE.Vector3().crossVectors(vecA, vecB);
+            const camPos = camera.position.clone().applyMatrix4(new THREE.Matrix4().getInverse(this.mesh.matrixWorld));
+            const vecA = camPos.clone().sub(this.start);
+            const vecB = camPos.clone().sub(this.end);
+            const cross = new THREE.Vector3().crossVectors(vecA, vecB);
             cross.normalize().multiplyScalar(this.thickness / 2);
 
             this.start.clone().add(cross).toArray(geometry.attributes.position.array, 0);
@@ -47,7 +47,7 @@ export class Beam {
             this.end.clone().sub(cross).toArray(geometry.attributes.position.array, 9);
             geometry.computeBoundingSphere();
             (<THREE.BufferAttribute>geometry.attributes.position).needsUpdate = true;
-        }
+        };
     }
 
     dispose() {
@@ -56,5 +56,4 @@ export class Beam {
         this.texture.dispose();
         this.material.dispose();
     }
-
 }

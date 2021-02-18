@@ -1,4 +1,4 @@
-import {UIController} from "../UIController";
+import {UIController} from '../UIController';
 
 export class RenderUI {
     uiController: UIController;
@@ -6,8 +6,6 @@ export class RenderUI {
 
     constructor(uiController) {
         this.uiController = uiController;
-        this.canvas = <HTMLCanvasElement>document.getElementById("main");
-
+        this.canvas = <HTMLCanvasElement>document.getElementById('main');
     }
-
 }

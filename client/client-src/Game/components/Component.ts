@@ -1,3 +1,4 @@
+/* eslint-disable */
 export enum ComponentType {
     Core,
     Chassis,

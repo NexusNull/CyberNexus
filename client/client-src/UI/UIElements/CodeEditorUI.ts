@@ -1,7 +1,7 @@
-import {UIController} from "../UIController";
+import {UIController} from '../UIController';
 import CodeMirror from 'codemirror';
-import {FileUI} from "./FileUI";
-import {VariableSeparator} from "../UIHelpers/VariableSeparator";
+import {FileUI} from './FileUI';
+import {VariableSeparator} from '../UIHelpers/VariableSeparator';
 import Timeout = NodeJS.Timeout;
 
 export class CodeEditorUI {
@@ -14,44 +14,42 @@ export class CodeEditorUI {
     consoleElement: HTMLDivElement;
     directoryStructure: HTMLDivElement;
     currentFile: FileUI;
-    saveTimeout: Timeout;
+    saveTimeout: number;
 
     constructor(uiController: UIController) {
         this.uiController = uiController;
-        this.element = <HTMLDivElement>document.getElementById("CodeEditor");
-        this.editorElement = <HTMLDivElement>document.getElementById("CECodeEditor");
-        this.consoleElement = <HTMLDivElement>document.getElementById("CEConsole");
-        this.directoryStructure = <HTMLDivElement>document.getElementById("CEDirectoryStructure");
+        this.element = <HTMLDivElement>document.getElementById('CodeEditor');
+        this.editorElement = <HTMLDivElement>document.getElementById('CECodeEditor');
+        this.consoleElement = <HTMLDivElement>document.getElementById('CEConsole');
+        this.directoryStructure = <HTMLDivElement>document.getElementById('CEDirectoryStructure');
         this.currentFile = null;
         this.separators = [];
 
-        let separators = <HTMLCollectionOf<HTMLDivElement>>this.element.getElementsByClassName("verticalSeparator");
-        for (let separator of separators) {
+        const separators = <HTMLCollectionOf<HTMLDivElement>> this.element.getElementsByClassName('verticalSeparator');
+        for (const separator of separators) {
             this.separators.push(new VariableSeparator(separator, separator.previousElementSibling));
         }
 
         this.editor = CodeMirror(this.editorElement, {
             lineNumbers: true,
-            mode: "javascript",
-            value: ""
+            mode: 'javascript',
+            value: '',
         });
 
-        this.editor.on("change", (e) => {
+        this.editor.on('change', (e) => {
             clearTimeout(this.saveTimeout);
-            this.saveTimeout = setTimeout(() => {
-                this.uiController.viewStates.codeEditor.saveFile(e.getValue());
-            }, 1000);
+
         });
     }
 
     display() {
-        this.element.classList.remove("hidden");
+        this.element.classList.remove('hidden');
         this.visible = true;
         this.editor.refresh();
-    };
+    }
 
     hide() {
-        this.element.classList.add("hidden");
+        this.element.classList.add('hidden');
         this.visible = false;
-    };
+    }
 }

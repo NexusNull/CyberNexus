@@ -1,7 +1,7 @@
-import {FileSystemUI} from "./FileSystemUI";
-import {DirectoryUI} from "./DirectoryUI";
-import {ContextMenuUI} from "../UIHelpers/ContextMenuUI";
-import {default as updateOps} from "../ContextGroups/updateOps";
+import {FileSystemUI} from './FileSystemUI';
+import {DirectoryUI} from './DirectoryUI';
+import {ContextMenuUI} from '../UIHelpers/ContextMenuUI';
+import {default as updateOps} from '../ContextGroups/updateOps';
 
 export class FileUI {
     fileSystemUI: FileSystemUI;
@@ -17,8 +17,8 @@ export class FileUI {
 
         this.name = name;
 
-        this.element = document.createElement("div");
-        this.element.classList.add("file", "script");
+        this.element = document.createElement('div');
+        this.element.classList.add('file', 'script');
         this.element.draggable = true;
 
         this.element.innerHTML = `
@@ -27,7 +27,7 @@ export class FileUI {
         `;
 
         this.setFileIcon(this.getExtension());
-        this.element.addEventListener("click", (e) => {
+        this.element.addEventListener('click', (e) => {
             e.cancelBubble = true;
             this.fileSystemUI.uiController.viewStates.codeEditor.openFile(this);
         });
@@ -39,64 +39,63 @@ export class FileUI {
                 current = current.parent;
                 level++;
             }
-            this.element.style.paddingLeft = level * 27 + "px";
+            this.element.style.paddingLeft = level * 27 + 'px';
             parent.addChild(this);
         }
 
-        this.element.addEventListener("contextmenu", (e) => {
+        this.element.addEventListener('contextmenu', (e) => {
             e.preventDefault();
 
             e.cancelBubble = true;
-            let contextMenu = new ContextMenuUI();
-            let contextContent = [];
-            if (this.parent)
+            const contextMenu = new ContextMenuUI();
+            const contextContent = [];
+            if (this.parent) {
                 updateOps(contextContent, this);
+            }
 
             contextMenu.setStructure(contextContent);
             contextMenu.display({x: e.clientX, y: e.clientY});
         });
-
     }
 
     setFileIcon(ext) {
-        console.log(ext)
-        let fileIcon = <HTMLImageElement>this.element.getElementsByClassName("fileIcon")[0];
+        console.log(ext);
+        const fileIcon = <HTMLImageElement> this.element.getElementsByClassName('fileIcon')[0];
         switch (ext) {
-            case "js":
-                fileIcon.src = "/icons/file-js.svg";
-                break;
-            case "txt":
-                fileIcon.src = "/icons/file-txt.svg";
-                break;
+        case 'js':
+            fileIcon.src = '/icons/file-js.svg';
+            break;
+        case 'txt':
+            fileIcon.src = '/icons/file-txt.svg';
+            break;
         }
     }
 
     rename(newName) {
         this.name = newName;
-        let fileName = <HTMLSpanElement>this.element.getElementsByClassName("fileName")[0]
+        const fileName = <HTMLSpanElement> this.element.getElementsByClassName('fileName')[0];
         fileName.innerText = newName;
     }
 
     getPath() {
-        let path = "";
-        let current: DirectoryUI | FileUI = this;
+        let path = '';
+        let current: DirectoryUI | FileUI = this; // eslint-disable-line @typescript-eslint/no-this-alias
         while (current.parent) {
-            path = "/" + current.name + path;
+            path = '/' + current.name + path;
             current = current.parent;
         }
         return path;
     }
 
     getExtension() {
-        return this.name.split(".").slice(-1)[0];
-
+        return this.name.split('.').slice(-1)[0];
     }
 
     select() {
-        this.element.classList.add("selected")
+        this.element.classList.add('selected');
     }
 
     unselect() {
-        this.element.classList.remove("selected")
+        this.element.classList.remove('selected');
     }
 }

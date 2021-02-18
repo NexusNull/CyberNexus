@@ -1,12 +1,12 @@
-import {UIController} from "./UI/UIController";
-import {InputController} from "./UI/InputController";
-import {AssetManager} from "./AssetManagement/AssetManager";
-import {Assets} from "./AssetManagement/Assets";
-import {GameScene} from "./Game/rendering/GameScene";
-import {DemoManager} from "./Game/demo/DemoManager";
-import {ChunkRenderer} from "./Game/rendering/ChunkRenderer";
-import {Runner} from "./Game/Runner";
-import * as BrowserFS from "browserfs";
+import {UIController} from './UI/UIController';
+import {InputController} from './UI/InputController';
+import {AssetManager} from './AssetManagement/AssetManager';
+import {Assets} from './AssetManagement/Assets';
+import {GameScene} from './Game/rendering/GameScene';
+import {DemoManager} from './Game/demo/DemoManager';
+import {ChunkRenderer} from './Game/rendering/ChunkRenderer';
+import {Runner} from './Game/Runner';
+import * as BrowserFS from 'browserfs';
 
 export class Game {
     uiController: UIController;
@@ -35,9 +35,9 @@ export class Game {
         this.userData = null;
         BrowserFS.install(window);
         BrowserFS.configure({
-            fs: "WebDav",
+            fs: 'WebDav',
             options: {
-                prefixUrl: "http://localhost:2000/fs/"
+                prefixUrl: 'http://localhost:2000/fs/',
             },
         }, function (e) {
             if (e) {
@@ -45,7 +45,7 @@ export class Game {
                 throw e;
             }
         });
-        window.fs = BrowserFS.BFSRequire("fs");
+        window.fs = BrowserFS.BFSRequire('fs');
     }
 
     main() {
@@ -53,10 +53,14 @@ export class Game {
     }
 
     setUserData(id, username) {
-        // @ts-ignore
-        this.userData = this.userData || {};
-        this.userData.id = id;
-        this.userData.username = username;
+        if (this.userData) {
+            this.userData.id = id;
+            this.userData.username = username;
+        } else {
+            this.userData = {
+                id, username, jwt: "",
+            };
+        }
     }
 
     setJwt(jwt: string) {
@@ -64,9 +68,8 @@ export class Game {
     }
 }
 
-
 declare let window: any;
-let game = new Game();
+const game = new Game();
 window.game = game;
 game.main();
 

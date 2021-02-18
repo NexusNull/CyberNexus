@@ -1,37 +1,46 @@
-import {GameScene} from "../rendering/GameScene";
+import {GameScene} from '../rendering/GameScene';
 import {
     AmbientLight,
     Material,
     Mesh,
     MeshLambertMaterial,
     PointLight,
-    Vector3
-} from "three";
-import {Beam} from "../rendering/Beam";
-import {Assets} from "../../AssetManagement/Assets";
-import {ChunkRenderer} from "../rendering/ChunkRenderer";
-import Timeout = NodeJS.Timeout;
+    Vector3,
+} from 'three';
+import {Beam} from '../rendering/Beam';
+import {Assets} from '../../AssetManagement/Assets';
+import {ChunkRenderer} from '../rendering/ChunkRenderer';
+import {Perlin} from "../../definitions/Perlin";
+/* eslint-disable no-undef */
 
-declare let perlin: perlin;
-declare var window: any;
+
+declare let perlin: Perlin;
+declare let window: any;
 
 export class TowerDefenceDemo {
-    intervalID: Timeout;
+    intervalID: number;
     materials: Array<Material>;
     meshes: Array<Mesh>;
     startTime: Date;
     chunks: Array<Mesh>;
+    assets: Assets;
+    gameScene: GameScene;
+    onDone: () => void;
 
-    constructor(public assets: Assets, public gameScene: GameScene, public onDone: () => void) {
+    constructor(assets: Assets, gameScene: GameScene, onDone: () => void) {
+        this.assets = assets;
+        this.gameScene = gameScene;
+        this.onDone = onDone;
+
         this.chunks = [];
-        let chunkRenderer = new ChunkRenderer(assets);
-        let beam = new Beam(new Vector3(10, 18, 10), new Vector3(-10, 18, -10), 0.2, 0.5, assets.textures.get("uvTest"));
+        const chunkRenderer = new ChunkRenderer(assets);
+        const beam = new Beam(new Vector3(10, 18, 10), new Vector3(-10, 18, -10), 0.2, 0.5, assets.textures.get('uvTest'));
         window.beam = beam;
         gameScene.world.position.x = 20;
         gameScene.world.add(beam.mesh);
-        let greenMat = new MeshLambertMaterial({color: 0x001b00});
-        let pLight = new PointLight(0xffffff, 0.7, 200, 0.5);
-        let aLight = new AmbientLight(0xffffff, 0.9);
+        const greenMat = new MeshLambertMaterial({color: 0x001b00});
+        const pLight = new PointLight(0xffffff, 0.7, 200, 0.5);
+        const aLight = new AmbientLight(0xffffff, 0.9);
 
         gameScene.world.add(pLight);
         gameScene.world.add(aLight);
@@ -40,19 +49,19 @@ export class TowerDefenceDemo {
 
         for (let _x = -1; _x < 2; _x++) {
             for (let _z = -1; _z < 2; _z++) {
-                let blockData = new Uint8Array(18 * 34 * 18);
+                const blockData = new Uint8Array(18 * 34 * 18);
 
                 for (let y = 0; y < 32; y++) {
                     for (let z = 0; z < 16; z++) {
                         for (let x = 0; x < 16; x++) {
-                            let i = (y + 1) * 612 + (z + 1) * 18 + x + 1;
+                            const i = (y + 1) * 612 + (z + 1) * 18 + x + 1;
                             blockData[i] = (perlin.simplex2((_x * 16 + x) * 0.06, (_z * 16 + z) * 0.06) + 1) * 8 > y ? 1 : 0;
                         }
                     }
                 }
 
-                let geometry = chunkRenderer.renderChunk(blockData, null);
-                let chunk = new Mesh(geometry, greenMat);
+                const geometry = chunkRenderer.renderChunk(blockData);
+                const chunk = new Mesh(geometry, greenMat);
                 chunk.position.x = 16 * _x - 8;
                 chunk.position.z = 16 * _z - 8;
                 this.chunks.push(chunk);
@@ -87,7 +96,7 @@ export class TowerDefenceDemo {
     }
 
     dispose() {
-        for (let chunk of this.chunks) {
+        for (const chunk of this.chunks) {
             this.gameScene.world.remove(chunk);
             chunk.geometry.dispose();
         }

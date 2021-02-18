@@ -1,4 +1,4 @@
-interface Server {
+export interface Server {
     id: number,
     name: string,
     location: string,
@@ -12,7 +12,7 @@ interface Server {
     ping: number
 }
 
-interface ServerElement {
+export interface ServerElement {
     serverEntryElement: HTMLDivElement;
 
     nameDisplay: HTMLSpanElement;

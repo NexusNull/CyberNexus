@@ -1,4 +1,4 @@
-interface ChunkData {
+export interface ChunkData {
     position: {
         x: number,
         y: number,

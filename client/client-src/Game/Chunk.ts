@@ -1,7 +1,8 @@
-import {EventSystem} from "../util/EventSystem";
-import {Mesh} from "three";
+import {EventSystem} from '../util/EventSystem';
+import {Mesh} from 'three';
+import { ChunkData } from '../definitions/ChunkData';
 
-class Chunk extends EventSystem {
+export class Chunk extends EventSystem {
     blockData: Uint8Array;
     mesh: Mesh;
     position: { x: number, y: number, z: number };
@@ -14,9 +15,7 @@ class Chunk extends EventSystem {
 
     async update(chunkData: ChunkData) {
         this.blockData = chunkData.blockData;
-        this.emit("chunkUpdate", {target: this, old: this.blockData, new: chunkData.blockData})
+        this.emit('chunkUpdate', {target: this, old: this.blockData, new: chunkData.blockData});
     }
-
 }
 
-export {Chunk}

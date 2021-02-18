@@ -1,37 +1,35 @@
-import {ViewState} from "./ViewState";
-import {Game} from "../../Game";
-import {UIController} from "../UIController";
-import {InputController} from "../InputController";
+import {ViewState} from './ViewState';
+import {Game} from '../../Game';
+import {UIController} from '../UIController';
+import {InputController} from '../InputController';
 
 export class LoadingViewState extends ViewState {
-
     constructor(game: Game, uiController: UIController, inputController: InputController) {
         super(game, uiController, inputController);
-    };
+    }
 
 
     async enable() {
-        var self = this;
         this.uiController.uiElements.loadingUI.display();
-        this.game.assetManager.on("error", function (data) {
-            self.uiController.uiElements.loadingUI.setMessage(`Failed: ${data.message}`);
+        this.game.assetManager.on('error', (data) =>{
+            this.uiController.uiElements.loadingUI.setMessage(`Failed: ${data.message}`);
         });
 
-        this.game.assetManager.on("progress", function (data) {
-            self.uiController.uiElements.loadingUI.setMessage(data.message);
-            self.uiController.uiElements.loadingUI.setProgress(data.percentage * 100)
+        this.game.assetManager.on('progress', (data)=> {
+            this.uiController.uiElements.loadingUI.setMessage(data.message);
+            this.uiController.uiElements.loadingUI.setProgress(data.percentage * 100);
         });
 
-        this.game.assetManager.on("finished", function (data) {
-            self.uiController.uiElements.loadingUI.setMessage(data.message);
-            self.uiController.uiElements.loadingUI.setProgress(100);
-            self.game.demoManager.start();
-            self.game.gameScene.startRender();
-            self.uiController.changeViewState(self.uiController.viewStates.auth);
+        this.game.assetManager.on('finished', (data)=> {
+            this.uiController.uiElements.loadingUI.setMessage(data.message);
+            this.uiController.uiElements.loadingUI.setProgress(100);
+            this.game.demoManager.start();
+            this.game.gameScene.startRender();
+            this.uiController.changeViewState(this.uiController.viewStates.auth);
         });
 
         this.game.assetManager.init();
-        /*
+    /*
         then(async function () {
             self.uiController.game.modelLoader = new ModelLoader(self.textureLoader.spriteAtlases.get("blocks"));
             self.uiController.game.modelLoader.init();
@@ -41,17 +39,11 @@ export class LoadingViewState extends ViewState {
             }
         });
         */
-
-    };
+    }
 
 
     async disable() {
         this.uiController.uiElements.loadingUI.hide();
-    };
-
-    async setup() {
-
     }
-
 
 }

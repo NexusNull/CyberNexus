@@ -1,4 +1,7 @@
-interface Action {
+import { KeyCombo } from "./KeyCombo";
+
+
+export interface Action {
     name: string
     active: boolean
     keyDown: () => void

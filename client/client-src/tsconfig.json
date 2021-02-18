@@ -1,10 +1,18 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "lib": [
+      "dom",
+      "DOM.Iterable",
+      "es2015"
+    ],
+    "module": "es2015",
     "target": "es2015",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": true,
+    "sourceMap": false,
   },
   "outFile": "../public/js/index.js",
   "exclude": [

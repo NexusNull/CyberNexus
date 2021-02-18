@@ -1,4 +1,6 @@
-interface KeyCombo {
+import {Action} from "./Action";
+
+export interface KeyCombo {
     code: string,
     modifiers?: {
         shiftKey: boolean

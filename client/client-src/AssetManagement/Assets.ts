@@ -1,5 +1,6 @@
-import {TextureAtlas} from "./TextureAtlas";
-import {Texture} from "three";
+import {TextureAtlas} from './TextureAtlas';
+import {Texture} from 'three';
+import { Geometry } from '../definitions/Geometry';
 
 export class Assets {
     textureAtlases: Map<string, TextureAtlas>;

@@ -1,14 +1,20 @@
 {
   "name": "cybernexus",
   "version": "0.0.1",
-  "description": "A Game base around controlling units in 3d sapce with code",
+  "description": "A Game base around controlling units in 3d space with code",
   "main": "main.js",
   "scripts": {
     "install": "node scripts/install.js",
     "dev": "concurrently --no-color -r \"npm:watch:webpack\" \"npm:watch:sass\"",
     "watch:webpack": "npx webpack --config client/webpack.config.js ",
     "build:sass": "node scripts/sassBuild.js",
-    "watch:sass": "watch \"npm run build:sass\" client/sass/"
+    "watch:sass": "watch \"npm run build:sass\" client/sass/",
+    "lint": "npx eslint \"./client/client-src/**/*.ts\" --config .eslintrc.js --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   },
   "repository": {
     "type": "git",
@@ -42,7 +48,12 @@
     "webdav-server": "git+https://github.com/NexusNull/npm-WebDAV-Server.git"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
     "concurrently": "^5.3.0",
+    "eslint": "^7.20.0",
+    "eslint-config-google": "^0.14.0",
+    "husky": "^4.3.8",
     "sass": "^1.26.10",
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.7",

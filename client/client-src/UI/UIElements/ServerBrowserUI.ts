@@ -1,4 +1,5 @@
-import {UIController} from "../UIController";
+import {UIController} from '../UIController';
+import {ServerElement} from "../../definitions/Server";
 
 export class ServerBrowserUI {
     uiController: UIController;
@@ -9,42 +10,43 @@ export class ServerBrowserUI {
 
     constructor(uiController) {
         this.uiController = uiController;
-        this.element = <HTMLDivElement>document.getElementById("serverBrowser");
+        this.element = <HTMLDivElement>document.getElementById('serverBrowser');
         this.servers = new Map();
-        this.serverListElement = <HTMLDivElement>document.getElementById("serverList");
-
-
+        this.serverListElement = <HTMLDivElement>document.getElementById('serverList');
     }
 
     removeServer(id) {
-        let entry = this.servers.get(id);
+        const entry = this.servers.get(id);
         this.serverListElement.removeChild(entry.serverEntryElement);
         this.servers.delete(id);
     }
 
     updateServer(id: number, data: any) {
-        let entry = this.servers.get(id);
-        if (data.name)
+        const entry = this.servers.get(id);
+        if (data.name) {
             entry.nameDisplay.innerText = data.name;
+        }
 
-        if (data.location)
+        if (data.location) {
             entry.locationDisplay.innerText = data.location;
+        }
 
-        if (data.players)
+        if (data.players) {
             entry.playersDisplay.innerText = '' + data.players;
-        if (data.maxPlayers)
+        }
+        if (data.maxPlayers) {
             entry.maxPlayersDisplay.innerText = '' + data.maxPlayers;
+        }
 
-        if (data.ping)
+        if (data.ping) {
             entry.pingDisplay.innerText = '' + data.ping;
-
+        }
     }
 
     addServerEntry(id, data) {
-        var self = this;
-        let element = this.serverEntryTemplate();
-        element.joinButton.addEventListener("click", function () {
-            self.uiController.viewStates.serverBrowser.joinServer(id);
+        const element = this.serverEntryTemplate();
+        element.joinButton.addEventListener('click', () => {
+            this.uiController.viewStates.serverBrowser.joinServer(id);
         });
         this.servers.set(id, element);
         this.updateServer(id, data);
@@ -52,7 +54,7 @@ export class ServerBrowserUI {
     }
 
     serverEntryTemplate(): ServerElement {
-        var template = `                
+        const template = `                
             <div class="serverName">
                 Europa I
             </div>
@@ -74,28 +76,28 @@ export class ServerBrowserUI {
                 <button>Join</button>
             </div>`;
 
-        let element = <HTMLDivElement>document.createElement("div");
-        element.classList.add("serverEntry");
+        const element = <HTMLDivElement>document.createElement('div');
+        element.classList.add('serverEntry');
         element.innerHTML = template;
 
         return {
             serverEntryElement: element,
-            nameDisplay: <HTMLSpanElement>element.getElementsByClassName("serverName")[0],
-            locationDisplay: <HTMLSpanElement>element.getElementsByClassName("serverLocation")[0],
-            playersDisplay: <HTMLSpanElement>element.getElementsByClassName("playerCount")[0],
-            maxPlayersDisplay: <HTMLSpanElement>element.getElementsByClassName("playerMaximum")[0],
-            pingDisplay: <HTMLSpanElement>element.getElementsByClassName("ping")[0],
-            joinButton: <HTMLButtonElement>element.getElementsByClassName("joinButton")[0].getElementsByTagName("button")[0]
-        }
+            nameDisplay: <HTMLSpanElement>element.getElementsByClassName('serverName')[0],
+            locationDisplay: <HTMLSpanElement>element.getElementsByClassName('serverLocation')[0],
+            playersDisplay: <HTMLSpanElement>element.getElementsByClassName('playerCount')[0],
+            maxPlayersDisplay: <HTMLSpanElement>element.getElementsByClassName('playerMaximum')[0],
+            pingDisplay: <HTMLSpanElement>element.getElementsByClassName('ping')[0],
+            joinButton: <HTMLButtonElement>element.getElementsByClassName('joinButton')[0].getElementsByTagName('button')[0],
+        };
     }
 
     display() {
-        this.element.classList.remove("hidden");
+        this.element.classList.remove('hidden');
         this.visible = true;
-    };
+    }
 
     hide() {
-        this.element.classList.add("hidden");
+        this.element.classList.add('hidden');
         this.visible = false;
-    };
+    }
 }

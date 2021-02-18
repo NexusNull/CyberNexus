@@ -1,8 +1,8 @@
-import {FileSystemUI} from "./FileSystemUI";
-import {FileUI} from "./FileUI";
-import {ContextMenuUI} from "../UIHelpers/ContextMenuUI";
-import {default as newOps} from "../ContextGroups/newOps";
-import {default as updateOps} from "../ContextGroups/updateOps";
+import {FileSystemUI} from './FileSystemUI';
+import {FileUI} from './FileUI';
+import {ContextMenuUI} from '../UIHelpers/ContextMenuUI';
+import {default as newOps} from '../ContextGroups/newOps';
+import {default as updateOps} from '../ContextGroups/updateOps';
 
 export class DirectoryUI {
     fileSystemUI: FileSystemUI;
@@ -15,15 +15,14 @@ export class DirectoryUI {
     children: Map<string, DirectoryUI | FileUI>;
 
     constructor(fileSystemUI: FileSystemUI, parent: DirectoryUI, name: string) {
-
         this.fileSystemUI = fileSystemUI;
         this.parent = parent;
         this.name = name;
         this.collapsed = true;
         this.children = new Map();
 
-        this.element = document.createElement("div");
-        this.element.classList.add("directory", "collapsed");
+        this.element = document.createElement('div');
+        this.element.classList.add('directory', 'collapsed');
         this.element.draggable = true;
 
         this.element.innerHTML = `
@@ -35,8 +34,8 @@ export class DirectoryUI {
                 <div class="childContainer hidden">
                 </div>`;
 
-        this.header = <HTMLDivElement>this.element.getElementsByClassName("directoryTop")[0];
-        this.childContainer = <HTMLDivElement>this.element.getElementsByClassName("childContainer")[0];
+        this.header = <HTMLDivElement>this.element.getElementsByClassName('directoryTop')[0];
+        this.childContainer = <HTMLDivElement>this.element.getElementsByClassName('childContainer')[0];
 
         if (parent) {
             let level = 1;
@@ -45,36 +44,38 @@ export class DirectoryUI {
                 current = current.parent;
                 level++;
             }
-            this.header.style.paddingLeft = level * 27 + "px";
+            this.header.style.paddingLeft = level * 27 + 'px';
             parent.addChild(this);
         }
 
-        this.header.getElementsByClassName("directoryArrow")[0].addEventListener("click", (e) => {
+        this.header.getElementsByClassName('directoryArrow')[0].addEventListener('click', (e) => {
             e.cancelBubble = true;
             e.preventDefault();
             this.toggle();
         });
 
-        this.element.addEventListener("click", (e) => {
+        this.element.addEventListener('click', (e) => {
             if (e.detail % 2 != 0) // double click gate
+            {
                 return;
+            }
             e.cancelBubble = true;
             e.preventDefault();
             this.toggle();
         });
 
-        this.element.addEventListener("contextmenu", (e) => {
+        this.element.addEventListener('contextmenu', (e) => {
             e.preventDefault();
 
             e.cancelBubble = true;
-            let contextMenu = new ContextMenuUI();
-            let contextContent = [];
+            const contextMenu = new ContextMenuUI();
+            const contextContent = [];
             newOps(contextContent, this);
             if (this.parent) {
                 contextContent.push({
-                    type: "hl"
-                })
-                updateOps(contextContent, this)
+                    type: 'hl',
+                });
+                updateOps(contextContent, this);
             }
 
             contextMenu.setStructure(contextContent);
@@ -84,7 +85,7 @@ export class DirectoryUI {
 
     rename(newName) {
         this.name = newName;
-        let dirName = <HTMLSpanElement>this.element.getElementsByClassName("directoryName")[0]
+        const dirName = <HTMLSpanElement>this.element.getElementsByClassName('directoryName')[0];
         dirName.innerText = newName;
     }
 
@@ -99,19 +100,19 @@ export class DirectoryUI {
     collapse() {
         this.collapsed = true;
 
-        let arrow = <HTMLImageElement>this.element.getElementsByClassName("directoryArrow")[0];
-        arrow.src = "/icons/arrow-collapsed.svg";
+        const arrow = <HTMLImageElement>this.element.getElementsByClassName('directoryArrow')[0];
+        arrow.src = '/icons/arrow-collapsed.svg';
 
-        this.childContainer.classList.add("hidden")
+        this.childContainer.classList.add('hidden');
     }
 
     expand() {
         this.collapsed = false;
 
-        let arrow = <HTMLImageElement>this.element.getElementsByClassName("directoryArrow")[0];
-        arrow.src = "/icons/arrow-expanded.svg";
+        const arrow = <HTMLImageElement>this.element.getElementsByClassName('directoryArrow')[0];
+        arrow.src = '/icons/arrow-expanded.svg';
 
-        this.childContainer.classList.remove("hidden")
+        this.childContainer.classList.remove('hidden');
     }
 
     getChild(name: string): FileUI | DirectoryUI {
@@ -120,23 +121,23 @@ export class DirectoryUI {
 
     addChild(fsElement: FileUI | DirectoryUI) {
         this.children.set(fsElement.name, fsElement);
-        for (let child of this.childContainer.children) {
-            if (child.classList.contains("directory") && fsElement.element.classList.contains("directory")) {
-                let childElement = <HTMLSpanElement>child.getElementsByClassName("directoryName")[0];
-                let elementName = fsElement.name;
+        for (const child of this.childContainer.children) {
+            if (child.classList.contains('directory') && fsElement.element.classList.contains('directory')) {
+                const childElement = <HTMLSpanElement>child.getElementsByClassName('directoryName')[0];
+                const elementName = fsElement.name;
                 if (childElement.innerText.localeCompare(elementName) > -1) {
                     this.childContainer.insertBefore(fsElement.element, child);
                     return;
                 }
-            } else if (child.classList.contains("file") && fsElement.element.classList.contains("file")) {
-                let childElement = <HTMLSpanElement>child.getElementsByClassName("fileName")[0];
-                let elementName = fsElement.name;
+            } else if (child.classList.contains('file') && fsElement.element.classList.contains('file')) {
+                const childElement = <HTMLSpanElement>child.getElementsByClassName('fileName')[0];
+                const elementName = fsElement.name;
                 if (childElement.innerText.localeCompare(elementName) > -1) {
                     this.childContainer.insertBefore(fsElement.element, child);
                     return;
                 }
-            } else if (child.classList.contains("file") && fsElement.element.classList.contains("directory")) {
-                //insertBefore
+            } else if (child.classList.contains('file') && fsElement.element.classList.contains('directory')) {
+                // insertBefore
                 this.childContainer.insertBefore(fsElement.element, child);
                 return;
             }
@@ -145,28 +146,30 @@ export class DirectoryUI {
     }
 
     getPath() {
-        let path = "";
-        let current: DirectoryUI = this;
+        let path = '';
+        let current: DirectoryUI = this; // eslint-disable-line @typescript-eslint/no-this-alias
         while (current.parent) {
-            path = "/" + current.name + path;
+            path = '/' + current.name + path;
             current = current.parent;
         }
         return path;
     }
 
     removeChild(name: string) {
-        let child = this.children.get(name);
+        const child = this.children.get(name);
         this.element.removeChild(child.element);
         this.children.delete(name);
     }
 
     renameChild(name: string, newName: string) {
-        if (this.children.has("newName"))
+        if (this.children.has('newName')) {
             throw new Error(`${newName} is already taken`);
-        if (!this.children.has(name))
+        }
+        if (!this.children.has(name)) {
             throw new Error(`${name} doesn't exist`);
+        }
 
-        let child = this.children.get(name);
+        const child = this.children.get(name);
         this.children.delete(name);
         this.children.set(newName, child);
     }

@@ -1,4 +1,4 @@
-interface perlin {
+export interface Perlin {
     seed: (number) => void;
     simplex2: (xin: number, yin: number) => number
     simplex3: (xin: number, yin: number, zin: number) => number

@@ -1,10 +1,10 @@
-import {EventSystem} from "../util/EventSystem";
-import {Object3D} from "three";
-import {ArmorComponent} from "./components/Armor";
-import {TurretComponent} from "./components/Turret";
-import {ChassisComponent} from "./components/ChassisComponent";
-import {StorageComponent} from "./components/Storage";
-import {CoreComponent} from "./components/Core";
+import {EventSystem} from '../util/EventSystem';
+import {Object3D} from 'three';
+import {ArmorComponent} from './components/Armor';
+import {TurretComponent} from './components/Turret';
+import {ChassisComponent} from './components/ChassisComponent';
+import {StorageComponent} from './components/Storage';
+import {CoreComponent} from './components/Core';
 
 /**
  * what does a unit need?
@@ -53,7 +53,7 @@ import {CoreComponent} from "./components/Core";
  *
  *
  */
-class Unit extends EventSystem {
+export class Unit extends EventSystem {
     components: {
         core: CoreComponent,
         chassis: Array<ChassisComponent>,
@@ -87,17 +87,8 @@ class Unit extends EventSystem {
         };
 
 
-        //create components
-        for (let componentData of data.components) {
-
-        }
-
         this.object = new Object3D();
-
-
     }
-
-
 }
 
-export {Unit}
+

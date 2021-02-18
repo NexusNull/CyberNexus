@@ -1,6 +1,6 @@
-import {Game} from "../../Game";
-import {UIController} from "../UIController";
-import {InputController} from "../InputController";
+import {Game} from '../../Game';
+import {UIController} from '../UIController';
+import {InputController} from '../InputController';
 
 export abstract class ViewState {
     game: Game;
@@ -14,10 +14,18 @@ export abstract class ViewState {
         this.inputController = inputController;
     }
 
-    abstract async setup();
+    //TODO This class has the issue that a common functionality is always implemented in sub classes
+    // setup should be called once when enabled is called, this behaviour is implemented in all sub classes right now
+    // this shouldn't be the case
+    async setup() {
+        // do nothing
+    }
 
-    abstract async enable();
+    async enable() {
+        // do nothing
+    }
 
-    abstract async disable();
-
+    async disable() {
+        // do nothing
+    }
 }

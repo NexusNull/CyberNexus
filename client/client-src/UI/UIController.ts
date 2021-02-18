@@ -1,17 +1,17 @@
-import {InputController} from "./InputController";
-import {Game} from "../Game";
-import {LoadingUI} from "./UIElements/LoadingUI";
-import {AuthUI} from "./UIElements/AuthUI";
-import {ServerBrowserUI} from "./UIElements/ServerBrowserUI";
-import {LoadingViewState} from "./ViewStates/Loading";
-import {AuthViewState} from "./ViewStates/Auth";
-import {ServerBrowserViewState} from "./ViewStates/ServerBrowser";
-import {GameViewSate} from "./ViewStates/Game";
-import {RenderUI} from "./UIElements/RenderUI";
-import {FileSystemUI} from "./UIElements/FileSystemUI";
-import {CodeEditorUI} from "./UIElements/CodeEditorUI";
-import {CodeEditorViewState} from "./ViewStates/CodeEditor";
-import {ConsoleUI} from "./UIElements/ConsoleUI";
+import {InputController} from './InputController';
+import {Game} from '../Game';
+import {LoadingUI} from './UIElements/LoadingUI';
+import {AuthUI} from './UIElements/AuthUI';
+import {ServerBrowserUI} from './UIElements/ServerBrowserUI';
+import {LoadingViewState} from './ViewStates/Loading';
+import {AuthViewState} from './ViewStates/Auth';
+import {ServerBrowserViewState} from './ViewStates/ServerBrowser';
+import {GameViewSate} from './ViewStates/Game';
+import {RenderUI} from './UIElements/RenderUI';
+import {FileSystemUI} from './UIElements/FileSystemUI';
+import {CodeEditorUI} from './UIElements/CodeEditorUI';
+import {CodeEditorViewState} from './ViewStates/CodeEditor';
+import {ConsoleUI} from './UIElements/ConsoleUI';
 
 export class UIController {
     game: Game;
@@ -59,12 +59,11 @@ export class UIController {
             game: new GameViewSate(game, this, inputController),
             codeEditor: new CodeEditorViewState(game, this, inputController),
         };
-
-    };
+    }
 
     async changeViewState(viewState) {
         if (this.activeViewState) {
-            console.log("current:" + this.activeViewState.constructor.name + " new:" + viewState.constructor.name);
+            console.log('current:' + this.activeViewState.constructor.name + ' new:' + viewState.constructor.name);
             await this.activeViewState.disable();
         }
         if (!viewState.isSetup) {
@@ -73,5 +72,5 @@ export class UIController {
         }
         await viewState.enable();
         this.activeViewState = viewState;
-    };
+    }
 }

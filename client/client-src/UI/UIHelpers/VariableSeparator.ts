@@ -8,26 +8,24 @@ export class VariableSeparator {
         this.target = target;
         this.separator = separator;
 
-        separator.addEventListener("mousedown", () => {
+        separator.addEventListener('mousedown', () => {
             this.active = true;
 
-            this.target.style.width = this.target.getBoundingClientRect().width + "px";
-            this.listener = this.mouseMove.bind(this)
-            window.addEventListener("mousemove", this.listener);
+            this.target.style.width = this.target.getBoundingClientRect().width + 'px';
+            this.listener = this.mouseMove.bind(this);
+            window.addEventListener('mousemove', this.listener);
         });
 
-        document.body.addEventListener("mouseup", () => {
+        document.body.addEventListener('mouseup', () => {
             if (this.active) {
-
                 this.active = false;
-                window.removeEventListener("mousemove", this.listener);
+                window.removeEventListener('mousemove', this.listener);
             }
         });
     }
 
     mouseMove(e: MouseEvent) {
-        let width = parseInt(this.target.style.width);
-        this.target.style.width = width + e.movementX + "px";
-
+        const width = parseInt(this.target.style.width);
+        this.target.style.width = width + e.movementX + 'px';
     }
 }

@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 export class TextureAtlas {
     name: string;
@@ -13,7 +13,7 @@ export class TextureAtlas {
     material: THREE.Material;
     textureUVMap: Map<string, any>;
 
-    constructor(texture, data) {
+    constructor(texture: THREE.Texture, data) {
         this.name = data.name;
         this.opts = data.opts || {};
         this.size = data.size;
@@ -25,21 +25,24 @@ export class TextureAtlas {
         texture.magFilter = THREE.NearestFilter;
         texture.minFilter = THREE.NearestFilter;
 
-        if (this.opts.transparent !== undefined)
+        if (this.opts.transparent !== undefined) {
             this.material.transparent = this.opts.transparent;
+        }
 
-        if (this.opts.alphaTest !== undefined)
+        if (this.opts.alphaTest !== undefined) {
             this.material.alphaTest = this.opts.alphaTest;
+        }
 
-        if (this.opts.vertexColors !== undefined)
+        if (this.opts.vertexColors !== undefined) {
             this.material.vertexColors = this.opts.vertexColors;
+        }
 
         this.textureUVMap = new Map();
-        for (let name in data.textures) {
+        for (const name in data.textures) {
             this.textures.set(name, data.textures[name]);
         }
-        for (let name in data.textureUVMap) {
+        for (const name in data.textureUVMap) {
             this.textureUVMap.set(name, data.textureUVMap[name]);
         }
-    };
+    }
 }
