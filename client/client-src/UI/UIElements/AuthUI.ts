@@ -5,7 +5,6 @@ class AuthUI {
     uiController: UIController
     element: HTMLDivElement;
 
-
     visible: boolean;
     tabController: TabController;
 

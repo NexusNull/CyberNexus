@@ -16,7 +16,9 @@ class AuthViewState extends ViewState {
     async enable(): Promise<any> {
         try {
             const userData = JSON.parse(await util.sendRequest('GET', '/auth/self'));
-            this.game.setUserData(userData.id, userData.username);
+            this.game.userData.setUsername(userData.username);
+            this.game.userData.setId(userData.id);
+            this.game.userData.setAuthStatus(true);
             this.authCompleted();
             return;
         } catch (e) {
@@ -34,7 +36,9 @@ class AuthViewState extends ViewState {
     async login(name, password) {
         try {
             const userData = JSON.parse(await util.sendRequest('post', '/auth/login', {name, password}));
-            this.game.setUserData(userData.id, userData.username);
+            this.game.userData.setUsername(userData.username);
+            this.game.userData.setId(userData.id);
+            this.game.userData.setAuthStatus(true);
             this.authCompleted();
         } catch (e) {
             this.uiController.uiElements.authUI.loginError(e);

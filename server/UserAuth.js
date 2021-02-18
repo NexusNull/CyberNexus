@@ -4,6 +4,7 @@ const fs = require("fs");
 
 const privateKey = fs.readFileSync('./keys/privateKey.pem');
 const tokenTTL = 60 * 60 * 4;
+const validScopes = ["webdav"];
 
 class UserAuth {
     constructor(app, DB) {
@@ -52,8 +53,20 @@ class UserAuth {
             }
         });
 
-        app.get("/auth/jwt", async (req, res) => {
+        app.post("/auth/jwt", async (req, res) => {
             if (req.session.user) {
+                if (!req.body || !req.body.scope) {
+                    res.status(400);
+                    res.setHeader("Content-Type", "application/json");
+                    res.send(`{"valid":false, "message":"Invalid request. Missing scope field"}`);
+                    return;
+                }
+                if (validScopes.indexOf(req.body.scope) === -1) {
+                    res.status(400);
+                    res.setHeader("Content-Type", "application/json");
+                    res.send(`{"valid":false, "message":"Invalid request. Invalid scope"}`);
+                    return;
+                }
 
                 const token = jwt.sign({
                     uid: req.session.user.id,
@@ -62,6 +75,7 @@ class UserAuth {
                         {path: "/1/", perms: ["canRead", "canWrite"]}
                     ],
                     admin: false,
+                    scope: req.body.scope
                 }, privateKey, {
                     algorithm: 'RS256',
                     expiresIn: tokenTTL

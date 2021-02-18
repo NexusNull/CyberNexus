@@ -7,6 +7,7 @@ import {DemoManager} from './Game/demo/DemoManager';
 import {ChunkRenderer} from './Game/rendering/ChunkRenderer';
 import {Runner} from './Game/Runner';
 import * as BrowserFS from 'browserfs';
+import {UserData} from "./Game/UserData";
 
 export class Game {
     uiController: UIController;
@@ -17,11 +18,7 @@ export class Game {
     demoManager: DemoManager;
     chunkRenderer: ChunkRenderer;
     runner: Runner;
-    userData: {
-        username: string,
-        id: number,
-        jwt: string,
-    } | null;
+    userData: UserData;
 
     constructor() {
         this.assets = new Assets();
@@ -32,7 +29,7 @@ export class Game {
         this.gameScene = new GameScene(this.uiController.uiElements.renderUI.canvas);
         this.demoManager = new DemoManager(this.assets, this.gameScene);
         this.runner = new Runner(this);
-        this.userData = null;
+        this.userData = new UserData(this);
         BrowserFS.install(window);
         BrowserFS.configure({
             fs: 'WebDav',
@@ -50,21 +47,6 @@ export class Game {
 
     main() {
         this.uiController.changeViewState(this.uiController.viewStates.loading);
-    }
-
-    setUserData(id, username) {
-        if (this.userData) {
-            this.userData.id = id;
-            this.userData.username = username;
-        } else {
-            this.userData = {
-                id, username, jwt: "",
-            };
-        }
-    }
-
-    setJwt(jwt: string) {
-        this.userData.jwt = jwt;
     }
 }
 
