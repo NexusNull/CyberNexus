@@ -5,12 +5,13 @@ const Errors = require("webdav-server").Errors;
 class HTTPJWTAuthentication {
     constructor(privilegeManager, realm = 'realm', publicKey) {
         this.publicKey = publicKey;
+        this.realm = realm;
         this.privilegeManager = privilegeManager;
         this.users = new Map();
         this.defaultUser = new SimpleUser('DefaultUser', '', false, true);
     }
 
-    askForAuthentication(ctx) {
+    askForAuthentication() {
         return {
             'WWW-Authenticate': `Bearer realm="${this.realm}"`
         }
@@ -20,7 +21,6 @@ class HTTPJWTAuthentication {
         const onError = (error) => {
             callback(error, this.defaultUser)
         }
-
         const authHeader = ctx.headers.find('Authorization');
         let type, credentials;
         if (authHeader) {
@@ -38,8 +38,11 @@ class HTTPJWTAuthentication {
 
         try {
             token = jwt.verify(credentials, this.publicKey);
+            if (token.ip !== ctx.request.connection.remoteAddress) {
+                onError(Errors.BadAuthentication)
+                return;
+            }
         } catch (e) {
-            console.log(e)
             onError(Errors.BadAuthentication)
             return;
         }
