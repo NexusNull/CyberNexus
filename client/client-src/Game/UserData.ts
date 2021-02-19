@@ -23,13 +23,13 @@ export class UserData {
         this.game = game;
         setInterval(() => {
             const time = Math.floor(new Date().getTime() / 1000);
-            for (let token of this.tokens) {
-                console.log(new Date(token[1].expiresAt * 1000), new Date((time + 6 * 60) * 1000))
+            for (const token of this.tokens) {
+                console.log(new Date(token[1].expiresAt * 1000), new Date((time + 6 * 60) * 1000));
                 if (token[1].expiresAt < time + 6 * 60) {
-                    console.log(`Token: ${token[0]} needs to be re issued`)
+                    console.log(`Token: ${token[0]} needs to be re issued`);
                 }
             }
-        }, 1000)
+        }, 1000);
     }
 
     setUsername(username: string) {
@@ -54,7 +54,7 @@ export class UserData {
         } else {
             const json = await util.sendRequest("POST", "/auth/jwt", {scope: scope});
             const data = JSON.parse(json);
-            let tokenContainer = UserData.destructureToken(data.token)
+            const tokenContainer = UserData.destructureToken(data.token);
             this.tokens.set(scope, tokenContainer);
             return data.token;
         }
@@ -68,7 +68,7 @@ export class UserData {
         const token = this.tokens.get(scope);
         if (!token)
             throw new Error("No Token exists for that scope");
-        return {body: token.body, header: token.header}
+        return {body: token.body, header: token.header};
     }
 
     private static destructureToken(token: string) {
