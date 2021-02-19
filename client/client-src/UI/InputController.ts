@@ -44,7 +44,7 @@ export class InputController extends EventSystem {
         this.pointerLockElement.addEventListener('mousedown', this.handleMouseDown.bind(this));
     }
 
-    registerAction(name, defaultKeyCombo: KeyCombo, keyDown?, keyUp?, keyPress?): Action {
+    registerAction(name: string, defaultKeyCombo: KeyCombo, keyDown?, keyUp?, keyPress?): Action {
         if (typeof defaultKeyCombo !== 'object' || typeof defaultKeyCombo.code !== 'string') {
             throw new Error('key combo has to be an object containing at least code as key code.');
         }
@@ -93,7 +93,7 @@ export class InputController extends EventSystem {
         return action;
     }
 
-    handleKeyDown(event: KeyboardEvent) {
+    handleKeyDown(event: KeyboardEvent): void {
         const keyCombos = this.keys.get(event.code);
         let foundAction = false;
         if (keyCombos) {
@@ -132,7 +132,7 @@ export class InputController extends EventSystem {
         }
     }
 
-    handleKeyPress(event) {
+    handleKeyPress(event: KeyboardEvent): void {
         let foundAction = false;
 
         for (const action of this.activeActions) {
@@ -176,7 +176,7 @@ export class InputController extends EventSystem {
         }
     }
 
-    handleKeyUp(event: KeyboardEvent) {
+    handleKeyUp(event: KeyboardEvent): void {
         let foundAction = false;
 
         for (const action of this.activeActions) {
@@ -224,11 +224,11 @@ export class InputController extends EventSystem {
      * @emits InputController#pointerLockChange
      * @type boolean
      */
-    handlePointerLockChange() {
+    handlePointerLockChange(): void {
         this.emit('pointerLockChange', this.hasPointerLock());
     }
 
-    async requestPointerLock() {
+    async requestPointerLock(): Promise<boolean> {
 
         return new Promise((resolve, reject) => {
 
@@ -250,7 +250,7 @@ export class InputController extends EventSystem {
     }
 
 
-    handleMouseMove(event) {
+    handleMouseMove(event: MouseEvent): void {
         if (!this.hasPointerLock()) {
             return;
         }
@@ -265,18 +265,18 @@ export class InputController extends EventSystem {
         });
     }
 
-    handleMouseDown(event) {
+    handleMouseDown(event: MouseEvent): void {
         if (!this.hasPointerLock()) {
             return;
         }
         this.emit('lockedMouseDown', event);
     }
 
-    unlockPointer() {
+    unlockPointer(): void {
         document.exitPointerLock();
     }
 
-    hasPointerLock() {
+    hasPointerLock(): boolean {
         return document.pointerLockElement === this.pointerLockElement;
     }
 }

@@ -15,7 +15,7 @@ class Runner {
         this.game = game;
     }
 
-    start() {
+    start(): void {
         if (!this.iframe) {
             this.iframe = <VMContainer>document.createElement('iframe');
             document.body.appendChild(this.iframe);
@@ -56,12 +56,12 @@ class Runner {
         }
     }
 
-    stop() {
+    stop(): void {
         this.iframe.parentElement.removeChild(this.iframe);
         this.iframe = null;
     }
 
-    run(code, path?) {
+    run(code: string, path?: string): void {
         if (!this.iframe) {
             this.start();
         }

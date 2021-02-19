@@ -15,7 +15,7 @@ export class FileSystemUI {
         this.container.appendChild(this.rootDir.element);
     }
 
-    addFile(path) {
+    addFile(path: string): void {
         const parsedPath = this.parsePath(path);
         let current = this.rootDir;
 
@@ -30,7 +30,7 @@ export class FileSystemUI {
         new FileUI(this, current, parsedPath.base);
     }
 
-    addDirectory(path) {
+    addDirectory(path: string): void {
         const parsedPath = this.parsePath(path);
         let current = this.rootDir;
 
@@ -44,7 +44,7 @@ export class FileSystemUI {
         new DirectoryUI(this, current, parsedPath.base);
     }
 
-    parsePath(path: string) {
+    parsePath(path: string): { elements: string[], segments: string[], base: string, ext: string } {
         const elements = path.split('/').filter((elem) => elem.length > 0);
         const segments = elements.slice(0, -1);
         const base = elements.slice(-1)[0];
@@ -64,7 +64,8 @@ export class FileSystemUI {
         return data;
     }
 
-    getDirectoryByPath(path): DirectoryUI {
+    //TODO FIX THIS SHIT
+    getDirectoryByPath(path: string): DirectoryUI {
         return null;
     }
 }

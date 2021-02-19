@@ -5,7 +5,7 @@ export class EventSystem {
         this.listeners = new Map();
     }
 
-    on(eventName: string, callback: () => void): void {
+    on(eventName: string, callback: (any?) => void): void {
         if (this.listeners.has(eventName)) {
             this.listeners.get(eventName).push(callback);
         } else {

@@ -2,7 +2,6 @@ import {UIController} from '../UIController';
 import CodeMirror from 'codemirror';
 import {FileUI} from './FileUI';
 import {VariableSeparator} from '../UIHelpers/VariableSeparator';
-import Timeout = NodeJS.Timeout;
 
 export class CodeEditorUI {
     uiController: UIController;
@@ -25,9 +24,9 @@ export class CodeEditorUI {
         this.currentFile = null;
         this.separators = [];
 
-        const separators = <HTMLCollectionOf<HTMLDivElement>> this.element.getElementsByClassName('verticalSeparator');
+        const separators = <HTMLCollectionOf<HTMLDivElement>>this.element.getElementsByClassName('verticalSeparator');
         for (const separator of separators) {
-            this.separators.push(new VariableSeparator(separator, separator.previousElementSibling));
+            this.separators.push(new VariableSeparator(separator, <HTMLDivElement>separator.previousElementSibling));
         }
 
         this.editor = CodeMirror(this.editorElement, {
@@ -36,19 +35,19 @@ export class CodeEditorUI {
             value: '',
         });
 
-        this.editor.on('change', (e) => {
+        this.editor.on('change', () => {
             clearTimeout(this.saveTimeout);
 
         });
     }
 
-    display() {
+    display(): void {
         this.element.classList.remove('hidden');
         this.visible = true;
         this.editor.refresh();
     }
 
-    hide() {
+    hide(): void {
         this.element.classList.add('hidden');
         this.visible = false;
     }

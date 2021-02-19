@@ -83,13 +83,13 @@ export class DirectoryUI {
         });
     }
 
-    rename(newName) {
+    rename(newName: string): void {
         this.name = newName;
         const dirName = <HTMLSpanElement>this.element.getElementsByClassName('directoryName')[0];
         dirName.innerText = newName;
     }
 
-    toggle() {
+    toggle(): void {
         if (this.collapsed) {
             this.expand();
         } else {
@@ -97,7 +97,7 @@ export class DirectoryUI {
         }
     }
 
-    collapse() {
+    collapse(): void {
         this.collapsed = true;
 
         const arrow = <HTMLImageElement>this.element.getElementsByClassName('directoryArrow')[0];
@@ -106,7 +106,7 @@ export class DirectoryUI {
         this.childContainer.classList.add('hidden');
     }
 
-    expand() {
+    expand(): void {
         this.collapsed = false;
 
         const arrow = <HTMLImageElement>this.element.getElementsByClassName('directoryArrow')[0];
@@ -145,7 +145,7 @@ export class DirectoryUI {
         this.childContainer.appendChild(fsElement.element);
     }
 
-    getPath() {
+    getPath(): string {
         let path = '';
         let current: DirectoryUI = this; // eslint-disable-line @typescript-eslint/no-this-alias
         while (current.parent) {
@@ -155,13 +155,13 @@ export class DirectoryUI {
         return path;
     }
 
-    removeChild(name: string) {
+    removeChild(name: string): void {
         const child = this.children.get(name);
         this.element.removeChild(child.element);
         this.children.delete(name);
     }
 
-    renameChild(name: string, newName: string) {
+    renameChild(name: string, newName: string): void {
         if (this.children.has('newName')) {
             throw new Error(`${newName} is already taken`);
         }

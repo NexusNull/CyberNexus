@@ -7,28 +7,28 @@ export class LoadingUI {
     loadingText: HTMLDivElement;
     visible: boolean;
 
-    constructor(uiController) {
+    constructor(uiController: UIController) {
         this.uiController = uiController;
         this.element = <HTMLDivElement>document.getElementById('MainLoading');
-        this.loadingBar = <HTMLDivElement> this.element.getElementsByClassName('loadingBar')[0];
-        this.loadingText = <HTMLDivElement> this.element.getElementsByClassName('loadingText')[0];
+        this.loadingBar = <HTMLDivElement>this.element.getElementsByClassName('loadingBar')[0];
+        this.loadingText = <HTMLDivElement>this.element.getElementsByClassName('loadingText')[0];
         this.visible = false;
     }
 
-    setProgress(progress) {
+    setProgress(progress: number): void {
         this.loadingBar.style.width = progress + '%';
     }
 
-    setMessage(message) {
+    setMessage(message: string): void {
         this.loadingText.innerText = message;
     }
 
-    display() {
+    display(): void {
         this.element.classList.remove('hidden');
         this.visible = true;
     }
 
-    hide() {
+    hide(): void {
         this.element.classList.add('hidden');
         this.visible = false;
     }

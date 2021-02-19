@@ -13,17 +13,17 @@ export class Modal {
         });
     }
 
-    setContent(element: HTMLElement) {
+    setContent(element: HTMLElement): void {
         this.shadow.innerHTML = '';
         this.shadow.appendChild(element);
         this.element = element;
     }
 
-    display() {
+    display(): void {
         document.body.appendChild(this.shadow);
     }
 
-    destroy() {
+    destroy(): void {
         document.body.removeChild(this.shadow);
     }
 }

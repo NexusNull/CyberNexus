@@ -22,12 +22,12 @@ export class ConsoleUI {
             value: 'setInterval(()=>{console.error(123)},500)',
         });
 
-        this.consoleLogElement.addEventListener('scroll', (e) => {
+        this.consoleLogElement.addEventListener('scroll', () => {
             this.scrollBarBound = this.consoleLogElement.scrollHeight - this.consoleLogElement.scrollTop === this.consoleLogElement.clientHeight;
         });
 
+        //TODO this should be handled here, that's what the InputController is for
         window.addEventListener('keypress', (e) => {
-            console.log(e);
             if (this.codeInput.hasFocus() && e.ctrlKey) {
                 switch (e.code) {
                 case 'Enter': {
@@ -37,7 +37,7 @@ export class ConsoleUI {
                     }
                     try {
                         if (result !== undefined) {
-                            this.logMessage(result);
+                            this.logMessage();
                         }
                     } catch (e) {
                         this.logError(e);
@@ -54,29 +54,29 @@ export class ConsoleUI {
         });
     }
 
-    refresh() {
+    refresh(): void {
         this.codeInput.refresh();
     }
 
-    updateScrollPosition() {
+    updateScrollPosition(): void {
         if (this.scrollBarBound) {
             this.consoleLogElement.scrollTo(0, this.consoleLogElement.scrollHeight);
         }
     }
 
-    logError(object) {
+    logError(object: string): HTMLDivElement {
         const element = this.logMessage(object);
         element.classList.add('logError');
         return element;
     }
 
-    logWarning(object) {
+    logWarning(object: string): HTMLDivElement {
         const element = this.logMessage(object);
         element.classList.add('logWarning');
         return element;
     }
 
-    logMessage(object) {
+    logMessage(object: string): HTMLDivElement {
         const element = document.createElement('div');
         element.classList.add('logMessage');
         element.innerText = object;

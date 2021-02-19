@@ -58,9 +58,8 @@ export class FileUI {
         });
     }
 
-    setFileIcon(ext) {
-        console.log(ext);
-        const fileIcon = <HTMLImageElement> this.element.getElementsByClassName('fileIcon')[0];
+    setFileIcon(ext: string): void {
+        const fileIcon = <HTMLImageElement>this.element.getElementsByClassName('fileIcon')[0];
         switch (ext) {
         case 'js':
             fileIcon.src = '/icons/file-js.svg';
@@ -71,13 +70,13 @@ export class FileUI {
         }
     }
 
-    rename(newName) {
+    rename(newName: string): void {
         this.name = newName;
-        const fileName = <HTMLSpanElement> this.element.getElementsByClassName('fileName')[0];
+        const fileName = <HTMLSpanElement>this.element.getElementsByClassName('fileName')[0];
         fileName.innerText = newName;
     }
 
-    getPath() {
+    getPath(): string {
         let path = '';
         let current: DirectoryUI | FileUI = this; // eslint-disable-line @typescript-eslint/no-this-alias
         while (current.parent) {
@@ -87,15 +86,15 @@ export class FileUI {
         return path;
     }
 
-    getExtension() {
+    getExtension(): string {
         return this.name.split('.').slice(-1)[0];
     }
 
-    select() {
+    select(): void {
         this.element.classList.add('selected');
     }
 
-    unselect() {
+    unselect(): void {
         this.element.classList.remove('selected');
     }
 }

@@ -4,7 +4,7 @@ export class RenderUI {
     uiController: UIController;
     canvas: HTMLCanvasElement;
 
-    constructor(uiController) {
+    constructor(uiController: UIController) {
         this.uiController = uiController;
         this.canvas = <HTMLCanvasElement>document.getElementById('main');
     }

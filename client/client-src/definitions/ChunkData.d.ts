@@ -1,8 +1,4 @@
 export interface ChunkData {
-    position: {
-        x: number,
-        y: number,
-        z: number,
-    }
+    position: Position,
     blockData: Uint8Array;
 }

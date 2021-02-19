@@ -21,6 +21,7 @@ export class Game {
     runner: Runner;
     userData: UserData;
     fs: FSModule;
+
     constructor() {
         this.assets = new Assets();
         this.chunkRenderer = new ChunkRenderer(this.assets);
@@ -45,7 +46,7 @@ export class Game {
         this.fs = BrowserFS.BFSRequire('fs');
     }
 
-    main() {
+    main(): void {
         this.uiController.changeViewState(this.uiController.viewStates.loading);
     }
 }

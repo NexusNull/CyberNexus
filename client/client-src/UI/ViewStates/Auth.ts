@@ -28,7 +28,7 @@ class AuthViewState extends ViewState {
         this.uiController.uiElements.authUI.display();
     }
 
-    authCompleted() {
+    authCompleted(): void {
         this.uiController.uiElements.authUI.clearForms();
         this.uiController.changeViewState(this.uiController.viewStates.serverBrowser);
     }

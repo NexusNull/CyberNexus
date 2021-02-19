@@ -4,7 +4,7 @@ export class VariableSeparator {
     active: boolean;
     listener: () => void;
 
-    constructor(separator, target) {
+    constructor(separator: HTMLDivElement, target: HTMLDivElement) {
         this.target = target;
         this.separator = separator;
 
@@ -24,7 +24,7 @@ export class VariableSeparator {
         });
     }
 
-    mouseMove(e: MouseEvent) {
+    mouseMove(e: MouseEvent): void {
         const width = parseInt(this.target.style.width);
         this.target.style.width = width + e.movementX + 'px';
     }

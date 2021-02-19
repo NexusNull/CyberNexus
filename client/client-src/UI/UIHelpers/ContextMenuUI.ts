@@ -1,4 +1,3 @@
-
 export class ContextMenuUI {
     element: HTMLDivElement;
     shadow: HTMLDivElement;
@@ -27,13 +26,12 @@ export class ContextMenuUI {
         this.subMenus = [];
     }
 
-    setStructure(structure) {
+    setStructure(structure): void {
         this.element.innerHTML = '';
         for (const declaration of structure) {
             if (!declaration) {
                 continue;
             }
-            console.log(declaration);
             let elem;
             switch (declaration.type) {
             case 'hl':
@@ -78,7 +76,7 @@ export class ContextMenuUI {
         }
     }
 
-    display(position) {
+    display(position): void {
         if (this.parent == null) {
             document.body.appendChild(this.shadow);
         }
@@ -88,7 +86,7 @@ export class ContextMenuUI {
         this.element.style.top = position.y + 'px';
     }
 
-    destroy() {
+    destroy(): void {
         if (!this.destroyed) {
             document.body.removeChild(this.shadow);
             this.destroyed = true;
