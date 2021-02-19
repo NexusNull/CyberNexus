@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const fs = require("fs");
 
 const {privateKey, publicKey} = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 4096,
+    modulusLength: 1024,
 });
 
 let privPem = privateKey.export({type: "pkcs1", format: "pem"});
