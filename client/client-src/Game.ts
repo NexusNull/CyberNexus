@@ -8,6 +8,7 @@ import {ChunkRenderer} from './Game/rendering/ChunkRenderer';
 import {Runner} from './Game/Runner';
 import * as BrowserFS from 'browserfs';
 import {UserData} from "./Game/UserData";
+import {FSModule} from "browserfs/dist/node/core/FS";
 
 export class Game {
     uiController: UIController;
@@ -19,7 +20,7 @@ export class Game {
     chunkRenderer: ChunkRenderer;
     runner: Runner;
     userData: UserData;
-
+    fs: FSModule;
     constructor() {
         this.assets = new Assets();
         this.chunkRenderer = new ChunkRenderer(this.assets);
@@ -30,7 +31,6 @@ export class Game {
         this.demoManager = new DemoManager(this.assets, this.gameScene);
         this.runner = new Runner(this);
         this.userData = new UserData(this);
-        BrowserFS.install(window);
         BrowserFS.configure({
             fs: 'WebDav',
             options: {
@@ -42,7 +42,7 @@ export class Game {
                 throw e;
             }
         });
-        window.fs = BrowserFS.BFSRequire('fs');
+        this.fs = BrowserFS.BFSRequire('fs');
     }
 
     main() {

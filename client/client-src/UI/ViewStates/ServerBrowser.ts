@@ -13,15 +13,15 @@ export class ServerBrowserViewState extends ViewState {
         this.servers = new Map();
     }
 
-    async disable(): Promise<any> {
+    async disable(): Promise<void> {
         this.uiController.uiElements.serverBrowserUI.hide();
     }
 
-    async enable(): Promise<any> {
+    async enable(): Promise<void> {
         this.uiController.uiElements.serverBrowserUI.display();
     }
 
-    async setup(): Promise<any> {
+    async setup(): Promise<void> {
         const servers = await this.requestServerList();
         for (const server of servers) {
             this.uiController.uiElements.serverBrowserUI.addServerEntry(server.id, server);
@@ -35,12 +35,12 @@ export class ServerBrowserViewState extends ViewState {
         }, 2000);
     }
 
-    async joinServer(id) {
+    async joinServer(id: number): Promise<void> {
         console.log(`joining server ${id}`);
         await this.uiController.changeViewState(this.uiController.viewStates.codeEditor);
     }
 
-    async pingAllServers() {
+    async pingAllServers(): Promise<void> {
         for (const server of this.servers) {
             await this.ping(server[1].ip, server[1].port).then((ping) => {
                 this.uiController.uiElements.serverBrowserUI.updateServer(server[1].id, {ping: `${ping} ms`});
@@ -50,7 +50,7 @@ export class ServerBrowserViewState extends ViewState {
         }
     }
 
-    async ping(ip, port): Promise<number> {
+    async ping(ip: string, port: number): Promise<number> {
         const start = new Date();
         return new Promise((resolve, reject) => {
             const xobj = new XMLHttpRequest();
@@ -71,7 +71,7 @@ export class ServerBrowserViewState extends ViewState {
         });
     }
 
-    async requestServerList(): Promise<Array<Server>> {
+    async requestServerList(): Promise<Server[]> {
         return new Promise((resolve, reject) => {
             const xobj = new XMLHttpRequest();
             xobj.open('GET', '/serverList', true);

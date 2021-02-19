@@ -5,7 +5,7 @@ export class EventSystem {
         this.listeners = new Map();
     }
 
-    on(eventName, callback) {
+    on(eventName: string, callback: () => void): void {
         if (this.listeners.has(eventName)) {
             this.listeners.get(eventName).push(callback);
         } else {
@@ -13,7 +13,7 @@ export class EventSystem {
         }
     }
 
-    async emit(eventName: string, data?: any) {
+    async emit(eventName: string, data?: any): Promise<void> {
         const listeners = this.listeners.get(eventName);
         if (!listeners) {
             return;
@@ -28,7 +28,7 @@ export class EventSystem {
         }
     }
 
-    remove(eventName, callback) {
+    remove(eventName: string, callback: () => void): void {
         const listeners = this.listeners.get(eventName);
         const i = listeners.indexOf(callback);
         listeners.splice(i, 1);

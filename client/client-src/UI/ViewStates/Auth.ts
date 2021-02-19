@@ -9,11 +9,11 @@ class AuthViewState extends ViewState {
         super(game, uiController, inputController);
     }
 
-    async disable(): Promise<any> {
+    async disable(): Promise<void> {
         this.uiController.uiElements.authUI.hide();
     }
 
-    async enable(): Promise<any> {
+    async enable(): Promise<void> {
         try {
             const userData = JSON.parse(await util.sendRequest('GET', '/auth/self'));
             this.game.userData.setUsername(userData.username);
@@ -33,7 +33,7 @@ class AuthViewState extends ViewState {
         this.uiController.changeViewState(this.uiController.viewStates.serverBrowser);
     }
 
-    async login(name, password) {
+    async login(name: string, password: string): Promise<void> {
         try {
             const userData = JSON.parse(await util.sendRequest('post', '/auth/login', {name, password}));
             this.game.userData.setUsername(userData.username);
@@ -45,7 +45,7 @@ class AuthViewState extends ViewState {
         }
     }
 
-    async register(name, email, password) {
+    async register(name: string, email: string, password: string): Promise<void> {
         //TODO implement after cleanup
         console.log("ADD ME");
     }

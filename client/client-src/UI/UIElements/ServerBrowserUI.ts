@@ -8,20 +8,20 @@ export class ServerBrowserUI {
     servers: Map<number, ServerElement>;
     serverListElement: HTMLDivElement;
 
-    constructor(uiController) {
+    constructor(uiController: UIController) {
         this.uiController = uiController;
         this.element = <HTMLDivElement>document.getElementById('serverBrowser');
         this.servers = new Map();
         this.serverListElement = <HTMLDivElement>document.getElementById('serverList');
     }
 
-    removeServer(id) {
+    removeServer(id: number): void {
         const entry = this.servers.get(id);
         this.serverListElement.removeChild(entry.serverEntryElement);
         this.servers.delete(id);
     }
 
-    updateServer(id: number, data: any) {
+    updateServer(id: number, data: any): void {
         const entry = this.servers.get(id);
         if (data.name) {
             entry.nameDisplay.innerText = data.name;
@@ -43,7 +43,7 @@ export class ServerBrowserUI {
         }
     }
 
-    addServerEntry(id, data) {
+    addServerEntry(id, data): void {
         const element = this.serverEntryTemplate();
         element.joinButton.addEventListener('click', () => {
             this.uiController.viewStates.serverBrowser.joinServer(id);
@@ -91,12 +91,12 @@ export class ServerBrowserUI {
         };
     }
 
-    display() {
+    display(): void {
         this.element.classList.remove('hidden');
         this.visible = true;
     }
 
-    hide() {
+    hide(): void {
         this.element.classList.add('hidden');
         this.visible = false;
     }
