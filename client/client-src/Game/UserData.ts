@@ -25,6 +25,7 @@ export class UserData {
             const time = Math.floor(new Date().getTime() / 1000);
             for (const token of this.tokens) {
                 if (token[1].expiresAt < time + 6 * 60) {
+                    this.clearToken(token[0]);
                     console.log(`Token: ${token[0]} needs to be re issued`);
                 }
             }
