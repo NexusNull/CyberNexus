@@ -5,11 +5,12 @@
   "main": "main.js",
   "scripts": {
     "install": "node scripts/install.js",
-    "dev": "concurrently --no-color -r \"npm:watch:webpack\" \"npm:watch:sass\"",
-    "watch:webpack": "npx webpack --config client/webpack.config.js ",
+    "watch:dev": "concurrently --no-color -r \"npm:watch:webpack\" \"npm:watch:sass\" \"npm:watch:lint\"",
+    "lint": "npx eslint \"./client/client-src/**/*.ts\" --config .eslintrc.js --fix",
     "build:sass": "node scripts/sassBuild.js",
+    "watch:webpack": "npx webpack --config client/webpack.config.js ",
     "watch:sass": "watch \"npm run build:sass\" client/sass/",
-    "lint": "npx eslint \"./client/client-src/**/*.ts\" --config .eslintrc.js --fix"
+    "watch:lint": "watch \"npm run lint\" client/client-src/"
   },
   "husky": {
     "hooks": {
