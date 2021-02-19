@@ -11,7 +11,6 @@ import {Beam} from '../rendering/Beam';
 import {Assets} from '../../AssetManagement/Assets';
 import {ChunkRenderer} from '../rendering/ChunkRenderer';
 import {Perlin} from "../../definitions/Perlin";
-/* eslint-disable no-undef */
 
 
 declare let perlin: Perlin;
@@ -79,7 +78,7 @@ export class TowerDefenceDemo {
 
     start() {
         this.startTime = new Date();
-        this.intervalID = setInterval(() => {
+        this.intervalID = window.setInterval(() => {
             this.gameScene.world.rotation.y += 0.001;
             if (new Date().getTime() - this.startTime.getTime() > 20000000) {
                 this.stop();
