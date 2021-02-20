@@ -37,7 +37,7 @@ export class ConsoleUI {
                     }
                     try {
                         if (result !== undefined) {
-                            this.logMessage();
+                            this.logMessage("");
                         }
                     } catch (e) {
                         this.logError(e);
