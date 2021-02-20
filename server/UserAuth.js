@@ -72,7 +72,7 @@ class UserAuth {
                     uid: req.session.user.id,
                     ip: req.connection.remoteAddress,
                     paths: [
-                        {path: "/1/", perms: ["canRead", "canWrite"]}
+                        {path: "/" + req.session.user.username + "/", perms: ["canRead", "canWrite"]}
                     ],
                     admin: false,
                     scope: req.body.scope
