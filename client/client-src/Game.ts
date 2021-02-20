@@ -44,10 +44,18 @@ export class Game {
             }
         });
         this.fs = BrowserFS.BFSRequire('fs');
+
+
+        setTimeout(this.updateToken, 1000 * 60);
     }
 
     main(): void {
         this.uiController.changeViewState(this.uiController.viewStates.loading);
+    }
+
+    async updateToken() {
+        const a = await game.userData.getToken("webdav");
+        (<any>game.fs.getRootFS()).client.setHeaders({"Authorization": "Bearer " + a});
     }
 }
 
