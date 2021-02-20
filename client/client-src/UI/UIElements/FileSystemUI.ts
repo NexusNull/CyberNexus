@@ -10,9 +10,7 @@ export class FileSystemUI {
     constructor(uiController: UIController) {
         this.uiController = uiController;
         this.container = <HTMLDivElement>document.getElementById('CEDirectoryStructure');
-        this.rootDir = new DirectoryUI(this, null, 'admin');
-
-        this.container.appendChild(this.rootDir.element);
+        this.rootDir = new DirectoryUI(this, null, name);
     }
 
     addFile(path: string): void {
@@ -44,6 +42,7 @@ export class FileSystemUI {
         new DirectoryUI(this, current, parsedPath.base);
     }
 
+
     parsePath(path: string): { elements: string[], segments: string[], base: string, ext: string } {
         const elements = path.split('/').filter((elem) => elem.length > 0);
         const segments = elements.slice(0, -1);
@@ -64,8 +63,4 @@ export class FileSystemUI {
         return data;
     }
 
-    //TODO FIX THIS SHIT
-    getDirectoryByPath(path: string): DirectoryUI {
-        return null;
-    }
 }
