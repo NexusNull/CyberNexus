@@ -86,6 +86,15 @@ export default {
         return posA.x === posB.x && posA.y === posB.y && posA.z === posB.z;
     },
 
+    deepCopy: function (obj: any): any {
+        const newObj = Object.assign({}, obj);
+        for (const key in newObj) {
+            if (typeof newObj[key] == "object") {
+                newObj[key] = this.deepCopy(obj[key]);
+            }
+        }
+        return newObj;
+    },
 
     loadJSON: async function (path: string): Promise<any> {
         return JSON.parse(await this.loadFile(path, 'application/json'));
