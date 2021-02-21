@@ -4,6 +4,7 @@
  */
 import util from '../util/Util';
 import {Game} from "../Game";
+import {EventSystem} from "../util/EventSystem";
 
 interface TokenContainer {
     token: string,
@@ -12,7 +13,7 @@ interface TokenContainer {
     expiresAt: number
 }
 
-export class UserData {
+export class UserData extends EventSystem {
     tokens: Map<string, TokenContainer> = new Map();
     game: Game;
     isAuthenticated = false;
@@ -20,12 +21,14 @@ export class UserData {
     id: number;
 
     constructor(game: Game) {
+        super();
         this.game = game;
         setInterval(() => {
             const time = Math.floor(new Date().getTime() / 1000);
             for (const token of this.tokens) {
                 if (token[1].expiresAt < time + 6 * 60) {
                     this.clearToken(token[0]);
+                    this.emit("tokenTimeout", util.deepCopy(token));
                     console.log(`Token: ${token[0]} needs to be re issued`);
                 }
             }
@@ -55,6 +58,7 @@ export class UserData {
             const json = await util.sendRequest("POST", "/auth/jwt", {scope: scope});
             const data = JSON.parse(json);
             const tokenContainer = UserData.destructureToken(data.token);
+            this.emit("tokenIssued", util.deepCopy(tokenContainer));
             this.tokens.set(scope, tokenContainer);
             return data.token;
         }
