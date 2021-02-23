@@ -20,7 +20,6 @@ export class CodeEditorUI {
         this.element = <HTMLDivElement>document.getElementById('CodeEditor');
         this.editorElement = <HTMLDivElement>document.getElementById('CECodeEditor');
         this.consoleElement = <HTMLDivElement>document.getElementById('CEConsole');
-        this.directoryStructure = <HTMLDivElement>document.getElementById('CEDirectoryStructure');
         this.currentFile = null;
         this.separators = [];
 

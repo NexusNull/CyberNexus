@@ -47,7 +47,14 @@ export class UserData extends EventSystem {
         this.isAuthenticated = status;
         if (!status) {
             this.tokens.clear();
+        } else {
+            this.fetchTokens();
         }
+    }
+
+    fetchTokens() {
+        //ignore promise
+        this.getToken("webdav");
     }
 
     async getToken(scope: string) {

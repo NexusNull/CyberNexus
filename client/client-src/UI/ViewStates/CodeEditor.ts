@@ -4,12 +4,16 @@ import {Game} from '../../Game';
 import {UIController} from '../UIController';
 import {InputController} from '../InputController';
 import {FileUI} from '../UIElements/FileUI';
+import {FileSystemManager} from "../UIHelpers/FileSystemManager";
 
 export class CodeEditorViewState extends ViewState {
     currentFile: FileUI;
+    fileSystemManager: FileSystemManager
 
     constructor(game: Game, uiController: UIController, inputController: InputController) {
         super(game, uiController, inputController);
+
+        this.fileSystemManager = new FileSystemManager(game, uiController, inputController, this);
         this.currentFile = null;
     }
 

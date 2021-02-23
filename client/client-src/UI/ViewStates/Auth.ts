@@ -31,7 +31,6 @@ class AuthViewState extends ViewState {
     authCompleted(): void {
         this.uiController.uiElements.authUI.clearForms();
         this.uiController.changeViewState(this.uiController.viewStates.serverBrowser);
-        this.game.updateToken();
     }
 
     async login(name: string, password: string): Promise<void> {
