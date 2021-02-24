@@ -150,7 +150,7 @@ export default {
     },
 
     /** Why this isn't standard functionality is beyond me */
-    differenceSet: function (a: Set<any>, b: Set<any>) {
+    differenceSet: function (a: Set<any>, b: Set<any>): Set<any> {
         const result = new Set();
         for (const elem of a) {
             if (!b.has(elem)) {
@@ -158,6 +158,26 @@ export default {
             }
         }
         return result;
+    },
+
+    parsePath: function (path: string): { elements: string[], segments: string[], base: string, ext: string } {
+        const elements = path.split('/').filter((elem) => elem.length > 0);
+        const segments = elements.slice(0, -1);
+        const base = elements.slice(-1)[0];
+
+        const data: { elements: string[], segments: string[], base: string, ext: string } = {
+            elements,
+            segments,
+            base,
+            ext: null,
+        };
+
+        const split = base.split('.');
+        if (split.length > 1) {
+            data.ext = '.' + split.slice(-1);
+        }
+
+        return data;
     },
 
     loadJSON: async function (path: string): Promise<any> {
@@ -172,12 +192,12 @@ export default {
             xobj.onreadystatechange = function () {
                 if (xobj.readyState === 4) {
                     switch (xobj.status) {
-                    case 200:
-                        resolve(xobj.responseText);
-                        break;
-                    case 404:
-                        reject(`${xobj.responseText} for ${xobj.responseURL}`);
-                        break;
+                        case 200:
+                            resolve(xobj.responseText);
+                            break;
+                        case 404:
+                            reject(`${xobj.responseText} for ${xobj.responseURL}`);
+                            break;
                     }
                 }
             };
