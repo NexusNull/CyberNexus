@@ -111,7 +111,7 @@ export default {
             if (Object.prototype.toString.call(item) === "[object Array]") {
                 result = [];
                 item.forEach((child, index) => {
-                    result[index] = this.deepCopy(child);
+                    result[index] = this.clone(child);
                 });
             } else if (typeof item == "object") {
                 // testing that this is DOM
@@ -124,7 +124,7 @@ export default {
                         // it is an object literal
                         result = {};
                         for (const i in item) {
-                            result[i] = this.deepCopy(item[i]);
+                            result[i] = this.clone(item[i]);
                         }
                     }
                 } else {
