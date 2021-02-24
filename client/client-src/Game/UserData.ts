@@ -28,7 +28,7 @@ export class UserData extends EventSystem {
             for (const token of this.tokens) {
                 if (token[1].expiresAt < time + 6 * 60) {
                     this.clearToken(token[0]);
-                    this.emit("tokenTimeout", util.deepCopy(token));
+                    this.emit("tokenTimeout", util.clone(token));
                     console.log(`Token: ${token[0]} needs to be re issued`);
                 }
             }
@@ -65,7 +65,7 @@ export class UserData extends EventSystem {
             const json = await util.sendRequest("POST", "/auth/jwt", {scope: scope});
             const data = JSON.parse(json);
             const tokenContainer = UserData.destructureToken(data.token);
-            this.emit("tokenIssued", util.deepCopy(tokenContainer));
+            this.emit("tokenIssued", util.clone(tokenContainer));
             this.tokens.set(scope, tokenContainer);
             return data.token;
         }
