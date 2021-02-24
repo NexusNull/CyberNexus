@@ -111,7 +111,7 @@ export default {
             if (Object.prototype.toString.call(item) === "[object Array]") {
                 result = [];
                 item.forEach((child, index) => {
-                    result[index] = this.clone(child);
+                    result[index] = this.deepCopy(child);
                 });
             } else if (typeof item == "object") {
                 // testing that this is DOM
@@ -124,7 +124,7 @@ export default {
                         // it is an object literal
                         result = {};
                         for (const i in item) {
-                            result[i] = this.clone(item[i]);
+                            result[i] = this.deepCopy(item[i]);
                         }
                     }
                 } else {
@@ -161,26 +161,6 @@ export default {
             };
             xobj.send(null);
         });
-    },
-    /** Why this isn't standard functionality is beyond me */
-    intersectSet: function (a: Set<any>, b: Set<any>): Set<any> {
-        const result = new Set();
-        for (const elem of a) {
-            if (b.has(elem)) {
-                result.add(elem);
-            }
-        }
-        return result;
-    },
-    /** Why this isn't standard functionality is beyond me */
-    differenceSet: function (a: Set<any>, b: Set<any>) {
-        const result = new Set();
-        for (const elem of a) {
-            if (!b.has(elem)) {
-                result.add(elem);
-            }
-        }
-        return result;
     },
 
     async sendRequest(method: string, url: string, body?: any): Promise<string> {
