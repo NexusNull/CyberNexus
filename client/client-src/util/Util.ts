@@ -138,6 +138,28 @@ export default {
         return result;
     },
 
+    /** Why this isn't standard functionality is beyond me */
+    intersectSet: function (a: Set<any>, b: Set<any>): Set<any> {
+        const result = new Set();
+        for (const elem of a) {
+            if (b.has(elem)) {
+                result.add(elem);
+            }
+        }
+        return result;
+    },
+
+    /** Why this isn't standard functionality is beyond me */
+    differenceSet: function (a: Set<any>, b: Set<any>) {
+        const result = new Set();
+        for (const elem of a) {
+            if (!b.has(elem)) {
+                result.add(elem);
+            }
+        }
+        return result;
+    },
+
     loadJSON: async function (path: string): Promise<any> {
         return JSON.parse(await this.loadFile(path, 'application/json'));
     },
