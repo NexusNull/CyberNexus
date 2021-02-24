@@ -85,15 +85,57 @@ export default {
     equalPosition: function (posA: { x: number, y: number, z: number }, posB: { x: number, y: number, z: number }): boolean {
         return posA.x === posB.x && posA.y === posB.y && posA.z === posB.z;
     },
+    /** https://stackoverflow.com/questions/4459928/how-to-deep-clone-in-javascript/
+     *  In my opinion we should have to deal with this, cloning something complex should lead to a compiler/runtime error
+     *  because some things shouldn't or can't be cloned properly and any attempt to do so should throw an error into the devs face saying "Fix your shit".
+     *  In this case tough i'm lazy and this works for the objects I'm using it for.
+     *  To anyone else using this, this function should be a last/least effort,
+     *  this function will do so much unnecessary work that can be fixed with a little knowledge about the object.
+     */
+    clone: function (item: any): any {
+        if (!item) {
+            return item;
+        } // null, undefined values check
 
-    deepCopy: function (obj: any): any {
-        const newObj = Object.assign({}, obj);
-        for (const key in newObj) {
-            if (typeof newObj[key] == "object") {
-                newObj[key] = this.deepCopy(obj[key]);
+        const types = [Number, String, Boolean];
+        let result;
+
+        // normalizing primitives if someone did new String('aaa'), or new Number('444');
+        types.forEach(function (type) {
+            if (item instanceof type) {
+                result = type(item);
+            }
+        });
+
+        if (typeof result == "undefined") {
+            if (Object.prototype.toString.call(item) === "[object Array]") {
+                result = [];
+                item.forEach((child, index) => {
+                    result[index] = this.deepCopy(child);
+                });
+            } else if (typeof item == "object") {
+                // testing that this is DOM
+                if (item.nodeType && typeof item.cloneNode == "function") {
+                    result = item.cloneNode(true);
+                } else if (!item.prototype) { // check that this is a literal
+                    if (item instanceof Date) {
+                        result = new Date(item);
+                    } else {
+                        // it is an object literal
+                        result = {};
+                        for (const i in item) {
+                            result[i] = this.deepCopy(item[i]);
+                        }
+                    }
+                } else {
+                    result = item;
+                }
+            } else {
+                result = item;
             }
         }
-        return newObj;
+
+        return result;
     },
 
     loadJSON: async function (path: string): Promise<any> {
