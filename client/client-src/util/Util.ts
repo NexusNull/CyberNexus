@@ -170,7 +170,8 @@ export default {
             else
                 newElements.push(element);
         }
-        return "/" + newElements.join("/") + (trailing ? "/" : "");
+        const resultPath = "/" + newElements.join("/");
+        return resultPath + (!resultPath.endsWith("/") && trailing ? "/" : "");
     },
 
     parsePath: function (path: string): { elements: string[], segments: string[], base: string, ext: string } {
