@@ -14,7 +14,7 @@ export class FileSystemUI {
 
     }
 
-    addRootDir(element: DirectoryUI): void {
+    addRootElement(element: DirectoryUI): void {
         this.rootElements.push(element);
         this.container.appendChild(element.element);
     }

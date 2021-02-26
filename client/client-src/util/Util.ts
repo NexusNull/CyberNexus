@@ -176,9 +176,7 @@ export default {
 
     parsePath: function (path: string): string[] {
         path = this.normalizePath(path);
-        const elements = path.split('/').filter((elem) => elem.length > 0);
-        elements.splice(0, 0, "/");
-        return elements;
+        return path.split('/').filter((elem) => elem.length > 0);
     },
 
     loadJSON: async function (path: string): Promise<any> {
