@@ -356,6 +356,5 @@ let perlin = (function () {
                 lerp(n011, n111, u), w),
             v);
     };
-    console.log(module.exports)
     return module.exports;
 })();
