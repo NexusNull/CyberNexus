@@ -174,25 +174,11 @@ export default {
         return resultPath + (!resultPath.endsWith("/") && trailing ? "/" : "");
     },
 
-    parsePath: function (path: string): { elements: string[], segments: string[], base: string, ext: string } {
-
-        const elements = this.normalizePath(path).split('/').filter((elem) => elem.length > 0);
-        const segments = elements.slice(0, -1);
-        const base = elements.slice(-1)[0];
-
-        const data: { elements: string[], segments: string[], base: string, ext: string } = {
-            elements,
-            segments,
-            base,
-            ext: null,
-        };
-
-        const split = base.split('.');
-        if (split.length > 1) {
-            data.ext = '.' + split.slice(-1);
-        }
-
-        return data;
+    parsePath: function (path: string): string[] {
+        path = this.normalizePath(path);
+        const elements = path.split('/').filter((elem) => elem.length > 0);
+        elements.splice(0, 0, "/");
+        return elements;
     },
 
     loadJSON: async function (path: string): Promise<any> {
