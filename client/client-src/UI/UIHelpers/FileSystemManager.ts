@@ -19,6 +19,9 @@ export class FileSystemManager {
     fs: FSModule;
     rootDir: DirectoryUI;
     activeElements: Set<string>;
+    updateQueue: (() => void)[];
+    updateTimeout: number;
+    activeElementsUpdateTimeout: number;
 
     constructor(game: Game, uiController: UIController, inputController: InputController, codeEditor: CodeEditorViewState) {
         this.game = game;
@@ -30,6 +33,25 @@ export class FileSystemManager {
         this.rootDir = new DirectoryUI(this.uiController.uiElements.fileSystemUI, null, "/");
         this.rootDir.expand();
         this.uiController.uiElements.fileSystemUI.addRootElement(this.rootDir);
+        this.updateQueue = [];
+        this.updateTimeout = setInterval(() => {
+            let func;
+            try {
+                func = this.updateQueue.shift();
+                if (func)
+                    func();
+            } catch (e) {
+                console.error("Error in update queue:" + e.stack);
+                console.error(func);
+            }
+        }, 100);
+
+        this.activeElementsUpdateTimeout = setInterval(() => {
+            for (const path of this.activeElements) {
+                this.update(path);
+            }
+        }, 5000);
+
 
         BrowserFS.configure({
             fs: 'WebDav',
@@ -68,8 +90,47 @@ export class FileSystemManager {
         });
     }
 
-    updateFileSystem() {
-        //do nothing
+    async update(path) {
+        return new Promise((resolve, reject) => {
+            this.updateQueue.push(() => {
+                const fsElement = this.getElement(path);
+                if (fsElement instanceof DirectoryUI) {
+                    this.fs.readdir(path, (err, names) => {
+                        if (err)
+                            reject(err);
+                        for (const name of names) {
+                            this.update(fsElement.getPath() + "/" + name);
+                        }
+                    });
+                } else if (fsElement instanceof FileUI) {
+                    console.log("file:" + path);
+                } else {
+                    const parsedPath = util.parsePath(path);
+                    const parent = this.getElement("/" + parsedPath.slice(0, -1).join("/"));
+                    this.fs.stat(path, (err, stats) => {
+                        if (stats.isFile()) {
+                            new FileUI(this.uiController.uiElements.fileSystemUI, parent, parsedPath[parsedPath.length - 1]);
+                        } else if (stats.isDirectory()) {
+                            new DirectoryUI(this.uiController.uiElements.fileSystemUI, parent, parsedPath[parsedPath.length - 1]);
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    getElement(path: string): DirectoryUI | FileUI {
+        const parsedPath = util.parsePath(path);
+        let current = this.rootDir;
+        for (let i = 0; i < parsedPath.length - 1; i++) {
+            const dir: DirectoryUI = <DirectoryUI>current.getChild(parsedPath[i]);
+            if (!dir) {
+                return null;
+            }
+            current = dir;
+        }
+        return current.getChild(parsedPath[parsedPath.length - 1]);
+
     }
 
     /** Not all folders are owned by the user, we only activate those that we actually have access to
@@ -102,11 +163,4 @@ export class FileSystemManager {
     removeActive(name: string): void {
         //do nothing
     }
-
-    async fullFetch() {
-        //do nothing
-
-    }
-
-
 }
