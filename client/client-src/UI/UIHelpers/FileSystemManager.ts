@@ -4,11 +4,10 @@ import {InputController} from "../InputController";
 import {CodeEditorViewState} from "../ViewStates/CodeEditor";
 import {DirectoryUI} from "../UIElements/DirectoryUI";
 import {FileUI} from "../UIElements/FileUI";
-import * as BrowserFS from "browserfs";
-import {FSModule} from "browserfs/dist/node/core/FS";
-import WebDav from "browserfs/dist/node/backend/WebDav";
 import util from "../../util/Util";
+import {FileStat, WebDAVClient} from "webdav/dist/node/types";
 
+import {createClient} from "webdav/web";
 
 export class FileSystemManager {
     directoryStructure: HTMLDivElement;
@@ -16,7 +15,7 @@ export class FileSystemManager {
     uiController: UIController;
     inputController: InputController;
     codeEditor: CodeEditorViewState;
-    fs: FSModule;
+    webdav: WebDAVClient;
     rootDir: DirectoryUI;
     activeElements: Set<string>;
     updateQueue: (() => void)[];
@@ -30,11 +29,12 @@ export class FileSystemManager {
         this.codeEditor = codeEditor;
         this.directoryStructure = <HTMLDivElement>document.getElementById('CEDirectoryStructure');
         this.activeElements = new Set();
+        this.webdav = createClient("//localhost:2000/fs/");
         this.rootDir = new DirectoryUI(this.uiController.uiElements.fileSystemUI, null, "/");
         this.rootDir.expand();
         this.uiController.uiElements.fileSystemUI.addRootElement(this.rootDir);
         this.updateQueue = [];
-        this.updateTimeout = setInterval(() => {
+        this.updateTimeout = window.setInterval(() => {
             let func;
             try {
                 func = this.updateQueue.shift();
@@ -46,45 +46,28 @@ export class FileSystemManager {
             }
         }, 100);
 
-        this.activeElementsUpdateTimeout = setInterval(() => {
+        this.activeElementsUpdateTimeout = window.setInterval(() => {
             for (const path of this.activeElements) {
                 this.update(path);
             }
         }, 5000);
 
-
-        BrowserFS.configure({
-            fs: 'WebDav',
-            options: {
-                prefixUrl: 'http://localhost:2000/fs/',
-            },
-        }, (e) => {
-            if (e) {
-                throw e;
-            }
-        });
-
-        this.fs = BrowserFS.BFSRequire('fs');
         this.game.userData.on("tokenIssued", async (tokenContainer) => {
             if (tokenContainer.body.scope == "webdav") {
-                const rootFS = this.fs.getRootFS();
-                if (rootFS.getName() === "WebDav") {
-                    const webDavFS = (rootFS as WebDav);
-                    webDavFS.client.setHeaders({"Authorization": "Bearer " + tokenContainer.token});
-                    const newActive = new Set();
-                    for (const pathPerms of tokenContainer.body.paths) {
-                        if (pathPerms.perms.includes("canRead")) {
-                            newActive.add(pathPerms.path);
-                        }
+                this.webdav.setHeaders({"Authorization": "Bearer " + tokenContainer.token});
+                const newActive = new Set();
+                for (const pathPerms of tokenContainer.body.paths) {
+                    if (pathPerms.perms.includes("canRead")) {
+                        newActive.add(pathPerms.path);
                     }
-                    const toActivate = util.differenceSet(newActive, this.activeElements);
-                    const toDeactivate = util.differenceSet(this.activeElements, newActive);
-                    for (const path of toActivate) {
-                        await this.addActive(path);
-                    }
-                    for (const path of toDeactivate) {
-                        this.removeActive(path);
-                    }
+                }
+                const toActivate = util.differenceSet(newActive, this.activeElements);
+                const toDeactivate = util.differenceSet(this.activeElements, newActive);
+                for (const path of toActivate) {
+                    await this.addActive(path);
+                }
+                for (const path of toDeactivate) {
+                    this.removeActive(path);
                 }
             }
         });
@@ -92,30 +75,7 @@ export class FileSystemManager {
 
     async update(path) {
         return new Promise((resolve, reject) => {
-            this.updateQueue.push(() => {
-                const fsElement = this.getElement(path);
-                if (fsElement instanceof DirectoryUI) {
-                    this.fs.readdir(path, (err, names) => {
-                        if (err)
-                            reject(err);
-                        for (const name of names) {
-                            this.update(fsElement.getPath() + "/" + name);
-                        }
-                    });
-                } else if (fsElement instanceof FileUI) {
-                    console.log("file:" + path);
-                } else {
-                    const parsedPath = util.parsePath(path);
-                    const parent = this.getElement("/" + parsedPath.slice(0, -1).join("/"));
-                    this.fs.stat(path, (err, stats) => {
-                        if (stats.isFile()) {
-                            new FileUI(this.uiController.uiElements.fileSystemUI, parent, parsedPath[parsedPath.length - 1]);
-                        } else if (stats.isDirectory()) {
-                            new DirectoryUI(this.uiController.uiElements.fileSystemUI, parent, parsedPath[parsedPath.length - 1]);
-                        }
-                    });
-                }
-            });
+            resolve();
         });
     }
 
@@ -148,16 +108,15 @@ export class FileSystemManager {
             current = dir;
         }
         //last element in the path can be directory or File
-        this.fs.stat(path, (err, stats) => {
-            if (stats.isDirectory()) {
-                const dir = new DirectoryUI(this.uiController.uiElements.fileSystemUI, current, parsedPath[parsedPath.length - 1]);
-                dir.expand();
-                this.activeElements.add(path);
-            } else if (stats.isFile()) {
-                new FileUI(this.uiController.uiElements.fileSystemUI, current, parsedPath[parsedPath.length - 1]);
-                this.activeElements.add(path);
-            }
-        });
+        const stats: FileStat = <FileStat>await this.webdav.stat(path);
+        if (stats.type === "directory") {
+            const dir = new DirectoryUI(this.uiController.uiElements.fileSystemUI, current, parsedPath[parsedPath.length - 1]);
+            dir.expand();
+            this.activeElements.add(path);
+        } else if (stats.type === "file") {
+            new FileUI(this.uiController.uiElements.fileSystemUI, current, parsedPath[parsedPath.length - 1]);
+            this.activeElements.add(path);
+        }
     }
 
     removeActive(name: string): void {
