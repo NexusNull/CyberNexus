@@ -67,6 +67,8 @@ export class FileUI {
         case 'txt':
             fileIcon.src = '/icons/file-txt.svg';
             break;
+        default:
+            fileIcon.src = '/icons/file-unknown.svg';
         }
     }
 
