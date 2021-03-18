@@ -47,9 +47,7 @@ export class FileSystemManager {
         }, 100);
 
         this.activeElementsUpdateTimeout = window.setInterval(() => {
-            for (const path of this.activeElements) {
-                this.update(path);
-            }
+            this.queueFullFetch();
         }, 5000);
 
         this.game.userData.on("tokenIssued", async (tokenContainer) => {
@@ -69,14 +67,30 @@ export class FileSystemManager {
                 for (const path of toDeactivate) {
                     this.removeActive(path);
                 }
+                this.queueFullFetch();
             }
         });
     }
 
     async update(path) {
-        return new Promise((resolve, reject) => {
-            resolve();
-        });
+        const parent = this.getElement(path);
+        if (parent) {
+            if (parent instanceof DirectoryUI) {
+                const contents = <FileStat[]>await this.webdav.getDirectoryContents(path);
+                for (const element of contents) {
+                    if (element.type === "directory") {
+                        if (!parent.getChild(element.basename)) {
+                            new DirectoryUI(this.uiController.uiElements.fileSystemUI, parent, element.basename);
+                            this.updateQueue.push(this.update.bind(this, element.filename));
+                        }
+
+                    } else if (element.type === "file") {
+                        if (!parent.getChild(element.basename))
+                            new FileUI(this.uiController.uiElements.fileSystemUI, parent, element.basename);
+                    }
+                }
+            }
+        }
     }
 
     getElement(path: string): DirectoryUI | FileUI {
@@ -91,6 +105,12 @@ export class FileSystemManager {
         }
         return current.getChild(parsedPath[parsedPath.length - 1]);
 
+    }
+
+    queueFullFetch() {
+        for (const path of this.activeElements) {
+            this.update(path);
+        }
     }
 
     /** Not all folders are owned by the user, we only activate those that we actually have access to
