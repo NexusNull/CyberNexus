@@ -10,7 +10,6 @@ import {FileStat, WebDAVClient} from "webdav/dist/node/types";
 import {createClient} from "webdav/web";
 
 export class FileSystemManager {
-    directoryStructure: HTMLDivElement;
     game: Game;
     uiController: UIController;
     inputController: InputController;
@@ -27,7 +26,6 @@ export class FileSystemManager {
         this.uiController = uiController;
         this.inputController = inputController;
         this.codeEditor = codeEditor;
-        this.directoryStructure = <HTMLDivElement>document.getElementById('CEDirectoryStructure');
         this.activeElements = new Set();
         this.webdav = createClient("//localhost:2000/fs/");
         this.rootDir = new DirectoryUI(this.uiController.uiElements.fileSystemUI, null, "/");

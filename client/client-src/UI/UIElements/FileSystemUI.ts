@@ -1,5 +1,4 @@
 import {DirectoryUI} from './DirectoryUI';
-import {FileUI} from './FileUI';
 import {UIController} from '../UIController';
 
 export class FileSystemUI {
@@ -9,7 +8,7 @@ export class FileSystemUI {
 
     constructor(uiController: UIController) {
         this.uiController = uiController;
-        this.container = <HTMLDivElement>document.getElementById('CEDirectoryStructure');
+        this.container = <HTMLDivElement>document.getElementById('CEDirectoryStructure').getElementsByClassName("directoryContainer")[0];
         this.rootElements = [];
 
     }
