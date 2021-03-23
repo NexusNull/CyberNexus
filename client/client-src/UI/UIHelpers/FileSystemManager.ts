@@ -44,9 +44,6 @@ export class FileSystemManager {
             }
         }, 100);
 
-        this.activeElementsUpdateTimeout = window.setInterval(() => {
-            this.queueFullFetch();
-        }, 5000);
 
         this.game.userData.on("tokenIssued", async (tokenContainer) => {
             if (tokenContainer.body.scope == "webdav") {
@@ -70,7 +67,7 @@ export class FileSystemManager {
         });
     }
 
-    async update(path) {
+    async update(path, recursive) {
         const parent = this.getElement(path);
         if (parent) {
             if (parent instanceof DirectoryUI) {
@@ -79,7 +76,8 @@ export class FileSystemManager {
                     if (element.type === "directory") {
                         if (!parent.getChild(element.basename)) {
                             new DirectoryUI(this.uiController.uiElements.fileSystemUI, parent, element.basename);
-                            this.updateQueue.push(this.update.bind(this, element.filename));
+                            if (recursive)
+                                this.updateQueue.push(this.update.bind(this, element.filename, recursive));
                         }
 
                     } else if (element.type === "file") {
@@ -102,12 +100,11 @@ export class FileSystemManager {
             current = dir;
         }
         return current.getChild(parsedPath[parsedPath.length - 1]);
-
     }
 
     queueFullFetch() {
         for (const path of this.activeElements) {
-            this.update(path);
+            this.update(path, true);
         }
     }
 
