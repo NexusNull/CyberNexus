@@ -1,18 +1,18 @@
-import {FileSystemUI} from './FileSystemUI';
 import {DirectoryUI} from './DirectoryUI';
 import {ContextMenuUI} from '../UIHelpers/ContextMenuUI';
 import {default as updateOps} from '../ContextGroups/updateOps';
+import {FileSystemManager} from "../UIHelpers/FileSystemManager";
 
 export class FileUI {
-    fileSystemUI: FileSystemUI;
+    fileSystemManager: FileSystemManager;
     parent: DirectoryUI;
 
     name: string;
     element: HTMLDivElement;
     hidden: boolean;
 
-    constructor(fileSystemUI: FileSystemUI, parent: DirectoryUI, name: string) {
-        this.fileSystemUI = fileSystemUI;
+    constructor(fileSystemManager: FileSystemManager, parent: DirectoryUI, name: string) {
+        this.fileSystemManager = fileSystemManager;
         this.parent = parent;
 
         this.name = name;
@@ -29,7 +29,7 @@ export class FileUI {
         this.setFileIcon(this.getExtension());
         this.element.addEventListener('click', (e) => {
             e.cancelBubble = true;
-            this.fileSystemUI.uiController.viewStates.codeEditor.openFile(this);
+            this.fileSystemManager.uiController.viewStates.codeEditor.openFile(this.getPath());
         });
 
         if (parent) {

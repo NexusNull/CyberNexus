@@ -36,12 +36,12 @@ export default function append(array, element: DirectoryUI) {
 
                             const nameElement = <HTMLInputElement>form.getElementsByClassName('inputNewName')[0];
                             try {
-                                await element.fileSystemUI.uiController.viewStates.codeEditor.createDirectory(element.getPath().slice(1) + '/' + nameElement.value + '/');
+                                await element.fileSystemManager.uiController.viewStates.codeEditor.createDirectory(element.getPath().slice(1) + '/' + nameElement.value + '/');
                             } catch (e) {
                                 console.error(e);
                                 return;
                             }
-                            element.addChild(new DirectoryUI(element.fileSystemUI, element, nameElement.value));
+                            element.addChild(new DirectoryUI(element.fileSystemManager, element, nameElement.value));
                         });
 
                         buttonCancel.addEventListener('click', () => {
@@ -82,12 +82,12 @@ export default function append(array, element: DirectoryUI) {
 
                             const nameElement = <HTMLInputElement>form.getElementsByClassName('inputNewName')[0];
                             try {
-                                await element.fileSystemUI.uiController.viewStates.codeEditor.createFile(element.getPath().slice(1) + '/' + nameElement.value);
+                                await element.fileSystemManager.uiController.viewStates.codeEditor.createFile(element.getPath().slice(1) + '/' + nameElement.value);
                             } catch (e) {
                                 console.error(e);
                                 return;
                             }
-                            element.addChild(new FileUI(element.fileSystemUI, element, nameElement.value));
+                            element.addChild(new FileUI(element.fileSystemManager, element, nameElement.value));
                         });
 
                         buttonCancel.addEventListener('click', () => {

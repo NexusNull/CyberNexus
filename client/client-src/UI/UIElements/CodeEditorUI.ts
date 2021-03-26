@@ -11,7 +11,6 @@ export class CodeEditorUI {
     editor: CodeMirror.Editor;
     editorElement: HTMLDivElement;
     consoleElement: HTMLDivElement;
-    directoryStructure: HTMLDivElement;
     currentFile: FileUI;
     saveTimeout: number;
 

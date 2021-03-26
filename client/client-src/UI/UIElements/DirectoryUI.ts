@@ -1,11 +1,11 @@
-import {FileSystemUI} from './FileSystemUI';
 import {FileUI} from './FileUI';
 import {ContextMenuUI} from '../UIHelpers/ContextMenuUI';
 import {default as newOps} from '../ContextGroups/newOps';
 import {default as updateOps} from '../ContextGroups/updateOps';
+import {FileSystemManager} from "../UIHelpers/FileSystemManager";
 
 export class DirectoryUI {
-    fileSystemUI: FileSystemUI;
+    fileSystemManager: FileSystemManager;
     parent: DirectoryUI;
     name: string;
     collapsed: boolean;
@@ -14,8 +14,8 @@ export class DirectoryUI {
     header: HTMLDivElement;
     children: Map<string, DirectoryUI | FileUI>;
 
-    constructor(fileSystemUI: FileSystemUI, parent: DirectoryUI, name: string) {
-        this.fileSystemUI = fileSystemUI;
+    constructor(fileSystemManager: FileSystemManager, parent: DirectoryUI, name: string) {
+        this.fileSystemManager = fileSystemManager;
         this.parent = parent;
         this.name = name;
         this.collapsed = true;

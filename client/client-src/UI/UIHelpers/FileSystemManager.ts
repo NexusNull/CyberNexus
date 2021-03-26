@@ -28,7 +28,7 @@ export class FileSystemManager {
         this.codeEditor = codeEditor;
         this.activeElements = new Set();
         this.webdav = createClient("//localhost:2000/fs/");
-        this.rootDir = new DirectoryUI(this.uiController.uiElements.fileSystemUI, null, "/");
+        this.rootDir = new DirectoryUI(this, null, "/");
         this.rootDir.expand();
         this.uiController.uiElements.fileSystemUI.addRootElement(this.rootDir);
         this.updateQueue = [];
@@ -75,14 +75,14 @@ export class FileSystemManager {
                 for (const element of contents) {
                     if (element.type === "directory") {
                         if (!parent.getChild(element.basename)) {
-                            new DirectoryUI(this.uiController.uiElements.fileSystemUI, parent, element.basename);
+                            new DirectoryUI(this, parent, element.basename);
                             if (recursive)
                                 this.updateQueue.push(this.update.bind(this, element.filename, recursive));
                         }
 
                     } else if (element.type === "file") {
                         if (!parent.getChild(element.basename))
-                            new FileUI(this.uiController.uiElements.fileSystemUI, parent, element.basename);
+                            new FileUI(this, parent, element.basename);
                     }
                 }
             }
@@ -117,7 +117,7 @@ export class FileSystemManager {
         for (let i = 0; i < parsedPath.length - 1; i++) {
             let dir: DirectoryUI = <DirectoryUI>current.getChild(parsedPath[i]);
             if (!dir) {
-                dir = new DirectoryUI(this.uiController.uiElements.fileSystemUI, current, parsedPath[i]);
+                dir = new DirectoryUI(this, current, parsedPath[i]);
                 dir.expand();
             }
             current = dir;
@@ -125,11 +125,11 @@ export class FileSystemManager {
         //last element in the path can be directory or File
         const stats: FileStat = <FileStat>await this.webdav.stat(path);
         if (stats.type === "directory") {
-            const dir = new DirectoryUI(this.uiController.uiElements.fileSystemUI, current, parsedPath[parsedPath.length - 1]);
+            const dir = new DirectoryUI(this, current, parsedPath[parsedPath.length - 1]);
             dir.expand();
             this.activeElements.add(path);
         } else if (stats.type === "file") {
-            new FileUI(this.uiController.uiElements.fileSystemUI, current, parsedPath[parsedPath.length - 1]);
+            new FileUI(this, current, parsedPath[parsedPath.length - 1]);
             this.activeElements.add(path);
         }
     }
