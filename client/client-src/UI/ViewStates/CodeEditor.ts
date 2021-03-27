@@ -7,7 +7,7 @@ import {FileUI} from '../UIElements/FileUI';
 import {FileSystemManager} from "../UIHelpers/FileSystemManager";
 
 export class CodeEditorViewState extends ViewState {
-    currentFile: FileUI;
+    currentFile: string;
     fileSystemManager: FileSystemManager
 
     constructor(game: Game, uiController: UIController, inputController: InputController) {
@@ -35,12 +35,17 @@ export class CodeEditorViewState extends ViewState {
 
     }
 
-    async openFile(fileUI) {
-
+    async openFile(path) {
+        let a = await this.fileSystemManager.readFile(path);
+        this.uiController.uiElements.codeEditorUI.editor.setValue(a);
+        this.currentFile = path;
+        console.log(a);
     }
 
-    async saveFile(content) {
-
+    async saveFile() {
+        if (this.currentFile) {
+            await this.fileSystemManager.writeFile(this.currentFile, this.uiController.uiElements.codeEditorUI.editor.getValue());
+        }
     }
 
     async createDirectory(path) {

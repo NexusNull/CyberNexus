@@ -42,7 +42,7 @@ export class FileSystemManager {
                 console.error("Error in update queue:" + e.stack);
                 console.error(func);
             }
-        }, 100);
+        }, 10);
 
 
         this.game.userData.on("tokenIssued", async (tokenContainer) => {
@@ -137,4 +137,13 @@ export class FileSystemManager {
     removeActive(name: string): void {
         //do nothing
     }
+
+    async readFile(path) {
+        return await this.webdav.getFileContents(path, {format: "text"});
+    }
+
+    async writeFile(path, data) {
+        return await this.webdav.putFileContents(path, data);
+    }
+
 }

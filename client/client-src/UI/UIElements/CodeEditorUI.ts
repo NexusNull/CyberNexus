@@ -35,7 +35,9 @@ export class CodeEditorUI {
 
         this.editor.on('change', () => {
             clearTimeout(this.saveTimeout);
-
+            this.saveTimeout = window.setTimeout(async () => {
+                await this.uiController.viewStates.codeEditor.saveFile();
+            }, 5000);
         });
     }
 
