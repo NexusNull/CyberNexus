@@ -13,7 +13,8 @@ const privilegeManager = new webdav.SimplePathPrivilegeManager();
 const server = new webdav.WebDAVServer({
     rootFileSystem: new webdav.PhysicalFileSystem(directory),
     httpAuthentication: new HTTPJWTAuthentication(privilegeManager, "webdav", publicKey),
-    privilegeManager: privilegeManager
+    privilegeManager: privilegeManager,
+    maxRequestDepth: Infinity,
 });
 
 const app = express();
