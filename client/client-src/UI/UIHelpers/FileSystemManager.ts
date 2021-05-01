@@ -67,29 +67,35 @@ export class FileSystemManager {
         });
     }
 
-    async update(path, recursive) {
-        const parent = this.getElement(path);
-        if (parent) {
+    async update(path) {
+        const contents = <FileStat[]>await this.webdav.getDirectoryContents(path, {deep: true});
+        let count = 0;
+        for (const element of contents) {
+            const parent = this.getParent(element.filename);
             if (parent instanceof DirectoryUI) {
-                const contents = <FileStat[]>await this.webdav.getDirectoryContents(path);
-                for (const element of contents) {
-                    if (element.type === "directory") {
-                        if (!parent.getChild(element.basename)) {
-                            new DirectoryUI(this, parent, element.basename);
-                            if (recursive)
-                                this.updateQueue.push(this.update.bind(this, element.filename, recursive));
-                        }
-
-                    } else if (element.type === "file") {
-                        if (!parent.getChild(element.basename))
-                            new FileUI(this, parent, element.basename);
+                if (element.type === "directory") {
+                    if (!parent.getChild(element.basename)) {
+                        new DirectoryUI(this, parent, element.basename);
                     }
+                } else if (element.type === "file") {
+                    if (!parent.getChild(element.basename))
+                        new FileUI(this, parent, element.basename);
                 }
+            } else {
+                if (parent)
+                    console.error("Trying to add Element to non DirectoryUI parent:\n" + parent.getPath() + " " + element.filename);
+                else
+                    console.error("Couldn't find :" + element.filename);
             }
+            if (count % 100 == 0){
+                await util.sleep(10);
+                console.log(count);
+            }
+            count++;
         }
     }
 
-    getElement(path: string): DirectoryUI | FileUI {
+    getParent(path: string): DirectoryUI | FileUI | null {
         const parsedPath = util.parsePath(path);
         let current = this.rootDir;
         for (let i = 0; i < parsedPath.length - 1; i++) {
@@ -99,12 +105,20 @@ export class FileSystemManager {
             }
             current = dir;
         }
-        return current.getChild(parsedPath[parsedPath.length - 1]);
+        return current;
+    }
+
+    getElement(path: string): DirectoryUI | FileUI | null {
+        const parsedPath = util.parsePath(path);
+        const parent = this.getParent(path);
+        if (parent && parent instanceof DirectoryUI) {
+            return parent.getChild(parsedPath[parsedPath.length - 1]);
+        }
     }
 
     queueFullFetch() {
         for (const path of this.activeElements) {
-            this.update(path, true);
+            this.update(path);
         }
     }
 
@@ -138,8 +152,13 @@ export class FileSystemManager {
         //do nothing
     }
 
-    async readFile(path) {
-        return await this.webdav.getFileContents(path, {format: "text"});
+    async readFile(path): Promise<string> {
+        const data = await this.webdav.getFileContents(path, {format: "text"});
+        if (data instanceof ArrayBuffer) {
+            return data.toString();
+        } else {
+            return data;
+        }
     }
 
     async writeFile(path, data) {
