@@ -19,7 +19,7 @@ export class ConsoleUI {
         this.codeInput = CodeMirror(this.consoleInputElement, {
             lineNumbers: true,
             mode: 'javascript',
-            value: 'setInterval(()=>{console.error(123)},500)',
+            value: '',
         });
 
         this.consoleLogElement.addEventListener('scroll', () => {

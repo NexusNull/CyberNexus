@@ -83,12 +83,13 @@ class Runner {
                     /****  ****/
                     
                     ${code}
-                    /****/
+                    /****  ****/
                     return module;
                  })();
                  ${sourceMap}
                 `;
-        document.body.appendChild(script);
+
+        this.iframe.contentDocument.body.appendChild(script);
     }
 }
 
