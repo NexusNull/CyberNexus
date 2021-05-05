@@ -95,12 +95,11 @@ export default {
     clone: function (item: any): any {
         if (!item) {
             return item;
-        } // null, undefined values check
+        }
 
         const types = [Number, String, Boolean];
         let result;
 
-        // normalizing primitives if someone did new String('aaa'), or new Number('444');
         types.forEach(function (type) {
             if (item instanceof type) {
                 result = type(item);
