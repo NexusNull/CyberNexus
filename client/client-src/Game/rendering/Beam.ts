@@ -35,7 +35,7 @@ export class Beam {
             this.texture.offset.x += this.speed;
             this.texture.repeat.set(this.start.clone().sub(this.end).length() / this.thickness, 1);
 
-            const camPos = camera.position.clone().applyMatrix4(new THREE.Matrix4().getInverse(this.mesh.matrixWorld));
+            const camPos = camera.position.clone().applyMatrix4(new THREE.Matrix4().copy(this.mesh.matrixWorld).invert());
             const vecA = camPos.clone().sub(this.start);
             const vecB = camPos.clone().sub(this.end);
             const cross = new THREE.Vector3().crossVectors(vecA, vecB);

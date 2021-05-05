@@ -18,7 +18,6 @@ module.exports = {
     },
     externals: {
         "socket.io-client": 'io',
-        "three": "THREE",
         "codemirror": "CodeMirror",
         "Perlin": "perlin",
         "Browserfs": "browserfs",
