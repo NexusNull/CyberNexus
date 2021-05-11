@@ -55,7 +55,12 @@ export class InputController extends EventSystem {
             code: defaultKeyCombo.code,
             action: null,
         };
+
         if (defaultKeyCombo.modifiers) {
+            defaultKeyCombo.modifiers.metaKey = !!defaultKeyCombo.modifiers.metaKey;
+            defaultKeyCombo.modifiers.altKey = !!defaultKeyCombo.modifiers.altKey;
+            defaultKeyCombo.modifiers.shiftKey = !!defaultKeyCombo.modifiers.shiftKey;
+            defaultKeyCombo.modifiers.ctrlKey = !!defaultKeyCombo.modifiers.ctrlKey;
             keyCombo.modifiers = {
                 metaKey: defaultKeyCombo.modifiers.metaKey,
                 altKey: defaultKeyCombo.modifiers.altKey,
@@ -99,20 +104,13 @@ export class InputController extends EventSystem {
         if (keyCombos) {
             for (const keyCombo of keyCombos) {
                 if (keyCombo.modifiers) {
-                    if (keyCombo.modifiers.altKey === event.altKey) {
-                        continue;
-                    }
-                    if (keyCombo.modifiers.shiftKey === event.shiftKey) {
-                        continue;
-                    }
-                    if (keyCombo.modifiers.metaKey === event.metaKey) {
-                        continue;
-                    }
-                    if (keyCombo.modifiers.ctrlKey === event.ctrlKey) {
+                    if (keyCombo.modifiers.altKey !== event.altKey ||
+                        keyCombo.modifiers.shiftKey !== event.shiftKey ||
+                        keyCombo.modifiers.metaKey !== event.metaKey ||
+                        keyCombo.modifiers.ctrlKey !== event.ctrlKey) {
                         continue;
                     }
                 }
-
                 try {
                     const action = keyCombo.action;
                     if (action.active) {
@@ -144,18 +142,10 @@ export class InputController extends EventSystem {
             }
 
             if (keyCombo.modifiers) {
-                if (keyCombo.modifiers.altKey !== event.altKey) {
-                    hit = true;
-                }
-                if (keyCombo.modifiers.shiftKey !== event.shiftKey) {
-                    hit = true;
-                }
-                if (keyCombo.modifiers.metaKey !== event.metaKey) {
-                    hit = true;
-                }
-                if (keyCombo.modifiers.ctrlKey !== event.ctrlKey) {
-                    hit = true;
-                }
+                hit = keyCombo.modifiers.altKey === event.altKey &&
+                    keyCombo.modifiers.shiftKey === event.shiftKey &&
+                    keyCombo.modifiers.metaKey === event.metaKey &&
+                    keyCombo.modifiers.ctrlKey === event.ctrlKey;
             }
 
             if (hit) {
