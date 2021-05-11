@@ -8,6 +8,12 @@ export class ConsoleUI {
     consoleLogElement: HTMLDivElement;
     codeInput: CodeMirror.Editor;
     scrollBarBound: boolean;
+    buttons: {
+        startRunner: HTMLDivElement,
+        startConsole: HTMLDivElement,
+        restart: HTMLDivElement,
+        stop: HTMLDivElement,
+    };
 
     constructor(uiController: UIController) {
         this.uiController = uiController;
@@ -15,6 +21,17 @@ export class ConsoleUI {
         this.consoleInputElement = <HTMLDivElement>this.element.getElementsByClassName('consoleInput')[0];
         this.consoleLogElement = <HTMLDivElement>this.element.getElementsByClassName('consoleLog')[0];
         this.scrollBarBound = true;
+
+        this.buttons = {
+            startRunner: <HTMLDivElement>this.element.getElementsByClassName("startRunner")[0],
+            startConsole: <HTMLDivElement>this.element.getElementsByClassName("startConsole")[0],
+            restart: <HTMLDivElement>this.element.getElementsByClassName("restart")[0],
+            stop: <HTMLDivElement>this.element.getElementsByClassName("stop")[0],
+        };
+
+        this.buttons.startRunner.addEventListener("click", () => {
+            uiController.viewStates.codeEditor.startRunner();
+        });
 
         this.codeInput = CodeMirror(this.consoleInputElement, {
             lineNumbers: true,
@@ -24,33 +41,6 @@ export class ConsoleUI {
 
         this.consoleLogElement.addEventListener('scroll', () => {
             this.scrollBarBound = this.consoleLogElement.scrollHeight - this.consoleLogElement.scrollTop === this.consoleLogElement.clientHeight;
-        });
-
-        //TODO this should be handled here, that's what the InputController is for
-        window.addEventListener('keypress', (e) => {
-            if (this.codeInput.hasFocus() && e.ctrlKey) {
-                switch (e.code) {
-                case 'Enter': {
-                    let result;
-                    {
-                        this.uiController.game.runner.run(this.codeInput.getValue());
-                    }
-                    try {
-                        if (result !== undefined) {
-                            this.logMessage("");
-                        }
-                    } catch (e) {
-                        this.logError(e);
-                    }
-                }
-                    break;
-                case 'KeyB':
-                    this.uiController.game.runner.stop();
-                    break;
-                default:
-                    break;
-                }
-            }
         });
     }
 
