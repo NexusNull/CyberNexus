@@ -1,33 +1,72 @@
 import {DirectoryUI} from './DirectoryUI';
-import {UIController} from '../UIController';
+import type {UIController} from '../UIController';
+import util from "../../util/Util";
+import {FileUI} from "./FileUI";
+
 
 export class FileSystemUI {
     uiController: UIController;
     container: HTMLDivElement;
-    rootElements: DirectoryUI[];
+    rootElements: Map<string, DirectoryUI>;
     reloadButton: HTMLDivElement;
     updateBlock: boolean;
+    focus: HTMLDivElement;
 
     constructor(uiController: UIController) {
         this.uiController = uiController;
         this.container = <HTMLDivElement>document.getElementById('CEDirectoryStructure').getElementsByClassName("directoryContainer")[0];
         this.reloadButton = <HTMLDivElement>document.getElementById('CEDirectoryStructure').getElementsByClassName("reloadButton")[0];
-        this.rootElements = [];
+
+        this.rootElements = new Map();
         this.updateBlock = false;
-        this.reloadButton.addEventListener("click", () => {
+        this.focus = null;
+
+        this.reloadButton.addEventListener("click", async () => {
             if (this.updateBlock)
                 return;
-            this.uiController.viewStates.codeEditor.fileSystemManager.queueFullFetch();
             this.updateBlock = true;
-            window.setTimeout(() => {
-                this.updateBlock = false;
-            }, 3 * 1000);
+            await this.uiController.game.fileSystemManager.fullFetch();
+            this.updateBlock = false;
+        });
+
+        this.uiController.game.fileSystemManager.on("created", (data) => {
+            const pathElements = util.parsePath(data.filename);
+            let element = null;
+            if (data.type == "directory") {
+                element = new DirectoryUI(this, data.basename);
+            } else {
+                element = new FileUI(this, data.basename);
+
+            }
+
+            if (pathElements.length == 1) {
+                this.addRootElement(pathElements[0], element);
+            } else {
+                let parent: DirectoryUI | FileUI = this.rootElements.get(pathElements[0]);
+                for (const intermediate of pathElements.slice(1, -1)) {
+                    if (parent instanceof DirectoryUI)
+                        parent = parent.getChild(intermediate);
+                    else
+                        throw new Error("Intermediate found that isn't a directory");
+                }
+                if (parent instanceof DirectoryUI)
+                    parent.addChild(element);
+                else
+                    throw new Error("Intermediate found that isn't a directory");
+            }
+        });
+
+        this.uiController.game.fileSystemManager.on("deleted", (data) => {
+
         });
     }
 
-    addRootElement(element: DirectoryUI): void {
-        this.rootElements.push(element);
+    addRootElement(name: string, element: DirectoryUI): void {
+        this.rootElements.set(name, element);
         this.container.appendChild(element.element);
     }
 
+    setFocus(element) {
+        this.focus = element;
+    }
 }

@@ -44,7 +44,7 @@ class Runner {
                     }
                 });
                 
-                function require(path){
+                async function require(path){
                     
                 
                 }
@@ -59,6 +59,11 @@ class Runner {
     stop(): void {
         this.iframe.parentElement.removeChild(this.iframe);
         this.iframe = null;
+    }
+
+    restart() {
+        this.stop();
+        this.start();
     }
 
     run(code: string, path?: string): void {
@@ -83,6 +88,7 @@ class Runner {
                     /****  ****/
                     
                     ${code}
+                    
                     /****  ****/
                     return module;
                  })();

@@ -1,25 +1,25 @@
 import {FileUI} from './FileUI';
 import {ContextMenuUI} from '../UIHelpers/ContextMenuUI';
-import {default as newOps} from '../ContextGroups/newOps';
-import {default as updateOps} from '../ContextGroups/updateOps';
-import {FileSystemManager} from "../UIHelpers/FileSystemManager";
+import {FileSystemUI} from "./FileSystemUI";
 
 export class DirectoryUI {
-    fileSystemManager: FileSystemManager;
-    parent: DirectoryUI;
+    fileSystemUI: FileSystemUI;
+    parent: DirectoryUI | null;
     name: string;
     collapsed: boolean;
     element: HTMLDivElement;
     childContainer: HTMLDivElement;
     header: HTMLDivElement;
     children: Map<string, DirectoryUI | FileUI>;
+    depth: number;
 
-    constructor(fileSystemManager: FileSystemManager, parent: DirectoryUI, name: string) {
-        this.fileSystemManager = fileSystemManager;
-        this.parent = parent;
+    constructor(FileSystemUI: FileSystemUI, name: string) {
+        this.fileSystemUI = FileSystemUI;
+        this.parent = null;
         this.name = name;
         this.collapsed = true;
         this.children = new Map();
+        this.depth = 0;
 
         this.element = document.createElement('div');
         this.element.classList.add('directory', 'collapsed');
@@ -36,17 +36,6 @@ export class DirectoryUI {
 
         this.header = <HTMLDivElement>this.element.getElementsByClassName('directoryTop')[0];
         this.childContainer = <HTMLDivElement>this.element.getElementsByClassName('childContainer')[0];
-
-        if (parent) {
-            let level = 1;
-            let current = parent;
-            while (current.parent) {
-                current = current.parent;
-                level++;
-            }
-            this.header.style.paddingLeft = level * 27 + 'px';
-            parent.addChild(this);
-        }
 
         this.header.getElementsByClassName('directoryArrow')[0].addEventListener('click', (e) => {
             e.cancelBubble = true;
@@ -70,13 +59,6 @@ export class DirectoryUI {
             e.cancelBubble = true;
             const contextMenu = new ContextMenuUI();
             const contextContent = [];
-            newOps(contextContent, this);
-            if (this.parent) {
-                contextContent.push({
-                    type: 'hl',
-                });
-                updateOps(contextContent, this);
-            }
 
             contextMenu.setStructure(contextContent);
             contextMenu.display({x: e.clientX, y: e.clientY});
@@ -120,8 +102,9 @@ export class DirectoryUI {
     }
 
     addChild(fsElement: FileUI | DirectoryUI) {
+        fsElement.setDepth(this.depth + 1);
         this.children.set(fsElement.name, fsElement);
-        for (const child of this.childContainer.children) {
+        for (const child of this.childContainer.children) { //TODO optimize
             if (child.classList.contains('directory') && fsElement.element.classList.contains('directory')) {
                 const childElement = <HTMLSpanElement>child.getElementsByClassName('directoryName')[0];
                 const elementName = fsElement.name;
@@ -143,6 +126,7 @@ export class DirectoryUI {
             }
         }
         this.childContainer.appendChild(fsElement.element);
+        fsElement.setDepth(this.depth + 1);
     }
 
     getPath(): string {
@@ -172,5 +156,13 @@ export class DirectoryUI {
         const child = this.children.get(name);
         this.children.delete(name);
         this.children.set(newName, child);
+    }
+
+    setDepth(depth) {
+        this.header.style.paddingLeft = 13 * depth+"px";
+        this.depth = depth;
+        for (const element of this.children) {
+            element[1].setDepth(depth + 1);
+        }
     }
 }

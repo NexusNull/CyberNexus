@@ -7,7 +7,8 @@ import {DemoManager} from './Game/demo/DemoManager';
 import {ChunkRenderer} from './Game/rendering/ChunkRenderer';
 import {Runner} from './Game/Runner';
 import {UserData} from "./Game/UserData";
-
+import {FileSystemManager} from "./UI/UIHelpers/FileSystemManager";
+import Util from "./util/Util";
 export class Game {
     uiController: UIController;
     inputController: InputController;
@@ -18,11 +19,12 @@ export class Game {
     chunkRenderer: ChunkRenderer;
     runner: Runner;
     userData: UserData;
-
+    fileSystemManager: FileSystemManager;
 
     constructor() {
         this.assets = new Assets();
         this.userData = new UserData(this);
+        this.fileSystemManager = new FileSystemManager(this);
         this.chunkRenderer = new ChunkRenderer(this.assets);
         this.assetManager = new AssetManager(this.assets);
         this.inputController = new InputController(this);
@@ -42,5 +44,6 @@ export class Game {
 declare let window: any;
 const game = new Game();
 window.game = game;
+window.util = Util;
 game.main();
 

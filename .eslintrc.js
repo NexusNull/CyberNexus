@@ -20,5 +20,6 @@ module.exports = {
     'rules': {
         "indent": ["error", 4],
         "semi": ["error", "always"],
+        "no-empty-function": ["warn", {allow: ["functions", "arrowFunctions", "generatorFunctions", "methods", "generatorMethods", "getters", "setters", "constructors", "asyncFunctions", "asyncMethods"]}]
     },
 };

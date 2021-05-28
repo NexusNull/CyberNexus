@@ -1,19 +1,21 @@
 import {DirectoryUI} from './DirectoryUI';
 import {ContextMenuUI} from '../UIHelpers/ContextMenuUI';
-import {default as updateOps} from '../ContextGroups/updateOps';
-import {FileSystemManager} from "../UIHelpers/FileSystemManager";
+import {FileSystemUI} from "./FileSystemUI";
+import {EventSystem} from "../../util/EventSystem";
 
-export class FileUI {
-    fileSystemManager: FileSystemManager;
-    parent: DirectoryUI;
+export class FileUI extends EventSystem {
+    fileSystemUI: FileSystemUI;
+    parent: DirectoryUI | null;
 
     name: string;
     element: HTMLDivElement;
     hidden: boolean;
+    depth: number;
 
-    constructor(fileSystemManager: FileSystemManager, parent: DirectoryUI, name: string) {
-        this.fileSystemManager = fileSystemManager;
-        this.parent = parent;
+    constructor(fileSystemUI: FileSystemUI, name: string) {
+        super();
+        this.fileSystemUI = fileSystemUI;
+        this.parent = null;
 
         this.name = name;
 
@@ -29,19 +31,8 @@ export class FileUI {
         this.setFileIcon(this.getExtension());
         this.element.addEventListener('click', (e) => {
             e.cancelBubble = true;
-            this.fileSystemManager.uiController.viewStates.codeEditor.openFile(this.getPath());
+            this.emit("click", this);
         });
-
-        if (parent) {
-            let level = 1;
-            let current = parent;
-            while (current.parent) {
-                current = current.parent;
-                level++;
-            }
-            this.element.style.paddingLeft = level * 27 + 'px';
-            parent.addChild(this);
-        }
 
         this.element.addEventListener('contextmenu', (e) => {
             e.preventDefault();
@@ -49,9 +40,6 @@ export class FileUI {
             e.cancelBubble = true;
             const contextMenu = new ContextMenuUI();
             const contextContent = [];
-            if (this.parent) {
-                updateOps(contextContent, this);
-            }
 
             contextMenu.setStructure(contextContent);
             contextMenu.display({x: e.clientX, y: e.clientY});
@@ -99,4 +87,10 @@ export class FileUI {
     unselect(): void {
         this.element.classList.remove('selected');
     }
+
+    setDepth(depth) {
+        this.element.style.paddingLeft = 13 * depth + 11+ "px";
+        this.depth = depth;
+    }
+
 }

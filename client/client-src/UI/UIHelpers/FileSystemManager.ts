@@ -1,168 +1,206 @@
 import {Game} from "../../Game";
-import {UIController} from "../UIController";
-import {InputController} from "../InputController";
-import {CodeEditorViewState} from "../ViewStates/CodeEditor";
-import {DirectoryUI} from "../UIElements/DirectoryUI";
-import {FileUI} from "../UIElements/FileUI";
 import util from "../../util/Util";
 import {FileStat, WebDAVClient} from "webdav/dist/node/types";
-
 import {createClient} from "webdav/web";
+import {EventSystem} from "../../util/EventSystem";
 
-export class FileSystemManager {
+
+interface Directory {
+    filename: string,
+    basename: string,
+    lastmod: string,
+    size: number,
+    type: "directory",
+    children: Map<string, Directory | File>
+    fake?: boolean,
+}
+
+interface File {
+    filename: string,
+    basename: string,
+    lastmod: string,
+    size: number,
+    type: "file",
+    fake?: boolean
+}
+
+type FsElement = Directory | File;
+
+export class FileSystemManager extends EventSystem {
     game: Game;
-    uiController: UIController;
-    inputController: InputController;
-    codeEditor: CodeEditorViewState;
     webdav: WebDAVClient;
-    rootDir: DirectoryUI;
+    // the root elements the user has access to
     activeElements: Set<string>;
-    updateQueue: (() => void)[];
-    updateTimeout: number;
-    activeElementsUpdateTimeout: number;
+    fs: Map<string, FsElement>;
 
-    constructor(game: Game, uiController: UIController, inputController: InputController, codeEditor: CodeEditorViewState) {
+    constructor(game: Game) {
+        super();
         this.game = game;
-        this.uiController = uiController;
-        this.inputController = inputController;
-        this.codeEditor = codeEditor;
         this.activeElements = new Set();
         this.webdav = createClient("//localhost:2000/fs/");
-        this.rootDir = new DirectoryUI(this, null, "/");
-        this.rootDir.expand();
-        this.uiController.uiElements.fileSystemUI.addRootElement(this.rootDir);
-        this.updateQueue = [];
-        this.updateTimeout = window.setInterval(() => {
-            let func;
-            try {
-                func = this.updateQueue.shift();
-                if (func)
-                    func();
-            } catch (e) {
-                console.error("Error in update queue:" + e.stack);
-                console.error(func);
-            }
-        }, 10);
-
+        this.fs = new Map();
 
         this.game.userData.on("tokenIssued", async (tokenContainer) => {
             if (tokenContainer.body.scope == "webdav") {
                 this.webdav.setHeaders({"Authorization": "Bearer " + tokenContainer.token});
-                const newActive = new Set();
+                const newActive = new Set<string>();
                 for (const pathPerms of tokenContainer.body.paths) {
                     if (pathPerms.perms.includes("canRead")) {
                         newActive.add(pathPerms.path);
                     }
                 }
-                const toActivate = util.differenceSet(newActive, this.activeElements);
-                const toDeactivate = util.differenceSet(this.activeElements, newActive);
+                /*
+                    to facilitate access to multiple directories on the root level things are kept as general as possible
+                    in the future adding documentation to everyone's project is so very easy
+                 */
+                const toActivate = util.differenceSet<string>(newActive, this.activeElements);
+                const toDeactivate = util.differenceSet<string>(this.activeElements, newActive);
                 for (const path of toActivate) {
+                    this._createFakeDir(path);
                     await this.addActive(path);
                 }
                 for (const path of toDeactivate) {
                     this.removeActive(path);
                 }
-                this.queueFullFetch();
+                this.fullDir(this.activeElements.keys().next().value);
+                setTimeout(() => {
+                    this.fullDir(this.activeElements.keys().next().value);
+                }, 1000);
             }
         });
     }
 
-    async update(path) {
-        const contents = <FileStat[]>await this.webdav.getDirectoryContents(path, {deep: true});
-        let count = 0;
-        for (const element of contents) {
-            const parent = this.getParent(element.filename);
-            if (parent instanceof DirectoryUI) {
-                if (element.type === "directory") {
-                    if (!parent.getChild(element.basename)) {
-                        new DirectoryUI(this, parent, element.basename);
-                    }
-                } else if (element.type === "file") {
-                    if (!parent.getChild(element.basename))
-                        new FileUI(this, parent, element.basename);
-                }
+    private async addActive(path: string) {
+        this.activeElements.add(path);
+    }
+
+    private removeActive(path: string) {
+        this.activeElements.delete(path);
+    }
+
+    async fullDir(path) {
+        if (!path.endsWith("/"))
+            throw new Error("Path has to end with a /");
+
+        const tmpFs = <FileStat[]>await this.webdav.getDirectoryContents(path, {deep: true});
+        const fsMap: Map<string, FileStat> = new Map(); // this Map gives quick access to the data behind a new entry
+        const serverFs: Set<string> = new Set(); // this Set is to quickly calculate which files to create and which to delete
+        for (const element of tmpFs) {
+            serverFs.add(element.filename);
+            fsMap.set(element.filename, element);
+        }
+
+        let localFs;
+        {
+            let files = Array.from(this.fs.keys());
+            files = files.filter((a) => {
+                return a.startsWith(path);
+            });
+            localFs = new Set(files);
+        }
+
+        const toActivate = util.differenceSet(serverFs, localFs);
+        const toDeactivate = util.differenceSet(localFs, serverFs);
+        for (const path of toActivate) {
+            const element = fsMap.get(path);
+            if (element.type === "directory") {
+                this._createDir(path, element);
             } else {
-                if (parent)
-                    console.error("Trying to add Element to non DirectoryUI parent:\n" + parent.getPath() + " " + element.filename);
-                else
-                    console.error("Couldn't find :" + element.filename);
+                this._createFile(path, element);
             }
-            if (count % 100 == 0){
-                await util.sleep(10);
-                console.log(count);
-            }
-            count++;
+        }
+
+        for (const path of toDeactivate) {
+            await this.emit("deleted", this.fs.get(path));
+            this.fs.delete(path);
         }
     }
 
-    getParent(path: string): DirectoryUI | FileUI | null {
-        const parsedPath = util.parsePath(path);
-        let current = this.rootDir;
-        for (let i = 0; i < parsedPath.length - 1; i++) {
-            const dir: DirectoryUI = <DirectoryUI>current.getChild(parsedPath[i]);
-            if (!dir) {
-                return null;
-            }
-            current = dir;
-        }
-        return current;
-    }
-
-    getElement(path: string): DirectoryUI | FileUI | null {
-        const parsedPath = util.parsePath(path);
-        const parent = this.getParent(path);
-        if (parent && parent instanceof DirectoryUI) {
-            return parent.getChild(parsedPath[parsedPath.length - 1]);
-        }
-    }
-
-    queueFullFetch() {
+    async fullFetch() {
         for (const path of this.activeElements) {
-            this.update(path);
+            await this.fullDir(path);
         }
     }
 
-    /** Not all folders are owned by the user, we only activate those that we actually have access to
-     *  Activated Directories are directories we are allowed to read
+    createFile() {
+        //
+    }
+
+    createDir() {
+        ///
+    }
+
+    /**
+     * This function creates fake directories for the entire path
+     * @param path
+     * @private
      */
-    async addActive(path: string): Promise<void> {
+    private _createFakeDir(path) {
         const parsedPath = util.parsePath(path);
-        let current = this.rootDir;
-        for (let i = 0; i < parsedPath.length - 1; i++) {
-            let dir: DirectoryUI = <DirectoryUI>current.getChild(parsedPath[i]);
-            if (!dir) {
-                dir = new DirectoryUI(this, current, parsedPath[i]);
-                dir.expand();
-            }
-            current = dir;
-        }
-        //last element in the path can be directory or File
-        const stats: FileStat = <FileStat>await this.webdav.stat(path);
-        if (stats.type === "directory") {
-            const dir = new DirectoryUI(this, current, parsedPath[parsedPath.length - 1]);
-            dir.expand();
-            this.activeElements.add(path);
-        } else if (stats.type === "file") {
-            new FileUI(this, current, parsedPath[parsedPath.length - 1]);
-            this.activeElements.add(path);
+        let currentPath = "";
+        for (const dirName of parsedPath) {
+            currentPath += "/" + dirName;
+            const dir = {
+                filename: currentPath,
+                basename: dirName,
+                lastmod: "Thu Jan 01 1970 00:00:00 GMT+0000",
+                size: 0,
+                type: "directory",
+                children: new Map(),
+                fake: true
+            };
+            this.emit("created", Object.assign({}, dir));
+            this.fs.set(currentPath, <Directory>dir);
         }
     }
 
-    removeActive(name: string): void {
-        //do nothing
+    private _destroyFakeDir(path) {
+        //
     }
 
-    async readFile(path): Promise<string> {
-        const data = await this.webdav.getFileContents(path, {format: "text"});
-        if (data instanceof ArrayBuffer) {
-            return data.toString();
-        } else {
-            return data;
-        }
+    private _createDir(path, data) {
+        const parentPath = "/" + util.parsePath(path).slice(0, -1).join("/");
+        const parent = this.fs.get(parentPath);
+        if (!parent)
+            throw new Error("Missing Parent " + parentPath);
+        if (parent.type !== "directory")
+            throw new Error("Parent isn't a directory");
+
+        parent.children.set(data.basename, {
+            filename: data.filename,
+            basename: data.basename,
+            lastmod: "0",
+            size: 0,
+            type: "directory",
+            children: new Map(),
+            fake: false,
+        });
+        data.children = new Map();
+        this.fs.set(path, data);
+
+        this.emit("created", Object.assign({}, data));
     }
 
-    async writeFile(path, data) {
-        return await this.webdav.putFileContents(path, data);
-    }
+    private _createFile(path, data) {
+        const parentPath = "/" + util.parsePath(path).slice(0, -1).join("/");
+        const parent = this.fs.get(parentPath);
+        if (!parent)
+            throw new Error("Missing Parent " + parentPath);
+        if (parent.type !== "directory")
+            throw new Error("Parent isn't a directory");
 
+        parent.children.set(data.basename, {
+            filename: data.filename,
+            basename: data.basename,
+            lastmod: "0",
+            size: 0,
+            type: "directory",
+            children: new Map(),
+            fake: false,
+        });
+        data.children = new Map();
+        this.fs.set(path, data);
+
+        this.emit("created", Object.assign({}, data));
+    }
 }

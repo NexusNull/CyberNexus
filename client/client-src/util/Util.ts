@@ -138,8 +138,8 @@ export default {
     },
 
     /** Why this isn't standard functionality is beyond me */
-    intersectSet: function (a: Set<any>, b: Set<any>): Set<any> {
-        const result = new Set();
+    intersectSet: function <Type>(a: Set<Type>, b: Set<Type>): Set<Type> {
+        const result: Set<Type> = new Set();
         for (const elem of a) {
             if (b.has(elem)) {
                 result.add(elem);
@@ -149,8 +149,8 @@ export default {
     },
 
     /** Why this isn't standard functionality is beyond me */
-    differenceSet: function (a: Set<any>, b: Set<any>): Set<any> {
-        const result = new Set();
+    differenceSet: function <Type>(a: Set<Type>, b: Set<Type>): Set<Type> {
+        const result: Set<Type> = new Set();
         for (const elem of a) {
             if (!b.has(elem)) {
                 result.add(elem);
