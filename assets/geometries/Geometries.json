@@ -1,5 +1,10 @@
 [
   {
+    "name": "air",
+    "path": "/blocks/air.json",
+    "type": "blockGeometry"
+  },
+  {
     "name": "block",
     "path": "/blocks/stone.json",
     "type": "blockGeometry"

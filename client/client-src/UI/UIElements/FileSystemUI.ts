@@ -57,7 +57,7 @@ export class FileSystemUI {
         });
 
         this.uiController.game.fileSystemManager.on("deleted", (data) => {
-
+            //
         });
     }
 

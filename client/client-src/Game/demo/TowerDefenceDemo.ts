@@ -46,28 +46,32 @@ export class TowerDefenceDemo {
 
         pLight.position.y = 50;
 
-        for (let _x = -1; _x < 2; _x++) {
-            for (let _z = -1; _z < 2; _z++) {
-                const blockData = new Uint8Array(18 * 34 * 18);
+        for (let _x = -2; _x < 3; _x++) {
+            for (let _z = -2; _z < 3; _z++) {
+                for (let _y = -2; _y < 3; _y++) {
+                    const blockData = new Uint8Array(18 * 34 * 18);
 
-                for (let y = 0; y < 32; y++) {
-                    for (let z = 0; z < 16; z++) {
-                        for (let x = 0; x < 16; x++) {
-                            const i = (y + 1) * 612 + (z + 1) * 18 + x + 1;
-                            blockData[i] = (perlin.simplex2((_x * 16 + x) * 0.06, (_z * 16 + z) * 0.06) + 1) * 8 > y ? 1 : 0;
+                    for (let y = 0; y < 16; y++) {
+                        for (let z = 0; z < 16; z++) {
+                            for (let x = 0; x < 16; x++) {
+                                const i = (y + 1) * 324 + (z + 1) * 18 + x + 1;
+                                const a = (Math.max(15 - y, y) - 8) / 7;
+
+
+                                blockData[i] = Math.pow(a, 3) + perlin.simplex2((_x * 16 + x) * 0.06, (_z * 16 + z) * 0.06 + _y * 100) * 0.5 > .6 ? 1 : 0;
+                            }
                         }
                     }
+                    const geometry = chunkRenderer.renderChunk(blockData);
+                    const chunk = new Mesh(geometry, greenMat);
+                    chunk.position.x = 16 * _x - 8;
+                    chunk.position.z = 16 * _z - 8;
+                    chunk.position.y = 16 * _y - 8;
+                    this.chunks.push(chunk);
+                    this.gameScene.world.add(chunk);
                 }
-
-                const geometry = chunkRenderer.renderChunk(blockData);
-                const chunk = new Mesh(geometry, greenMat);
-                chunk.position.x = 16 * _x - 8;
-                chunk.position.z = 16 * _z - 8;
-                this.chunks.push(chunk);
-                this.gameScene.world.add(chunk);
             }
         }
-
 
         this.gameScene.mainCamera.position.y = 40;
         this.gameScene.mainCamera.position.z = 35;
@@ -78,19 +82,9 @@ export class TowerDefenceDemo {
 
     start() {
         this.startTime = new Date();
-        this.intervalID = window.setInterval(() => {
-            this.gameScene.world.rotation.y += 0.001;
-            if (new Date().getTime() - this.startTime.getTime() > 20000000) {
-                this.stop();
-                this.onDone();
-            }
-        }, 16);
     }
 
     stop() {
-        if (this.intervalID) {
-            clearInterval(this.intervalID);
-        }
         this.dispose();
     }
 
