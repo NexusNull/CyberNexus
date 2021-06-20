@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/NexusNull/CyberNexus#readme",
   "dependencies": {
-    "@gltf-transform/core": "^0.11.3",
+    "@gltf-transform/core": "^0.11.4",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "codemirror": "^5.61.1",
