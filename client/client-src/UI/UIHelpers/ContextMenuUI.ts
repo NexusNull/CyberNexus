@@ -1,3 +1,19 @@
+type SelectionDef = hl | selection | subSelection;
+interface hl {
+    type: "hl"
+}
+
+interface selection {
+    type: "selection"
+    fn: () => void
+}
+
+interface subSelection {
+    type: "subSelection",
+    fn: () => void
+    structure: SelectionDef
+}
+
 export class ContextMenuUI {
     element: HTMLDivElement;
     shadow: HTMLDivElement;
@@ -26,7 +42,7 @@ export class ContextMenuUI {
         this.subMenus = [];
     }
 
-    setStructure(structure): void {
+    setStructure(structure: SelectionDef[]): void {
         this.element.innerHTML = '';
         for (const declaration of structure) {
             if (!declaration) {
@@ -35,38 +51,13 @@ export class ContextMenuUI {
             let elem;
             switch (declaration.type) {
             case 'hl':
-                elem = document.createElement('div');
-                elem.classList.add('horizontalSeparator');
+                this._horizontalLine();
                 break;
             case 'selection':
-                elem = document.createElement('div');
-                elem.classList.add('contextMenuSelection');
-                elem.innerText = declaration.text;
-                if (typeof declaration.fn === 'function') {
-                    elem.addEventListener('click', () => {
-                        this.destroy();
-                        try {
-                            declaration.fn();
-                        } catch (e) {
-                            console.error(e);
-                        }
-                    });
-                }
+                elem = this._selection(declaration);
                 break;
             case 'subSelection':
-                elem = document.createElement('div');
-                elem.classList.add('contextMenuSubSelection');
-                elem.innerText = declaration.text;
-                elem.addEventListener('click', (e) => {
-                    e.cancelBubble = true;
-                    const subMenu = new ContextMenuUI(this);
-                    this.subMenus.push(subMenu);
-                    subMenu.setStructure(declaration.structure);
-                    subMenu.display({
-                        x: elem.getBoundingClientRect().right + 6,
-                        y: elem.getBoundingClientRect().y + elem.getBoundingClientRect().height / 2 - 2,
-                    });
-                });
+                elem = this._subSelection(declaration);
                 break;
             }
             if (!elem) {
@@ -91,5 +82,45 @@ export class ContextMenuUI {
             document.body.removeChild(this.shadow);
             this.destroyed = true;
         }
+    }
+
+    _subSelection(declaration) {
+        const elem = document.createElement('div');
+        elem.classList.add('contextMenuSubSelection');
+        elem.innerText = declaration.text;
+        elem.addEventListener('click', (e) => {
+            e.cancelBubble = true;
+            const subMenu = new ContextMenuUI(this);
+            this.subMenus.push(subMenu);
+            subMenu.setStructure(declaration.structure);
+            subMenu.display({
+                x: elem.getBoundingClientRect().right + 6,
+                y: elem.getBoundingClientRect().y + elem.getBoundingClientRect().height / 2 - 2,
+            });
+        });
+        return elem;
+    }
+
+    _selection(declaration) {
+        const elem = document.createElement('div');
+        elem.classList.add('contextMenuSelection');
+        elem.innerText = declaration.text;
+        if (typeof declaration.fn === 'function') {
+            elem.addEventListener('click', () => {
+                this.destroy();
+                try {
+                    declaration.fn();
+                } catch (e) {
+                    console.error(e);
+                }
+            });
+        }
+        return elem;
+    }
+
+    _horizontalLine() {
+        const elem = document.createElement('div');
+        elem.classList.add('horizontalSeparator');
+        return elem;
     }
 }
