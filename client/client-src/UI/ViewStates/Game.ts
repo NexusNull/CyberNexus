@@ -11,11 +11,11 @@ export class GameViewSate extends ViewState {
         super(game, uiController, inputController);
     }
 
-    async disable(): Promise<any> {
-        return undefined;
+    async disable(): Promise<void> {
+        return;
     }
 
-    async enable(): Promise<any> {
+    async enable(): Promise<void> {
         this.game.gameScene.clear();
         this.gameState = new GameState(this.game.gameScene);
     }

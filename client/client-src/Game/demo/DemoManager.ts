@@ -1,11 +1,12 @@
 import {GameScene} from '../rendering/GameScene';
 import {TowerDefenceDemo} from './TowerDefenceDemo';
 import {Assets} from '../../AssetManagement/Assets';
+import {Demo} from "./Demo";
 
 
 export class DemoManager {
-    demos = Array<any>();
-    activeDemo: any;
+    demos = Array<Demo>();
+    activeDemo: Demo;
     isActive: boolean;
     assets: Assets;
     gameScene: GameScene;
@@ -16,25 +17,26 @@ export class DemoManager {
         this.activeDemo = null;
         this.isActive = false;
         this.demos = [
-            TowerDefenceDemo,
+            new TowerDefenceDemo(this.assets, this.gameScene, this.playRandomDemo.bind(this)),
         ];
     }
 
-    playRandomDemo() {
+    playRandomDemo(): void {
         if (this.isActive) {
             const i = Math.floor(this.demos.length * Math.random());
-            const demo = new this.demos[i](this.assets, this.gameScene, this.playRandomDemo.bind(this));
+            const demo = this.demos[i];
+            demo.init();
             this.activeDemo = demo;
             demo.start();
         }
     }
 
-    start() {
+    start(): void {
         this.isActive = true;
         this.playRandomDemo();
     }
 
-    stop() {
+    stop(): void {
         this.isActive = false;
         this.activeDemo.stop();
     }

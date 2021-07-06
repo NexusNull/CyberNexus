@@ -9,7 +9,20 @@ export interface Server {
     players: number,
     maxPlayers: number,
 
-    ping: number
+    ping: string
+}
+
+export interface ServerData {
+    id: number,
+
+    name: string,
+    location: string,
+
+    ip: string,
+    port: number,
+
+    players: number,
+    maxPlayers: number,
 }
 
 export interface ServerElement {

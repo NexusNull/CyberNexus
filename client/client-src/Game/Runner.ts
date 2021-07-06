@@ -10,7 +10,7 @@ class Runner {
     iframe: VMContainer;
     game: Game;
 
-    constructor(game) {
+    constructor(game: Game) {
         this.iframe = null;
         this.game = game;
     }
@@ -61,7 +61,7 @@ class Runner {
         this.iframe = null;
     }
 
-    restart() {
+    restart(): void {
         this.stop();
         this.start();
     }

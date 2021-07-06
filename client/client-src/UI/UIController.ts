@@ -12,11 +12,11 @@ import {FileSystemUI} from './UIElements/FileSystemUI';
 import {CodeEditorUI} from './UIElements/CodeEditorUI';
 import {CodeEditorViewState} from './ViewStates/CodeEditor';
 import {ConsoleUI} from './UIElements/ConsoleUI';
+import {ViewState} from "./ViewStates/ViewState";
 
 export class UIController {
     game: Game;
-    activeViewState: any;
-    activeKeyMap: any;
+    activeViewState: ViewState;
     inputController: InputController;
     uiElements: {
         loadingUI: LoadingUI;
@@ -39,7 +39,6 @@ export class UIController {
     constructor(game: Game, inputController: InputController) {
         this.game = game;
         this.activeViewState = null;
-        this.activeKeyMap = null;
         this.inputController = inputController;
 
         this.uiElements = {
@@ -61,7 +60,7 @@ export class UIController {
         };
     }
 
-    async changeViewState(viewState) {
+    async changeViewState(viewState: ViewState): Promise<void> {
         if (this.activeViewState) {
             console.log('current:' + this.activeViewState.constructor.name + ' new:' + viewState.constructor.name);
             await this.activeViewState.disable();

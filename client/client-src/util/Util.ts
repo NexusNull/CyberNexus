@@ -92,7 +92,7 @@ export default {
      *  To anyone else using this, this function should be a last/least effort,
      *  this function will do so much unnecessary work that can be fixed with a little knowledge about the object.
      */
-    clone: function (item: any): any {
+    clone: function <Type>(item: Type): Type {
         if (!item) {
             return item;
         }
@@ -107,27 +107,20 @@ export default {
         });
 
         if (typeof result == "undefined") {
-            if (Object.prototype.toString.call(item) === "[object Array]") {
+            if (Array.isArray(item)) {
                 result = [];
                 item.forEach((child, index) => {
                     result[index] = this.clone(child);
                 });
             } else if (typeof item == "object") {
-                // testing that this is DOM
-                if (item.nodeType && typeof item.cloneNode == "function") {
-                    result = item.cloneNode(true);
-                } else if (!item.prototype) { // check that this is a literal
-                    if (item instanceof Date) {
-                        result = new Date(item);
-                    } else {
-                        // it is an object literal
-                        result = {};
-                        for (const i in item) {
-                            result[i] = this.clone(item[i]);
-                        }
-                    }
+                if (item instanceof Date) {
+                    result = new Date(item);
                 } else {
-                    result = item;
+                    // it is an object literal
+                    result = {};
+                    for (const i in item) {
+                        result[i] = this.clone(item[i]);
+                    }
                 }
             } else {
                 result = item;
@@ -178,7 +171,7 @@ export default {
         return path.split('/').filter((elem) => elem.length > 0);
     },
 
-    loadJSON: async function (path: string): Promise<any> {
+    loadJSON: async function (path: string): Promise<unknown> {
         return JSON.parse(await this.loadFile(path, 'application/json'));
     },
 
@@ -203,7 +196,7 @@ export default {
         });
     },
 
-    async sendRequest(method: string, url: string, body?: any): Promise<string> {
+    async sendRequest(method: string, url: string, body?: unknown): Promise<string> {
         return new Promise(function (resolve, reject) {
             const xhttp = new XMLHttpRequest();
             xhttp.open(method, url, true);

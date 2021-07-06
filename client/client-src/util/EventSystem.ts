@@ -13,7 +13,7 @@ export class EventSystem {
         }
     }
 
-    async emit(eventName: string, data?: any): Promise<void> {
+    async emit(eventName: string, data?: unknown): Promise<void> {
         const listeners = this.listeners.get(eventName);
         if (!listeners) {
             return;

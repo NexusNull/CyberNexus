@@ -10,7 +10,7 @@ export class FileSystemUI {
     rootElements: Map<string, DirectoryUI>;
     reloadButton: HTMLDivElement;
     updateBlock: boolean;
-    focus: HTMLDivElement;
+
 
     constructor(uiController: UIController) {
         this.uiController = uiController;
@@ -19,7 +19,6 @@ export class FileSystemUI {
 
         this.rootElements = new Map();
         this.updateBlock = false;
-        this.focus = null;
 
         this.reloadButton.addEventListener("click", async () => {
             if (this.updateBlock)
@@ -31,7 +30,7 @@ export class FileSystemUI {
 
         this.uiController.game.fileSystemManager.on("created", (data) => {
             const pathElements = util.parsePath(data.filename);
-            let element = null;
+            let element;
             if (data.type == "directory") {
                 element = new DirectoryUI(this, data.basename);
             } else {
@@ -55,10 +54,6 @@ export class FileSystemUI {
                     throw new Error("Intermediate found that isn't a directory");
             }
         });
-
-        this.uiController.game.fileSystemManager.on("deleted", (data) => {
-            //
-        });
     }
 
     addRootElement(name: string, element: DirectoryUI): void {
@@ -66,7 +61,4 @@ export class FileSystemUI {
         this.container.appendChild(element.element);
     }
 
-    setFocus(element) {
-        this.focus = element;
-    }
 }

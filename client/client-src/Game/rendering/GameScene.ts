@@ -6,7 +6,6 @@
 import {Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer} from 'three';
 
 
-
 export class GameScene {
     isRendering: boolean;
     requestAnimationFrameID: number;
@@ -35,39 +34,46 @@ export class GameScene {
         this.scene.add(this.chunkContainer);
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        (function(camera, pointerCaptureElement) {
+        (function (camera, pointerCaptureElement) {
             camera.rotation.order = 'YXZ';
 
-            const hasPointerLock = function() {
+            const hasPointerLock = function () {
                 return document.pointerLockElement === pointerCaptureElement;
             };
 
-            const requestPointerLock = function() {
+            const requestPointerLock = function () {
                 pointerCaptureElement.requestPointerLock();
             };
 
-            pointerCaptureElement.addEventListener('click', function() {
+            pointerCaptureElement.addEventListener('click', function () {
                 if (!hasPointerLock()) {
                     requestPointerLock();
                 }
             });
 
-            window.addEventListener('mousemove', function(event) {
+            window.addEventListener('mousemove', function (event) {
                 if (hasPointerLock()) {
                     camera.rotation.y += event.movementX * -0.002;
                     camera.rotation.x = Math.max(Math.min(camera.rotation.x + (event.movementY * -0.002), Math.PI / 2), -Math.PI / 2);
                 }
             });
 
-            const keys: any = {};
-            document.addEventListener('keydown', function(event) {
+            const keys: {
+                Space?: boolean,
+                ShiftLeft?: boolean,
+                KeyW?: boolean,
+                KeyS?: boolean,
+                KeyA?: boolean,
+                KeyD?: boolean,
+            } = {};
+            document.addEventListener('keydown', function (event) {
                 keys[event.code] = true;
             });
-            document.addEventListener('keyup', function(event) {
+            document.addEventListener('keyup', function (event) {
                 keys[event.code] = false;
             });
             const speed = .1;
-            setInterval(function() {
+            setInterval(function () {
                 if (keys.Space) {
                     const dir = (new Vector3(0, 1, 0)).applyQuaternion(camera.quaternion).multiplyScalar(speed);
                     camera.position.add(dir);
@@ -96,21 +102,21 @@ export class GameScene {
         })(this.mainCamera, document.getElementById('main'));
     }
 
-    render() {
+    render(): void {
         if (this.isRendering) {
             this.requestAnimationFrameID = requestAnimationFrame(this.render.bind(this));
         }
         this.renderer.render(this.scene, this.mainCamera);
     }
 
-    startRender() {
+    startRender(): void {
         if (!this.isRendering) {
             this.isRendering = true;
             this.requestAnimationFrameID = requestAnimationFrame(this.render.bind(this));
         }
     }
 
-    stopRender() {
+    stopRender(): void {
         this.isRendering = false;
         cancelAnimationFrame(this.requestAnimationFrameID);
     }
@@ -118,7 +124,7 @@ export class GameScene {
     /**
      * This function disposes all object on the gameScene and prepares for new addition
      */
-    clear() {
+    clear(): void {
         //TODO investigate
         console.log("We are supposed to clear here but didn't do anything. FIX IT");
     }

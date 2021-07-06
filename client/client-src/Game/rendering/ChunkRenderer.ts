@@ -9,7 +9,7 @@ export class ChunkRenderer {
 
     }
 
-    renderChunk(data) {
+    renderChunk(data: Uint8Array): BufferGeometry {
         const geo = {
             vertices: [],
             normals: [],
@@ -35,8 +35,8 @@ export class ChunkRenderer {
                             if (sides[side]) {
 
                                 const vert = geometry.vertices.slice(geometry.sides[side][0] * 9, (geometry.sides[side][1] + 1) * 9);
-                                const norm = geometry.normals .slice(geometry.sides[side][0] * 9, (geometry.sides[side][1] + 1) * 9);
-                                const uv =   geometry.uvs     .slice(geometry.sides[side][0] * 6, (geometry.sides[side][1] + 1) * 6);
+                                const norm = geometry.normals.slice(geometry.sides[side][0] * 9, (geometry.sides[side][1] + 1) * 9);
+                                const uv = geometry.uvs.slice(geometry.sides[side][0] * 6, (geometry.sides[side][1] + 1) * 6);
 
                                 for (let i = 0; i < vert.length / 3; i++) {
                                     geo.vertices.push(

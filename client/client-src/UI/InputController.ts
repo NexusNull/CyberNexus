@@ -44,7 +44,7 @@ export class InputController extends EventSystem {
         this.pointerLockElement.addEventListener('mousedown', this.handleMouseDown.bind(this));
     }
 
-    registerAction(name: string, defaultKeyCombo: KeyCombo, keyDown?, keyUp?, keyPress?): Action {
+    registerAction(name: string, defaultKeyCombo: KeyCombo, keyDown?: () => void, keyUp?: () => void, keyPress?: () => void): Action {
         if (typeof defaultKeyCombo !== 'object' || typeof defaultKeyCombo.code !== 'string') {
             throw new Error('key combo has to be an object containing at least code as key code.');
         }

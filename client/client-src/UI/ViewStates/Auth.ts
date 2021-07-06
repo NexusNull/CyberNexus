@@ -44,11 +44,6 @@ class AuthViewState extends ViewState {
             this.uiController.uiElements.authUI.loginError(e);
         }
     }
-
-    async register(name: string, email: string, password: string): Promise<void> {
-        //TODO implement after cleanup
-        console.log("ADD ME");
-    }
 }
 
 export {AuthViewState};

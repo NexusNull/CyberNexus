@@ -11,15 +11,13 @@ import {Beam} from '../rendering/Beam';
 import {Assets} from '../../AssetManagement/Assets';
 import {ChunkRenderer} from '../rendering/ChunkRenderer';
 import {Perlin} from "../../definitions/Perlin";
+import {Demo} from "./Demo";
 
 
 declare let perlin: Perlin;
-declare let window: any;
 
-export class TowerDefenceDemo {
-    intervalID: number;
+export class TowerDefenceDemo implements Demo {
     materials: Array<Material>;
-    meshes: Array<Mesh>;
     startTime: Date;
     chunks: Array<Mesh>;
     assets: Assets;
@@ -32,17 +30,21 @@ export class TowerDefenceDemo {
         this.onDone = onDone;
 
         this.chunks = [];
-        const chunkRenderer = new ChunkRenderer(assets);
-        const beam = new Beam(new Vector3(10, 18, 10), new Vector3(-10, 18, -10), 0.2, 0.5, assets.textures.get('uvTest'));
-        window.beam = beam;
-        gameScene.world.position.x = 20;
-        gameScene.world.add(beam.mesh);
+
+    }
+
+    init(): void {
+
+        const chunkRenderer = new ChunkRenderer(this.assets);
+        const beam = new Beam(new Vector3(10, 18, 10), new Vector3(-10, 18, -10), 0.2, 0.5);
+        this.gameScene.world.position.x = 20;
+        this.gameScene.world.add(beam.mesh);
         const greenMat = new MeshLambertMaterial({color: 0x001b00});
         const pLight = new PointLight(0xffffff, 0.7, 200, 0.5);
         const aLight = new AmbientLight(0xffffff, 0.9);
 
-        gameScene.world.add(pLight);
-        gameScene.world.add(aLight);
+        this.gameScene.world.add(pLight);
+        this.gameScene.world.add(aLight);
 
         pLight.position.y = 50;
 
@@ -80,15 +82,15 @@ export class TowerDefenceDemo {
         this.materials = [greenMat];
     }
 
-    start() {
+    start(): void {
         this.startTime = new Date();
     }
 
-    stop() {
+    stop(): void {
         this.dispose();
     }
 
-    dispose() {
+    dispose(): void {
         for (const chunk of this.chunks) {
             this.gameScene.world.remove(chunk);
             chunk.geometry.dispose();

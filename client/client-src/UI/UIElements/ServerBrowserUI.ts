@@ -1,6 +1,15 @@
 import {UIController} from '../UIController';
 import {ServerElement} from "../../definitions/Server";
 
+export interface ServerData {
+    name?: string,
+    location?: string,
+    players?: number,
+    maxPlayers?: number,
+    ping?: string
+}
+
+
 export class ServerBrowserUI {
     uiController: UIController;
     element: HTMLDivElement;
@@ -21,29 +30,29 @@ export class ServerBrowserUI {
         this.servers.delete(id);
     }
 
-    updateServer(id: number, data: any): void {
+    updateServer(id: number, data: ServerData): void {
         const entry = this.servers.get(id);
-        if (data.name) {
+        if (typeof data.name == "string") {
             entry.nameDisplay.innerText = data.name;
         }
 
-        if (data.location) {
+        if (typeof data.location == "string") {
             entry.locationDisplay.innerText = data.location;
         }
 
-        if (data.players) {
+        if (typeof data.players == "number") {
             entry.playersDisplay.innerText = '' + data.players;
         }
-        if (data.maxPlayers) {
+        if (typeof data.maxPlayers == "number") {
             entry.maxPlayersDisplay.innerText = '' + data.maxPlayers;
         }
 
-        if (data.ping) {
+        if (typeof data.ping == "string") {
             entry.pingDisplay.innerText = '' + data.ping;
         }
     }
 
-    addServerEntry(id, data): void {
+    addServerEntry(id: number, data: ServerData): void {
         const element = this.serverEntryTemplate();
         element.joinButton.addEventListener('click', () => {
             this.uiController.viewStates.serverBrowser.joinServer(id);

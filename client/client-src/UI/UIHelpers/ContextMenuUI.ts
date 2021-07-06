@@ -1,14 +1,16 @@
-type SelectionDef = hl | selection | subSelection;
-interface hl {
+export type SelectionDef = hl | selection | subSelection;
+
+export interface hl {
     type: "hl"
 }
 
-interface selection {
+export interface selection {
     type: "selection"
     fn: () => void
+    text: string
 }
 
-interface subSelection {
+export interface subSelection {
     type: "subSelection",
     fn: () => void
     structure: SelectionDef
@@ -67,7 +69,7 @@ export class ContextMenuUI {
         }
     }
 
-    display(position): void {
+    display(position: { x: number, y: number }): void {
         if (this.parent == null) {
             document.body.appendChild(this.shadow);
         }
@@ -84,7 +86,7 @@ export class ContextMenuUI {
         }
     }
 
-    _subSelection(declaration) {
+    private _subSelection(declaration) {
         const elem = document.createElement('div');
         elem.classList.add('contextMenuSubSelection');
         elem.innerText = declaration.text;
@@ -101,7 +103,7 @@ export class ContextMenuUI {
         return elem;
     }
 
-    _selection(declaration) {
+    private _selection(declaration) {
         const elem = document.createElement('div');
         elem.classList.add('contextMenuSelection');
         elem.innerText = declaration.text;
@@ -118,7 +120,7 @@ export class ContextMenuUI {
         return elem;
     }
 
-    _horizontalLine() {
+    private _horizontalLine() {
         const elem = document.createElement('div');
         elem.classList.add('horizontalSeparator');
         return elem;

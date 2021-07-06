@@ -3,18 +3,14 @@
  *
  */
 
-import {Chunk} from './Chunk';
+
 import {EventSystem} from '../util/EventSystem';
 import {GameScene} from './rendering/GameScene';
-import {Unit} from './Unit';
 
 export class GameState extends EventSystem {
-    chunks: Map<string, Chunk>;
-    units: Map<number, Unit>;
 
     constructor(gameScene: GameScene) {
         super();
-        this.chunks = new Map();
         gameScene.clear();
     }
 

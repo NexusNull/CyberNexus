@@ -88,8 +88,8 @@ export class FileUI extends EventSystem {
         this.element.classList.remove('selected');
     }
 
-    setDepth(depth) {
-        this.element.style.paddingLeft = 13 * depth + 11+ "px";
+    setDepth(depth: number): void {
+        this.element.style.paddingLeft = 13 * depth + 11 + "px";
         this.depth = depth;
     }
 

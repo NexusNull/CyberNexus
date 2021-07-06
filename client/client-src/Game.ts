@@ -9,6 +9,7 @@ import {Runner} from './Game/Runner';
 import {UserData} from "./Game/UserData";
 import {FileSystemManager} from "./UI/UIHelpers/FileSystemManager";
 import Util from "./util/Util";
+
 export class Game {
     uiController: UIController;
     inputController: InputController;
@@ -41,7 +42,11 @@ export class Game {
 
 }
 
-declare let window: any;
+declare let window: Window &
+    {
+        game: Game,
+        util: typeof Util
+    };
 const game = new Game();
 window.game = game;
 window.util = Util;

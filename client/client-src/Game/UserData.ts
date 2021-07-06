@@ -6,15 +6,34 @@ import util from '../util/Util';
 import {Game} from "../Game";
 import {EventSystem} from "../util/EventSystem";
 
-interface TokenContainer {
+
+export interface GenericJWTContainer {
     token: string,
-    body: any,
-    header: any,
+    header: { alg: string, typ: string },
+    body: { exp: number, iat: number, scope: string },
     expiresAt: number
 }
 
+export interface PathPermissions {
+    path: string,
+    perms: Array<"canRead" | "canWrite">
+}
+
+export interface WebDavJWTContainer extends GenericJWTContainer {
+    body: {
+        uid: number
+        ip: string,
+        paths: Array<PathPermissions>,
+        admin: boolean,
+        scope: "webdav",
+
+        exp: number,
+        iat: number
+    },
+}
+
 export class UserData extends EventSystem {
-    tokens: Map<string, TokenContainer> = new Map();
+    tokens: Map<string, GenericJWTContainer> = new Map();
     game: Game;
     isAuthenticated = false;
     username: string;
@@ -35,15 +54,15 @@ export class UserData extends EventSystem {
         }, 5 * 60 * 1000);
     }
 
-    setUsername(username: string) {
+    setUsername(username: string): void {
         this.username = username;
     }
 
-    setId(id: number) {
+    setId(id: number): void {
         this.id = id;
     }
 
-    setAuthStatus(status: boolean) {
+    setAuthStatus(status: boolean): void {
         this.isAuthenticated = status;
         if (!status) {
             this.tokens.clear();
@@ -52,12 +71,12 @@ export class UserData extends EventSystem {
         }
     }
 
-    fetchTokens() {
+    async fetchTokens(): Promise<void> {
         //ignore promise
-        this.getToken("webdav");
+        await this.getToken("webdav");
     }
 
-    async getToken(scope: string) {
+    async getToken(scope: string): Promise<string> {
         const token = this.tokens.get(scope);
         if (token) {
             return token.token;
@@ -65,24 +84,24 @@ export class UserData extends EventSystem {
             const json = await util.sendRequest("POST", "/auth/jwt", {scope: scope});
             const data = JSON.parse(json);
             const tokenContainer = UserData.destructureToken(data.token);
-            this.emit("tokenIssued", util.clone(tokenContainer));
+            await this.emit("tokenIssued", util.clone(tokenContainer));
             this.tokens.set(scope, tokenContainer);
             return data.token;
         }
     }
 
-    clearToken(scope: string) {
+    clearToken(scope: string): void {
         this.tokens.delete(scope);
     }
 
-    public inspectToken(scope: string) {
+    public inspectToken(scope: string): GenericJWTContainer {
         const token = this.tokens.get(scope);
         if (!token)
             throw new Error("No Token exists for that scope");
-        return {body: token.body, header: token.header};
+        return util.clone(token);
     }
 
-    private static destructureToken(token: string) {
+    private static destructureToken(token: string): GenericJWTContainer {
         const base64 = token.split(".");
         const header = JSON.parse(atob(base64[0]));
         const body = JSON.parse(atob(base64[1]));

@@ -1,5 +1,5 @@
 import {FileUI} from './FileUI';
-import {ContextMenuUI} from '../UIHelpers/ContextMenuUI';
+import {ContextMenuUI, SelectionDef} from '../UIHelpers/ContextMenuUI';
 import {FileSystemUI} from "./FileSystemUI";
 
 export class DirectoryUI {
@@ -58,7 +58,14 @@ export class DirectoryUI {
 
             e.cancelBubble = true;
             const contextMenu = new ContextMenuUI();
-            const contextContent = [];
+            const contextContent: SelectionDef[] = [
+                {type: "hl"},
+                {
+                    type: "selection",
+                    text: "asd",
+                    fn: () => console.log("asd")
+                },
+            ];
 
             contextMenu.setStructure(contextContent);
             contextMenu.display({x: e.clientX, y: e.clientY});
@@ -101,7 +108,7 @@ export class DirectoryUI {
         return this.children.get(name);
     }
 
-    addChild(fsElement: FileUI | DirectoryUI) {
+    addChild(fsElement: FileUI | DirectoryUI): void {
         fsElement.setDepth(this.depth + 1);
         this.children.set(fsElement.name, fsElement);
         for (const child of this.childContainer.children) { //TODO optimize
@@ -158,8 +165,8 @@ export class DirectoryUI {
         this.children.set(newName, child);
     }
 
-    setDepth(depth) {
-        this.header.style.paddingLeft = 13 * depth+"px";
+    setDepth(depth: number): void {
+        this.header.style.paddingLeft = 13 * depth + "px";
         this.depth = depth;
         for (const element of this.children) {
             element[1].setDepth(depth + 1);

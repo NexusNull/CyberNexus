@@ -78,7 +78,7 @@ export class FileSystemManager extends EventSystem {
         this.activeElements.delete(path);
     }
 
-    async fullDir(path) {
+    async fullDir(path: string): Promise<void> {
         if (!path.endsWith("/"))
             throw new Error("Path has to end with a /");
 
@@ -116,18 +116,10 @@ export class FileSystemManager extends EventSystem {
         }
     }
 
-    async fullFetch() {
+    async fullFetch(): Promise<void> {
         for (const path of this.activeElements) {
             await this.fullDir(path);
         }
-    }
-
-    createFile() {
-        //
-    }
-
-    createDir() {
-        ///
     }
 
     /**
@@ -152,10 +144,6 @@ export class FileSystemManager extends EventSystem {
             this.emit("created", Object.assign({}, dir));
             this.fs.set(currentPath, <Directory>dir);
         }
-    }
-
-    private _destroyFakeDir(path) {
-        //
     }
 
     private _createDir(path, data) {

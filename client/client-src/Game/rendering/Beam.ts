@@ -12,19 +12,16 @@ export class Beam {
     thickness: number;
     mesh: THREE.Mesh;
     material: THREE.MeshBasicMaterial;
-    texture: THREE.Texture;
     geometry: THREE.BufferGeometry;
 
-    constructor(start: THREE.Vector3, end: THREE.Vector3, speed: number, thickness: number, texture: THREE.Texture) {
+    constructor(start: THREE.Vector3, end: THREE.Vector3, speed: number, thickness: number, ) {
         this.start = start;
         this.end = end;
         this.speed = speed;
         this.thickness = thickness;
-        this.texture = texture.clone();
-        this.texture.needsUpdate = true;
-        this.texture.wrapS = THREE.RepeatWrapping;
 
-        this.material = new THREE.MeshBasicMaterial({map: this.texture, color: 0xffffff, transparent: true});
+
+        this.material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true});
         this.geometry = new THREE.BufferGeometry();
         this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(new Array(12).fill(0), 3));
         this.geometry.setAttribute('uv', new THREE.Float32BufferAttribute([0, 0, 0, 1, 1, 0, 1, 1], 2));
@@ -32,9 +29,6 @@ export class Beam {
         this.mesh = new THREE.Mesh(this.geometry, this.material);
 
         this.mesh.onBeforeRender = (renderer, scene, camera, geometry: THREE.BufferGeometry) => {
-            this.texture.offset.x += this.speed;
-            this.texture.repeat.set(this.start.clone().sub(this.end).length() / this.thickness, 1);
-
             const camPos = camera.position.clone().applyMatrix4(new THREE.Matrix4().copy(this.mesh.matrixWorld).invert());
             const vecA = camPos.clone().sub(this.start);
             const vecB = camPos.clone().sub(this.end);
@@ -50,10 +44,9 @@ export class Beam {
         };
     }
 
-    dispose() {
+    dispose(): void {
         this.mesh.parent.remove(this.mesh);
         this.geometry.dispose();
-        this.texture.dispose();
         this.material.dispose();
     }
 }

@@ -2,7 +2,7 @@ import {ViewState} from './ViewState';
 import {Game} from '../../Game';
 import {UIController} from '../UIController';
 import {InputController} from '../InputController';
-import {Server} from "../../definitions/Server";
+import {Server, ServerData} from "../../definitions/Server";
 
 
 export class ServerBrowserViewState extends ViewState {
@@ -23,7 +23,21 @@ export class ServerBrowserViewState extends ViewState {
 
     async setup(): Promise<void> {
         const servers = await this.requestServerList();
-        for (const server of servers) {
+        for (const serverData of servers) {
+            const server = {
+                id: serverData.id,
+                name: serverData.name,
+                location: serverData.location,
+
+                ip: serverData.ip,
+                port: serverData.port,
+
+                players: serverData.players,
+                maxPlayers: serverData.maxPlayers,
+
+                ping: "-"
+            };
+
             this.uiController.uiElements.serverBrowserUI.addServerEntry(server.id, server);
             this.servers.set(server.id, server);
         }
@@ -71,7 +85,7 @@ export class ServerBrowserViewState extends ViewState {
         });
     }
 
-    async requestServerList(): Promise<Server[]> {
+    async requestServerList(): Promise<ServerData[]> {
         return new Promise((resolve, reject) => {
             const xobj = new XMLHttpRequest();
             xobj.open('GET', '/serverList', true);

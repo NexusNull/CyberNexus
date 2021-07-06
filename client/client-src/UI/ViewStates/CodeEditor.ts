@@ -1,9 +1,7 @@
-/* eslint-disable */
 import {ViewState} from './ViewState';
 import {Game} from '../../Game';
 import type {UIController} from '../UIController';
 import type {InputController} from '../InputController';
-import {FileSystemManager} from "../UIHelpers/FileSystemManager";
 import type {Action} from "../../definitions/Action";
 
 export class CodeEditorViewState extends ViewState {
@@ -14,51 +12,32 @@ export class CodeEditorViewState extends ViewState {
         super(game, uiController, inputController);
         this.actions = [
             this.inputController.registerAction("Save File",
-                {code: "KeyS", modifiers: {ctrlKey: true}},
-                (event) => {
-
-                }),
+                {code: "KeyS", modifiers: {ctrlKey: true}}),
         ];
         this.currentFile = null;
     }
 
-    async disable(): Promise<any> {
+    async disable(): Promise<void> {
         this.uiController.uiElements.codeEditorUI.hide();
-        for (let action of this.actions) {
+        for (const action of this.actions) {
             action.active = false;
         }
     }
 
-    async enable(): Promise<any> {
+    async enable(): Promise<void> {
         this.uiController.uiElements.codeEditorUI.display();
         this.uiController.uiElements.consoleUI.codeInput.refresh();
         this.uiController.uiElements.codeEditorUI.editor.refresh();
-        for (let action of this.actions) {
+        for (const action of this.actions) {
             action.active = true;
         }
     }
 
-    async setup(): Promise<any> {
-
+    async saveFile(): Promise<void> {
+        //TODO implement
     }
 
-    async requestDirectoryStructure(path) {
-
-    }
-
-    async createDirectory(path) {
-
-    }
-
-    async createFile(path) {
-
-    }
-
-    startRunner() {
-
-    }
-
-    saveFile() {
-
+    startRunner(): void {
+        //TODO implement
     }
 }

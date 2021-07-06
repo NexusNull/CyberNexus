@@ -17,7 +17,7 @@ class AuthUI {
     loginErrorContainer: HTMLDivElement;
     registerErrorContainer: HTMLDivElement;
 
-    constructor(uiController) {
+    constructor(uiController: UIController) {
         this.uiController = uiController;
         this.element = <HTMLDivElement>document.getElementById('authContainer');
 
@@ -52,7 +52,7 @@ class AuthUI {
         this.visible = false;
     }
 
-    loginError(errorMessage) {
+    loginError(errorMessage: string): void {
 
         const elem = document.createElement('div');
         elem.style.color = 'red';
@@ -69,17 +69,17 @@ class AuthUI {
         }, 3000);
     }
 
-    clearForms() {
+    clearForms(): void {
         (<HTMLInputElement>document.getElementById('loginName')).value = '';
         (<HTMLInputElement>document.getElementById('loginPassword')).value = '';
     }
 
-    display() {
+    display(): void {
         this.element.classList.remove('hidden');
         this.visible = true;
     }
 
-    hide() {
+    hide(): void {
         this.element.classList.add('hidden');
         this.visible = false;
     }

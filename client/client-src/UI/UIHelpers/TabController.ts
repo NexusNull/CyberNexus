@@ -16,7 +16,7 @@ export class TabController {
         this.setActive(structure[0]);
     }
 
-    setActive(Tab): void {
+    setActive(Tab: Tab): void {
         if (this.activeTab) {
             this.activeTab.nav.classList.remove('active');
             this.activeTab.content.classList.add('hidden');
