@@ -23,8 +23,7 @@ export class AssetManager extends EventSystem {
 
 
     async init(): Promise<void> {
-        this.emit('progress', {message: 'Loading ...', percentage: 0});
-
-        this.emit('finished', {message: 'Finished!'});
+        await this.emit('progress', {message: 'Loading ...', percentage: 0});
+        await this.emit('finished', {message: 'Finished!'});
     }
 }

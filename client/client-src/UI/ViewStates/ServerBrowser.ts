@@ -5,11 +5,18 @@ import {InputController} from '../InputController';
 import {Server, ServerData} from "../../definitions/Server";
 
 
-export class ServerBrowserViewState extends ViewState {
+export class ServerBrowserViewState implements ViewState {
+    isSetup: boolean;
+    game: Game;
+    uiController: UIController;
+    inputController: InputController;
     servers: Map<number, Server>;
 
     constructor(game: Game, uiController: UIController, inputController: InputController) {
-        super(game, uiController, inputController);
+
+        this.game = game;
+        this.uiController = uiController;
+        this.inputController = inputController;
         this.servers = new Map();
     }
 
@@ -47,6 +54,7 @@ export class ServerBrowserViewState extends ViewState {
                 await this.pingAllServers();
             }
         }, 2000);
+        this.isSetup = true;
     }
 
     async joinServer(id: number): Promise<void> {

@@ -4,12 +4,18 @@ import type {UIController} from '../UIController';
 import type {InputController} from '../InputController';
 import type {Action} from "../../definitions/Action";
 
-export class CodeEditorViewState extends ViewState {
+export class CodeEditorViewState implements ViewState {
+    game: Game;
+    isSetup: boolean;
+    uiController: UIController;
+    inputController: InputController;
     currentFile: string;
     actions: Action[];
 
     constructor(game: Game, uiController: UIController, inputController: InputController) {
-        super(game, uiController, inputController);
+        this.game = game;
+        this.uiController = uiController;
+        this.inputController = inputController;
         this.actions = [
             this.inputController.registerAction("Save File",
                 {code: "KeyS", modifiers: {ctrlKey: true}}),
@@ -40,4 +46,11 @@ export class CodeEditorViewState extends ViewState {
     startRunner(): void {
         //TODO implement
     }
+
+    setup(): Promise<void> {
+        this.isSetup = true;
+        return Promise.resolve(undefined);
+    }
+
+
 }

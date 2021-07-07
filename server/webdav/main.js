@@ -18,7 +18,7 @@ const server = new webdav.WebDAVServer({
 });
 
 const app = express();
-app.use(express.static("./"));
+
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", req.header("origin"));
     res.header("Access-Control-Allow-Methods", "*");

@@ -4,9 +4,16 @@ import {UIController} from '../UIController';
 import {InputController} from '../InputController';
 import util from '../../util/Util';
 
-class AuthViewState extends ViewState {
+export class AuthViewState implements ViewState {
+    isSetup: boolean;
+    game: Game;
+    uiController: UIController;
+    inputController: InputController;
+
     constructor(game: Game, uiController: UIController, inputController: InputController) {
-        super(game, uiController, inputController);
+        this.game = game;
+        this.uiController = uiController;
+        this.inputController = inputController;
     }
 
     async disable(): Promise<void> {
@@ -44,6 +51,9 @@ class AuthViewState extends ViewState {
             this.uiController.uiElements.authUI.loginError(e);
         }
     }
-}
 
-export {AuthViewState};
+    async setup(): Promise<void> {
+        this.isSetup = true;
+        return;
+    }
+}
