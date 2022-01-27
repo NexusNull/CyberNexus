@@ -43,7 +43,7 @@
     "socket.io-client": "^3.1.0",
     "sqlite": "^4.0.14",
     "sqlite3": "^5.0.1",
-    "three": "^0.128.0",
+    "three": "^0.137.0",
     "webdav": "^4.2.1",
     "webdav-server": "git+https://github.com/NexusNull/npm-WebDAV-Server.git"
   },
