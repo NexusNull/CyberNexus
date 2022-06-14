@@ -37,7 +37,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "jsonwebtoken": "^8.5.1",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "pngjs-util": "git+https://github.com/NexusNull/pngjs-util.git",
     "socket.io": "^3.1.0",
     "socket.io-client": "^3.1.0",
